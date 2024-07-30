@@ -6,7 +6,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
@@ -50,12 +53,18 @@ fun SignUpScreen(modifier: Modifier = Modifier, viewModel: SignUpViewModel = vie
             modifier = modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .padding(16.dp),
+                .padding(16.dp)
+                .imePadding()
+                .verticalScroll(rememberScrollState())
+
         ) {
             var name by rememberSaveable { mutableStateOf("") }
             var email by rememberSaveable { mutableStateOf("") }
             var password by rememberSaveable { mutableStateOf("") }
             val passwordError by viewModel.passwordError.collectAsState()
+            val emailError by viewModel.emailError.collectAsState()
+            val nameError by viewModel.emailError.collectAsState()
+
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(text = "Speedo Transfer", style = TitleTextStyle)
@@ -63,6 +72,7 @@ fun SignUpScreen(modifier: Modifier = Modifier, viewModel: SignUpViewModel = vie
             Spacer(modifier = Modifier.height(55.dp))
 
             DataField(
+                isError = nameError,
                 value = name,
                 onValueChange = { name = it },
                 label = "Full Name",
@@ -72,6 +82,7 @@ fun SignUpScreen(modifier: Modifier = Modifier, viewModel: SignUpViewModel = vie
             )
             Spacer(modifier = Modifier.height(16.dp))
             DataField(
+                isError = emailError,
                 value = email,
                 onValueChange = { email = it },
                 label = "Email",
@@ -89,7 +100,8 @@ fun SignUpScreen(modifier: Modifier = Modifier, viewModel: SignUpViewModel = vie
                 label = "Enter your password"
             )
             Spacer(modifier = Modifier.height(32.dp))
-            PrimaryButton(onClick = { viewModel.validatePassword(password) }, buttonText = "Sign up")
+            PrimaryButton(onClick = { viewModel.validatePassword(password)
+                                    viewModel.validateEmail(email)}, buttonText = "Sign up")
             Spacer(modifier = Modifier.height(16.dp))
             Row() {
                 Text(

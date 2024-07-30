@@ -148,6 +148,7 @@ fun PasswordField(
 
 @Composable
 fun DataField(
+    isError: String? = null,
     modifier: Modifier = Modifier,
     value: String,
     onValueChange: (String) -> Unit,
@@ -163,6 +164,7 @@ fun DataField(
         Text(text = label, style = AppTextStyle)
         Spacer(modifier = modifier.height(8.dp))
         OutlinedTextField(
+            isError = isError != null,
             value = value,
             onValueChange = onValueChange,
             placeholder = {
@@ -180,6 +182,12 @@ fun DataField(
             modifier = modifier
                 .fillMaxWidth()
         )
+        if (isError != null)
+            Text(
+                text = isError,
+                style = AppTextStyle,
+                color = AlertColor
+            )
 
     }
 }
