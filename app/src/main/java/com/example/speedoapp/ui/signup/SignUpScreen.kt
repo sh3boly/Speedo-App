@@ -1,6 +1,7 @@
 package com.example.speedoapp.ui.signup
 
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -33,10 +34,16 @@ import com.example.speedoapp.ui.theme.DisabledColor
 import com.example.speedoapp.ui.theme.SubTitleTextStyle
 import com.example.speedoapp.ui.theme.TitleTextStyle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import com.example.speedoapp.navigation.AppRoutes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SignUpScreen(modifier: Modifier = Modifier, viewModel: SignUpViewModel = viewModel()) {
+fun SignUpScreen(
+    navController: NavController,
+    modifier: Modifier = Modifier,
+    viewModel: SignUpViewModel = viewModel()
+) {
 
     Scaffold(
         topBar = {
@@ -56,6 +63,9 @@ fun SignUpScreen(modifier: Modifier = Modifier, viewModel: SignUpViewModel = vie
             var email by rememberSaveable { mutableStateOf("") }
             var password by rememberSaveable { mutableStateOf("") }
             val passwordError by viewModel.passwordError.collectAsState()
+            val emailError by viewModel.emailError.collectAsState()
+            val nameError by viewModel.nameError.collectAsState()
+
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(text = "Speedo Transfer", style = TitleTextStyle)
@@ -63,6 +73,7 @@ fun SignUpScreen(modifier: Modifier = Modifier, viewModel: SignUpViewModel = vie
             Spacer(modifier = Modifier.height(55.dp))
 
             DataField(
+                isError = nameError,
                 value = name,
                 onValueChange = { name = it },
                 label = "Full Name",
@@ -72,6 +83,7 @@ fun SignUpScreen(modifier: Modifier = Modifier, viewModel: SignUpViewModel = vie
             )
             Spacer(modifier = Modifier.height(16.dp))
             DataField(
+                isError = emailError,
                 value = email,
                 onValueChange = { email = it },
                 label = "Email",
@@ -89,7 +101,21 @@ fun SignUpScreen(modifier: Modifier = Modifier, viewModel: SignUpViewModel = vie
                 label = "Enter your password"
             )
             Spacer(modifier = Modifier.height(32.dp))
-            PrimaryButton(onClick = { viewModel.validatePassword(password) }, buttonText = "Sign up")
+            PrimaryButton(onClick = {
+                viewModel.validatePassword(password)
+                viewModel.validateEmail(email)
+                viewModel.validatePassword(password)
+                if (viewModel.validatePassword(password)
+                    && viewModel.validateEmail(email)
+                    && viewModel.validatePassword(password)
+                ) {
+                    try {
+                        navController.navigate("${AppRoutes.COUNTRYDATE_ROUTE}/$name/$email/$password")
+                    } catch (e: Exception) {
+                        Log.d("Exception", "Error during navigation: ${e.message} ")
+                    }
+                }
+            }, buttonText = "Sign up")
             Spacer(modifier = Modifier.height(16.dp))
             Row() {
                 Text(
@@ -102,10 +128,4 @@ fun SignUpScreen(modifier: Modifier = Modifier, viewModel: SignUpViewModel = vie
 
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun SignUpScreenPreview() {
-    SignUpScreen()
 }

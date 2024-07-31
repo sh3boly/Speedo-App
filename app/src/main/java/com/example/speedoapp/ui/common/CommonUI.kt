@@ -1,9 +1,15 @@
 package com.example.speedoapp.ui.common
 
+import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -11,14 +17,25 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.Card
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerState
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -155,7 +172,8 @@ fun DataField(
     @DrawableRes image: Int,
     @DrawableRes typingImage: Int,
     imageDescription: String = "",
-    type: KeyboardType
+    type: KeyboardType,
+    isError: String?
 ) {
     Column(
         horizontalAlignment = Alignment.Start,
@@ -163,6 +181,7 @@ fun DataField(
         Text(text = label, style = AppTextStyle)
         Spacer(modifier = modifier.height(8.dp))
         OutlinedTextField(
+            isError = isError != null,
             value = value,
             onValueChange = onValueChange,
             placeholder = {
@@ -180,10 +199,94 @@ fun DataField(
             modifier = modifier
                 .fillMaxWidth()
         )
+        if (isError != null)
+            Text(
+                text = isError,
+                style = AppTextStyle,
+                color = AlertColor
+            )
 
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ClickableDataField(
+    modifier: Modifier = Modifier,
+    value: String,
+    onValueChange: (String) -> Unit,
+    label: String,
+    @DrawableRes image: Int,
+    imageDescription: String = "",
+    onClick: () -> Unit
+) {
+
+    Column(
+        horizontalAlignment = Alignment.Start,
+    ) {
+        Text(text = label, style = AppTextStyle)
+        Spacer(modifier = modifier.height(8.dp))
+        OutlinedTextField(
+            colors = OutlinedTextFieldDefaults.colors(
+                disabledTextColor = MaterialTheme.colorScheme.onSurface,
+                disabledBorderColor = MaterialTheme.colorScheme.outline,
+                disabledPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant
+            ),
+            enabled = false,
+            value = value,
+            onValueChange = onValueChange,
+            placeholder = {
+                if (label == "Country")
+                    Text(text = "Select your $label", style = AppTextStyle)
+                else
+                    Text(text = "DD/MM/YYYY", style = AppTextStyle)
+            },
+            trailingIcon = {
+                Image(painterResource(id = image), imageDescription, Modifier.size(24.dp))
+
+
+            },
+            modifier = Modifier.fillMaxWidth().clickable(onClick = onClick)
+
+
+        )
+    }
+
+}
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DatePickerChooser(onConfirm: (DatePickerState) -> Unit, onDismiss: () -> Unit) {
+
+    /*
+    val c = Calendar.getInstance()
+    val year = c.get(Calendar.YEAR)
+    //Months are zero base (e.g. January = 0 & December = 11)
+    val month = c.get(Calendar.MONTH) + 1
+    val day = c.get(Calendar.DAY_OF_MONTH)
+    val date = "$year/$month/$day"
+    val dateFormatter = SimpleDateFormat("yyyy/MM/dd", Locale.US)
+    val parsed = dateFormatter.parse(date)?.time ?: 0L
+    */
+
+    val datePickerState = rememberDatePickerState(
+        //initialSelectedDateMillis = parsed,
+        //yearRange = (2024..2025),
+    )
+
+    AlertDialog(
+        onDismissRequest = {},
+        confirmButton = {
+            TextButton(onClick = { onConfirm(datePickerState) }) {
+                Text(text = "Ok")
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = { onDismiss() }) { Text(text = "Cancel") }
+        },
+        text = { DatePicker(state = datePickerState) },
+    )
+}
 @Preview(showBackground = true)
 @Composable
 fun ComposablesPreview() {
