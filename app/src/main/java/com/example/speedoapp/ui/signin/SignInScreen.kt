@@ -69,7 +69,7 @@ fun SignInScreen(
 
             Text(text = "Speedo Transfer", style = TitleTextStyle)
 
-            Spacer(modifier = Modifier.height(55.dp))
+            Spacer(modifier = Modifier.height(55.86.dp))
 
             DataField(
                 value = email,
@@ -79,7 +79,7 @@ fun SignInScreen(
                 typingImage = R.drawable.ic_email_typing,
                 type = KeyboardType.Email
             )
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(8.dp))
             PasswordField(
                 value = password,
                 onValueChange = {
@@ -94,7 +94,7 @@ fun SignInScreen(
             Spacer(modifier = Modifier.height(16.dp))
             Row() {
                 Text(
-                    text = "Already have an account? ",
+                    text = "Don't have an account? ",
                     style = AppTextStyle,
                     color = DisabledColor
                 )

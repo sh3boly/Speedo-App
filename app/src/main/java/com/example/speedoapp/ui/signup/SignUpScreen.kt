@@ -67,11 +67,11 @@ fun SignUpScreen(
             val emailError by viewModel.emailError.collectAsState()
             val nameError by viewModel.nameError.collectAsState()
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(55.14.dp))
 
             Text(text = "Speedo Transfer", style = TitleTextStyle)
 
-            Spacer(modifier = Modifier.height(55.dp))
+            Spacer(modifier = Modifier.height(65.86.dp))
 
             DataField(
                 isError = nameError,
@@ -82,7 +82,7 @@ fun SignUpScreen(
                 typingImage = R.drawable.ic_person_typing,
                 type = KeyboardType.Text
             )
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(8.dp))
             DataField(
                 isError = emailError,
                 value = email,
@@ -92,7 +92,7 @@ fun SignUpScreen(
                 typingImage = R.drawable.ic_email_typing,
                 type = KeyboardType.Email
             )
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(8.dp))
             PasswordField(
                 isError = passwordError,
                 value = password,

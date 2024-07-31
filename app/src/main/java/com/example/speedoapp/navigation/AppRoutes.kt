@@ -44,7 +44,7 @@ fun AppNavHost(modifier: Modifier = Modifier) {
             val password = it.arguments?.getString(PASSWORD)!!
 
 
-            CountryDateScreen(name, email, password)
+            CountryDateScreen(navController, name, email, password)
         }
     }
 
