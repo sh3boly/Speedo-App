@@ -12,13 +12,16 @@ import com.example.speedoapp.constants.Constants.NAME
 import com.example.speedoapp.constants.Constants.PASSWORD
 import com.example.speedoapp.navigation.AppRoutes.SIGNUP_ROUTE
 import com.example.speedoapp.navigation.AppRoutes.COUNTRYDATE_ROUTE
+import com.example.speedoapp.navigation.AppRoutes.SIGNIN_ROUTE
 
 import com.example.speedoapp.ui.signup.CountryDateScreen
+import com.example.speedoapp.ui.signup.SignInScreen
 import com.example.speedoapp.ui.signup.SignUpScreen
 
 object AppRoutes {
     const val SIGNUP_ROUTE = "signup"
     const val COUNTRYDATE_ROUTE = "countrydate"
+    const val SIGNIN_ROUTE = "signin"
 }
 
 @Composable
@@ -26,6 +29,8 @@ fun AppNavHost(modifier: Modifier = Modifier) {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = SIGNUP_ROUTE, modifier = modifier) {
         composable(route = SIGNUP_ROUTE) { SignUpScreen(navController) }
+        composable(route = SIGNIN_ROUTE) { SignInScreen(navController) }
+
         composable(
             route = "$COUNTRYDATE_ROUTE/{$NAME}/{$EMAIL}/{$PASSWORD}",
             arguments = listOf(

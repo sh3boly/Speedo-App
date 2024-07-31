@@ -136,11 +136,12 @@ fun PasswordField(
             trailingIcon = {
                 val image = if (isError == null) {
                     if (passwordVisible) {
+                        R.drawable.ic_hidden_typing
+                    } else
                         if (value.isEmpty())
-                            R.drawable.ic_shown_typing
-                        else
                             R.drawable.ic_shown
-                    } else R.drawable.ic_hidden_typing
+                        else
+                            R.drawable.ic_shown_typing
                 } else {
                     R.drawable.ic_shown_error
                 }
@@ -174,7 +175,6 @@ fun DataField(
     @DrawableRes typingImage: Int,
     imageDescription: String = "",
     type: KeyboardType,
-    isError: String?
 ) {
     Column(
         horizontalAlignment = Alignment.Start,
@@ -248,13 +248,16 @@ fun ClickableDataField(
 
 
             },
-            modifier = Modifier.fillMaxWidth().clickable(onClick = onClick)
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable(onClick = onClick)
 
 
         )
     }
 
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DatePickerChooser(onConfirm: (DatePickerState) -> Unit, onDismiss: () -> Unit) {
@@ -288,6 +291,7 @@ fun DatePickerChooser(onConfirm: (DatePickerState) -> Unit, onDismiss: () -> Uni
         text = { DatePicker(state = datePickerState) },
     )
 }
+
 @Preview(showBackground = true)
 @Composable
 fun ComposablesPreview() {
