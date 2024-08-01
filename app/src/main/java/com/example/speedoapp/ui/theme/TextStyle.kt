@@ -12,6 +12,18 @@ val AppTextStyle = TextStyle(
     fontWeight = FontWeight(400),
 )
 
+val AppTextStyleSelected = TextStyle(
+    fontSize = 14.sp,
+    lineHeight = 21.sp,
+    fontWeight = FontWeight(500),
+)
+
+val AppNumbersStyle = TextStyle(
+    fontSize = 14.sp,
+    lineHeight = 22.36.sp,
+    fontWeight = FontWeight(500),
+)
+
 val TitleTextStyle = TextStyle(
     fontSize = 24.sp,
     lineHeight = 29.05.sp,
@@ -19,11 +31,39 @@ val TitleTextStyle = TextStyle(
     fontWeight = FontWeight(600),
 )
 
+val SubTitleTextStyleBold = TextStyle(
+    fontSize = 20.sp,
+    lineHeight = 30.sp,
+    textAlign = TextAlign.Center,
+    fontWeight = FontWeight(600),
+)
+
+val BodyMediumBold = TextStyle(
+    fontSize = 16.sp,
+    lineHeight = 24.sp,
+    textAlign = TextAlign.Center,
+    fontWeight = FontWeight(500),
+)
+
+val BodyMedium = TextStyle(
+    fontSize = 16.sp,
+    lineHeight = 24.sp,
+    textAlign = TextAlign.Center,
+    fontWeight = FontWeight(400),
+)
+
 val SubTitleTextStyle = TextStyle(
     fontSize = 20.sp,
     lineHeight = 30.sp,
     textAlign = TextAlign.Center,
     fontWeight = FontWeight(500),
+)
+
+val SubTitleTextStyleLight = TextStyle(
+    fontSize = 20.sp,
+    lineHeight = 30.sp,
+    textAlign = TextAlign.Center,
+    fontWeight = FontWeight(400),
 )
 
 val ClickAbleTextStyle = TextStyle(
