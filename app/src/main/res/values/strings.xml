@@ -1,3 +1,18 @@
 <resources>
     <string name="app_name">Speedo App</string>
+    <string name="how_much_are_you_sending">How much are you sending?</string>
+    <string name="amount">Amount</string>
+    <string name="confirmation">Confirmation</string>
+    <string name="payment">Payment</string>
+    <string name="transfer">Transfer</string>
+    <string name="choose_currency">Choose Currency</string>
+    <string name="you_send">You Send</string>
+    <string name="recipient_gets">Recipient Gets</string>
+    <string name="country_icon">country icon</string>
+    <string name="show_favourites">Show favourites</string>
+    <string name="favourite">Favourite</string>
+    <string name="recipient_information">Recipient Information</string>
+    <string name="recipient_name">Recipient Name</string>
+    <string name="recipient_account">Recipient Account</string>
+    <string name="continue_button">Continue</string>
 </resources>
