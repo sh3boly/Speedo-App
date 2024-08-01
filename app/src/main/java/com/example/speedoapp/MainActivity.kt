@@ -11,6 +11,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.speedoapp.navigation.AppNavHost
+import com.example.speedoapp.navigation.AppRoutes
+import com.example.speedoapp.ui.signup.CountryDateScreen
 import com.example.speedoapp.ui.signup.SignUpScreen
 import com.example.speedoapp.ui.theme.SpeedoAppTheme
 
@@ -20,7 +23,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             SpeedoAppTheme {
-                SignUpScreen()
+                AppNavHost()
             }
         }
     }
