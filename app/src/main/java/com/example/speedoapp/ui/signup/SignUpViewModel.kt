@@ -14,9 +14,9 @@ class SignUpViewModel : ViewModel() {
     val emailError: StateFlow<String?> = _emailError.asStateFlow()
 
     private val _nameError = MutableStateFlow<String?>(null)
-    val nameError: StateFlow<String?> = _emailError.asStateFlow()
+    val nameError: StateFlow<String?> = _nameError.asStateFlow()
 
-    fun validatePassword(password: String) {
+    fun validatePassword(password: String) : Boolean {
         _passwordError.value = when {
             password.length < 6 -> "Password must be at least 6 characters long"
             !password.any { it.isLowerCase() } -> "Password must contain at least one lowercase letter"
@@ -24,15 +24,24 @@ class SignUpViewModel : ViewModel() {
             !password.any { !it.isLetterOrDigit() } -> "Password must contain at least one special character"
             else -> null
         }
+        if(_passwordError.value == null)
+            return true
+        else return false
     }
 
-    fun validateEmail(email: String) {
+    fun validateEmail(email: String) : Boolean {
         val emailRegex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"
         _emailError.value =
             if (email.matches(emailRegex.toRegex())) null else "Please enter a valid email address"
+        if(_emailError.value == null)
+            return true
+        else return false
     }
 
-    fun validateName(name: String) {
+    fun validateName(name: String): Boolean{
         _nameError.value = if (name.isEmpty()) "Please enter your name" else null
+        if(_nameError.value == null)
+            return true
+        else return false
     }
 }

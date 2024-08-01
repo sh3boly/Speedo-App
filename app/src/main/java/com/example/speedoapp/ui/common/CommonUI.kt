@@ -7,6 +7,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -20,16 +21,23 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults.outlinedTextFieldColors
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -144,9 +152,12 @@ fun PasswordField(
             trailingIcon = {
                 val image = if (isError == null) {
                     if (passwordVisible) {
-                        if (value.isEmpty()) R.drawable.ic_shown_typing
-                        else R.drawable.ic_shown
-                    } else R.drawable.ic_hidden_typing
+                        R.drawable.ic_hidden_typing
+                    } else
+                        if (value.isEmpty())
+                            R.drawable.ic_shown
+                        else
+                            R.drawable.ic_shown_typing
                 } else {
                     R.drawable.ic_shown_error
                 }
@@ -158,9 +169,12 @@ fun PasswordField(
             },
             modifier = modifier.fillMaxWidth()
         )
-        if (isError != null) Text(
-            text = isError, style = AppTextStyle, color = AlertColor
-        )
+        if (isError != null)
+            Text(
+                text = isError,
+                style = AppTextStyle,
+                color = AlertColor
+            )
 
     }
 }
@@ -336,6 +350,88 @@ fun LineBetweenSteps(isActive: Boolean) {
                 if (isActive) PrimaryColor
                 else DisabledColor
             )
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ClickableDataField(
+    modifier: Modifier = Modifier,
+    value: String,
+    onValueChange: (String) -> Unit,
+    label: String,
+    @DrawableRes image: Int,
+    imageDescription: String = "",
+    onClick: () -> Unit
+) {
+
+    Column(
+        horizontalAlignment = Alignment.Start,
+    ) {
+        Text(text = label, style = AppTextStyle)
+        Spacer(modifier = modifier.height(8.dp))
+        OutlinedTextField(
+            colors = OutlinedTextFieldDefaults.colors(
+                disabledTextColor = MaterialTheme.colorScheme.onSurface,
+                disabledBorderColor = MaterialTheme.colorScheme.outline,
+                disabledPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant
+            ),
+            enabled = false,
+            value = value,
+            onValueChange = onValueChange,
+            placeholder = {
+                if (label == "Country")
+                    Text(text = "Select your $label", style = AppTextStyle)
+                else
+                    Text(text = "DD/MM/YYYY", style = AppTextStyle)
+            },
+            trailingIcon = {
+                Image(painterResource(id = image), imageDescription, Modifier.size(24.dp))
+
+
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable(onClick = onClick)
+
+
+        )
+    }
+
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DatePickerChooser(onConfirm: (DatePickerState) -> Unit, onDismiss: () -> Unit) {
+
+    /*
+    val c = Calendar.getInstance()
+    val year = c.get(Calendar.YEAR)
+    //Months are zero base (e.g. January = 0 & December = 11)
+    val month = c.get(Calendar.MONTH) + 1
+    val day = c.get(Calendar.DAY_OF_MONTH)
+    val date = "$year/$month/$day"
+    val dateFormatter = SimpleDateFormat("yyyy/MM/dd", Locale.US)
+    val parsed = dateFormatter.parse(date)?.time ?: 0L
+    */
+
+    val datePickerState = rememberDatePickerState(
+        //initialSelectedDateMillis = parsed,
+        //yearRange = (2024..2025),
+    )
+
+    AlertDialog(
+        onDismissRequest = {},
+        confirmButton = {
+            TextButton(onClick = { onConfirm(datePickerState) }) {
+                Text(text = "Ok")
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = { onDismiss() }) { Text(text = "Cancel") }
+        },
+        text = { DatePicker(state = datePickerState) },
     )
 }
 

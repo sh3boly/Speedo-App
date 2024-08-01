@@ -40,7 +40,7 @@ import com.example.speedoapp.navigation.AppRoutes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SignUpScreen(
+fun SignInScreen(
     navController: NavController,
     modifier: Modifier = Modifier,
     viewModel: SignUpViewModel = viewModel()
@@ -49,7 +49,7 @@ fun SignUpScreen(
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(title = {
-                Text(text = "Sign Up", style = SubTitleTextStyle)
+                Text(text = "Sign In", style = SubTitleTextStyle)
             })
         }
     ) { innerPadding ->
@@ -60,31 +60,18 @@ fun SignUpScreen(
                 .padding(innerPadding)
                 .padding(16.dp),
         ) {
-            var name by rememberSaveable { mutableStateOf("") }
             var email by rememberSaveable { mutableStateOf("") }
             var password by rememberSaveable { mutableStateOf("") }
-            val passwordError by viewModel.passwordError.collectAsState()
-            val emailError by viewModel.emailError.collectAsState()
-            val nameError by viewModel.nameError.collectAsState()
+            //val passwordError by viewModel.passwordError.collectAsState()
+            //val nameError by viewModel.nameError.collectAsState()
 
-            Spacer(modifier = Modifier.height(55.14.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             Text(text = "Speedo Transfer", style = TitleTextStyle)
 
-            Spacer(modifier = Modifier.height(65.86.dp))
+            Spacer(modifier = Modifier.height(55.86.dp))
 
             DataField(
-                isError = nameError,
-                value = name,
-                onValueChange = { name = it },
-                label = "Full Name",
-                image = R.drawable.ic_person,
-                typingImage = R.drawable.ic_person_typing,
-                type = KeyboardType.Text
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            DataField(
-                isError = emailError,
                 value = email,
                 onValueChange = { email = it },
                 label = "Email",
@@ -94,7 +81,6 @@ fun SignUpScreen(
             )
             Spacer(modifier = Modifier.height(8.dp))
             PasswordField(
-                isError = passwordError,
                 value = password,
                 onValueChange = {
                     password = it
@@ -103,30 +89,19 @@ fun SignUpScreen(
             )
             Spacer(modifier = Modifier.height(32.dp))
             PrimaryButton(onClick = {
-                viewModel.validatePassword(password)
-                viewModel.validateEmail(email)
-                viewModel.validatePassword(password)
-                if (viewModel.validatePassword(password)
-                    && viewModel.validateEmail(email)
-                    && viewModel.validatePassword(password)
-                ) {
-                    try {
-                        navController.navigate("${AppRoutes.COUNTRYDATE_ROUTE}/$name/$email/$password")
-                    } catch (e: Exception) {
-                        Log.d("Exception", "Error during navigation: ${e.message} ")
-                    }
-                }
-            }, buttonText = "Sign up")
+
+            }, buttonText = "Sign In")
             Spacer(modifier = Modifier.height(16.dp))
             Row() {
                 Text(
-                    text = "Already have an account? ",
+                    text = "Don't have an account? ",
                     style = AppTextStyle,
                     color = DisabledColor
                 )
-                Text(text = "Sign In", style = ClickAbleTextStyle, modifier = Modifier.clickable {
-                    navController.navigate(AppRoutes.SIGNIN_ROUTE)
-                })
+                Text(
+                    text = "Sign Up",
+                    style = ClickAbleTextStyle,
+                    modifier = Modifier.clickable { navController.navigate(AppRoutes.SIGNUP_ROUTE) })
             }
 
         }
