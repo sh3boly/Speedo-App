@@ -66,6 +66,7 @@ fun CountryDateScreen(
             })
         }
     ) {
+        contentPadding ->
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = modifier

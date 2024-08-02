@@ -1,6 +1,7 @@
 package com.example.speedoapp.ui.homepage
 
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -20,11 +21,13 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.speedoapp.R
 import com.example.speedoapp.model.Transaction
 import com.example.speedoapp.ui.common.IconWithText
@@ -40,30 +43,35 @@ import com.example.speedoapp.ui.theme.G200
 import com.example.speedoapp.ui.theme.G700
 import com.example.speedoapp.ui.theme.G900
 import com.example.speedoapp.ui.theme.PrimaryColor
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
-fun HomeScreen(modifier: Modifier = Modifier) {
+fun HomeScreen(
+    modifier: Modifier = Modifier,
+    navController: NavController,
+    viewModel: HomeViewModel = viewModel()
+) {
 
 
 //    val balance by viewModel.balance.collectAsState()
 //    val transactions by viewModel.transactions.collectAsState()
-//    val name by viewModel.name.collectAsState()
+    val name by viewModel.name.collectAsState()
+    Log.d("trace", "The name is : $name")
 //
 //    val hasError by viewModel.hasError.collectAsState()
 //    if (hasError > 0)
 //        Toast.makeText(LocalContext.current, "Check your connection", Toast.LENGTH_SHORT).show()
-    val name = "Asmaa Dosuky"
     var transactions = mutableListOf<Transaction>()
     transactions.add(Transaction("Ahmed Hamdy", "Recieved", 1000f, "12/12/2024"))
     transactions.add(Transaction("Ahmed Tarek", "Recieved", 1500f, "24/04/2024"))
-
+    //val name = "Asmaa Desouky"
     Scaffold(
         bottomBar = { MenuAppBar(currentScreen = "home") }
     )
     { innerPadding ->
         Column(
             modifier = Modifier
-                .padding(16.dp)
+                .padding(start = 16.dp, end = 16.dp, bottom = 15.dp, top = 78.dp)
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
@@ -72,7 +80,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = modifier.fillMaxWidth()
             ) {
-                UserIcon(initials = "AD")
+                UserIcon(initials = viewModel.getInitials(name))
 
                 Spacer(modifier = Modifier.padding(8.dp))
 
@@ -234,8 +242,3 @@ fun TransactionListItem(modifier: Modifier = Modifier, transaction: Transaction)
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun HomeScreenPreview() {
-    HomeScreen()
-}

@@ -514,7 +514,7 @@ fun MenuAppBar(modifier: Modifier = Modifier, currentScreen: String) {
                 text = "Home",
                 onClick = {})
 
-        Spacer(modifier = modifier.padding(8.dp))
+        Spacer(modifier = modifier.padding(10.dp))
 
         if (currentScreen == "transfer")
             NavItem(
@@ -528,7 +528,7 @@ fun MenuAppBar(modifier: Modifier = Modifier, currentScreen: String) {
                 text = "Transfer",
                 onClick = {})
 
-        Spacer(modifier = modifier.padding(8.dp))
+        Spacer(modifier = modifier.padding(10.dp))
 
 
         if (currentScreen == "transactions")
@@ -543,7 +543,7 @@ fun MenuAppBar(modifier: Modifier = Modifier, currentScreen: String) {
                 text = "Transactions",
                 onClick = {})
 
-        Spacer(modifier = modifier.padding(8.dp))
+        Spacer(modifier = modifier.padding(10.dp))
 
         if (currentScreen == "mycards")
             NavItem(
@@ -557,7 +557,7 @@ fun MenuAppBar(modifier: Modifier = Modifier, currentScreen: String) {
                 text = "My Cards",
                 onClick = {})
 
-        Spacer(modifier = modifier.padding(8.dp))
+        Spacer(modifier = modifier.padding(10.dp))
 
         if (currentScreen == "more")
             NavItem(

@@ -24,6 +24,10 @@ class HomeViewModel : ViewModel() {
     private val _hasError = MutableStateFlow(0)
     val hasError = _hasError.asStateFlow()
 
+    init {
+        getName()
+    }
+
     fun getBalance() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -64,7 +68,8 @@ class HomeViewModel : ViewModel() {
     fun getName() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                _name.value = RetrofitFactory.homeApi.getUser()
+                val body = RetrofitFactory.homeApi.getUser()
+                _name.value = body.name
 
             } catch (e: Exception) {
                 Log.d("trace", "Exception: ${e.localizedMessage}")
@@ -75,6 +80,9 @@ class HomeViewModel : ViewModel() {
     }
 
     fun getInitials(fullName: String): String {
+        if (fullName.isNullOrEmpty()) {
+            return ""
+        }
         if (fullName.contains(" ")) {
             val names = fullName.split(" ")
             return names.mapNotNull { it.firstOrNull()?.toString() }.take(2).joinToString("")

@@ -12,7 +12,9 @@ import com.example.speedoapp.constants.Constants.NAME
 import com.example.speedoapp.constants.Constants.PASSWORD
 import com.example.speedoapp.navigation.AppRoutes.SIGNUP_ROUTE
 import com.example.speedoapp.navigation.AppRoutes.COUNTRYDATE_ROUTE
+import com.example.speedoapp.navigation.AppRoutes.HOME_ROUTE
 import com.example.speedoapp.navigation.AppRoutes.SIGNIN_ROUTE
+import com.example.speedoapp.ui.homepage.HomeScreen
 import com.example.speedoapp.ui.signin.SignInScreen
 
 import com.example.speedoapp.ui.signup.CountryDateScreen
@@ -22,6 +24,7 @@ object AppRoutes {
     const val SIGNUP_ROUTE = "signup"
     const val COUNTRYDATE_ROUTE = "countrydate"
     const val SIGNIN_ROUTE = "signin"
+    const val HOME_ROUTE = "home"
 }
 
 @Composable
@@ -46,6 +49,8 @@ fun AppNavHost(modifier: Modifier = Modifier) {
 
             CountryDateScreen(navController, name, email, password)
         }
+        composable(route = HOME_ROUTE) { HomeScreen(navController = navController) }
+
     }
 
 }

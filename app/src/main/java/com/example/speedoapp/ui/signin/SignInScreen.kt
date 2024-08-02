@@ -39,6 +39,7 @@ import com.example.speedoapp.ui.theme.SubTitleTextStyle
 import com.example.speedoapp.ui.theme.TitleTextStyle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.speedoapp.api.RetrofitFactory
 import com.example.speedoapp.model.LoginStatus
 import com.example.speedoapp.navigation.AppRoutes
 import com.example.speedoapp.ui.signup.AuthViewModel
@@ -52,7 +53,6 @@ fun SignInScreen(
     modifier: Modifier = Modifier,
     viewModel: AuthViewModel = viewModel()
 ) {
-
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(title = {
@@ -99,11 +99,11 @@ fun SignInScreen(
             )
             Spacer(modifier = Modifier.height(32.dp))
             PrimaryButton(onClick = {
-                viewModel.login(email, password)
+                viewModel.login(email, password, context)
 
             }, buttonText = "Sign In")
             Spacer(modifier = Modifier.height(16.dp))
-            Row() {
+            Row {
                 Text(
                     text = "Don't have an account? ",
                     style = AppTextStyle,
@@ -124,6 +124,8 @@ fun SignInScreen(
                                 "login Successful!",
                                 Toast.LENGTH_SHORT
                             ).show()
+                            navController.navigate(AppRoutes.HOME_ROUTE)
+
                         }
 
                         is LoginStatus.Error -> {

@@ -1,6 +1,7 @@
 package com.example.speedoapp.api
 
 import com.example.speedoapp.model.TransactionRoot
+import com.example.speedoapp.model.User
 import retrofit2.Response
 import retrofit2.http.GET
 
@@ -12,6 +13,6 @@ interface HomeApi {
     suspend fun getTransactions(): TransactionRoot
 
     @GET("api/user")
-    suspend fun getUser(): String
+    suspend fun getUser(): User
 
 }

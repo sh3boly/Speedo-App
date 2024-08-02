@@ -119,7 +119,7 @@ fun SignUpScreen(
                     && viewModel.validateEmail(email)
                     && viewModel.validatePassword(password)
                 ) {
-                    viewModel.register(name, email, password)
+                    viewModel.register(name, email, password, context)
 
 //                    try {
 //                        navController.navigate("${AppRoutes.COUNTRYDATE_ROUTE}/$name/$email/$password")
@@ -148,9 +148,9 @@ fun SignUpScreen(
                                 "Register Successful!",
                                 Toast.LENGTH_SHORT
                             ).show()
-                            viewModel.login(email, password)
+                            viewModel.login(email,password, context)
+                            navController.navigate(AppRoutes.HOME_ROUTE)
                         }
-
                         is RegisterStatus.Error -> {
                             Toast.makeText(
                                 context,
@@ -158,7 +158,6 @@ fun SignUpScreen(
                                 Toast.LENGTH_SHORT
                             ).show()
                             viewModel.resetRegisterStatus()
-
                         }
                     }
                 }

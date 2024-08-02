@@ -1,5 +1,7 @@
 package com.example.speedoapp.ui.signup
 
+import TokenManager
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.speedoapp.api.RetrofitFactory
@@ -56,7 +58,7 @@ class AuthViewModel : ViewModel() {
     private val _registerStatus = MutableStateFlow<RegisterStatus?>(null)
     val registerStatus: StateFlow<RegisterStatus?>  = _registerStatus.asStateFlow()
 
-    fun register(name: String, email: String, password: String) {
+    fun register(name: String, email: String, password: String, context: Context) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val request = RegisterRequest(name, email, password)
@@ -84,7 +86,7 @@ class AuthViewModel : ViewModel() {
     private val _loginStatus = MutableStateFlow<LoginStatus?>(null)
     val loginStatus: StateFlow<LoginStatus?> = _loginStatus.asStateFlow()
 
-    fun login(email: String, password: String) {
+    fun login(email: String, password: String, context: Context) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val request = LoginRequest(email, password)
@@ -94,6 +96,8 @@ class AuthViewModel : ViewModel() {
                     val loginResponse = response.body()
                     if (loginResponse != null) {
                         _loginStatus.value = (LoginStatus.Success(loginResponse))
+                        val tokenManager = TokenManager
+                        tokenManager.saveToken(loginResponse.token)
                     } else {
                         _loginStatus.value = (LoginStatus.Error("Empty response body"))
                     }
@@ -109,5 +113,6 @@ class AuthViewModel : ViewModel() {
     fun resetLoginStatus(){
         _loginStatus.value = null
     }
+
 
 }
