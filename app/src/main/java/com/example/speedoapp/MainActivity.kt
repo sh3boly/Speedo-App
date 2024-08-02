@@ -8,8 +8,6 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.navigation.compose.NavHost
 import com.example.speedoapp.navigation.AppNavHost
-import com.example.speedoapp.ui.theme.SpeedoAppTheme
-import com.example.speedoapp.ui.tranfer.AmountScreen
 
 class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
@@ -22,5 +20,21 @@ class MainActivity : ComponentActivity() {
                 AppNavHost()
             }
         }
+    }
+}
+
+@Composable
+fun Greeting(name: String, modifier: Modifier = Modifier) {
+    Text(
+        text = "Hello $name!",
+        modifier = modifier
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun GreetingPreview() {
+    SpeedoAppTheme {
+        Greeting("Android")
     }
 }

@@ -56,7 +56,7 @@ import com.example.speedoapp.ui.theme.TitleTextStyle
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddCardScreen(modifier: Modifier = Modifier, cardViewModel: AddCardViewModel= viewModel()) {
-    //val cardInfo by cardViewModel.cardInfo.collectAsState()
+    val cardInfo by cardViewModel.cardInfo.collectAsState()
     val demoCardInfo = CardInfo(
         userID = "user123",
         cardHolder = "John Doe",
@@ -64,9 +64,7 @@ fun AddCardScreen(modifier: Modifier = Modifier, cardViewModel: AddCardViewModel
         expiryDate = "11\\25",
         CVV = "123",
     )
-    val cardList= cardViewModel.addedCards
     val democardInfo by remember { mutableStateOf(demoCardInfo) }
-    val listdemo = remember { mutableStateListOf(cardList) }
     val context= LocalContext.current
 
     Scaffold(
@@ -110,14 +108,15 @@ fun AddCardScreen(modifier: Modifier = Modifier, cardViewModel: AddCardViewModel
                 )
             }
             Spacer(modifier = Modifier.height(32.dp))
-            PrimaryButton(onClick = {val result =cardViewModel.submitCard(democardInfo)
-                if (result){
-                    Toast.makeText(context, "success", Toast.LENGTH_SHORT).show();
-                }
-                else{
-                    Toast.makeText(context, "failure", Toast.LENGTH_SHORT).show();
-                }
-            }, buttonText = "Sign on")
+//            PrimaryButton(onClick = {val result =cardViewModel.submitCard(democardInfo)
+//                if (result){
+//                    Toast.makeText(context, "success", Toast.LENGTH_SHORT).show();
+//                }
+//                else{
+//                    Toast.makeText(context, "failure", Toast.LENGTH_SHORT).show();
+//                }
+//            }, buttonText = "Sign on")
+            PrimaryButton(onClick = {cardViewModel.submitCard(cardInfo)}, buttonText ="sign on" ) //fix this line
 
         }
     }
