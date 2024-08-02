@@ -2,6 +2,7 @@ package com.example.speedoapp.ui.signup
 
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,13 +16,16 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -36,6 +40,8 @@ import com.example.speedoapp.ui.theme.SubTitleTextStyle
 import com.example.speedoapp.ui.theme.TitleTextStyle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.speedoapp.model.LoginStatus
+import com.example.speedoapp.model.RegisterStatus
 import com.example.speedoapp.navigation.AppRoutes
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -66,8 +72,10 @@ fun SignUpScreen(
             val passwordError by viewModel.passwordError.collectAsState()
             val emailError by viewModel.emailError.collectAsState()
             val nameError by viewModel.nameError.collectAsState()
-
+            val registerStatus by viewModel.registerStatus.collectAsState()
+            val context = LocalContext.current
             Spacer(modifier = Modifier.height(55.14.dp))
+
 
             Text(text = "Speedo Transfer", style = TitleTextStyle)
 
@@ -103,18 +111,20 @@ fun SignUpScreen(
             )
             Spacer(modifier = Modifier.height(32.dp))
             PrimaryButton(onClick = {
-                viewModel.validatePassword(password)
+                //viewModel.validatePassword(password)
                 viewModel.validateEmail(email)
-                viewModel.validatePassword(password)
-                if (viewModel.validatePassword(password)
+                viewModel.validateName(name)
+                if (viewModel.validateName(name)
                     && viewModel.validateEmail(email)
-                    && viewModel.validatePassword(password)
+                //&& viewModel.validatePassword(password)
                 ) {
-                    try {
-                        navController.navigate("${AppRoutes.COUNTRYDATE_ROUTE}/$name/$email/$password")
-                    } catch (e: Exception) {
-                        Log.d("Exception", "Error during navigation: ${e.message} ")
-                    }
+                    viewModel.register(email, password)
+
+//                    try {
+//                        navController.navigate("${AppRoutes.COUNTRYDATE_ROUTE}/$name/$email/$password")
+//                    } catch (e: Exception) {
+//                        Log.d("Exception", "Error during navigation: ${e.message} ")
+//                    }
                 }
             }, buttonText = "Sign up")
             Spacer(modifier = Modifier.height(16.dp))
@@ -128,6 +138,31 @@ fun SignUpScreen(
                     navController.navigate(AppRoutes.SIGNIN_ROUTE)
                 })
             }
+            LaunchedEffect(registerStatus) {
+                registerStatus?.let { status ->
+                    when (status) {
+                        is RegisterStatus.Success -> {
+                            Toast.makeText(
+                                context,
+                                "Login Successful! Token: ${status.loginResponse.token}",
+                                Toast.LENGTH_SHORT
+                            ).show()
+
+                        }
+
+                        is RegisterStatus.Error -> {
+                            Toast.makeText(
+                                context,
+                                "Sign Up failed! Error: ${status.message}",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            viewModel.resetStatus()
+
+                        }
+                    }
+                }
+            }
+
 
         }
     }

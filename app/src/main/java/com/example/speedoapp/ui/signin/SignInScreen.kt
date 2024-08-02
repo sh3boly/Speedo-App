@@ -1,7 +1,8 @@
-package com.example.speedoapp.ui.signup
+package com.example.speedoapp.ui.signin
 
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,11 +18,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -36,14 +39,16 @@ import com.example.speedoapp.ui.theme.SubTitleTextStyle
 import com.example.speedoapp.ui.theme.TitleTextStyle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.speedoapp.model.LoginStatus
 import com.example.speedoapp.navigation.AppRoutes
+import com.example.speedoapp.ui.signin.SignInViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignInScreen(
     navController: NavController,
     modifier: Modifier = Modifier,
-    viewModel: SignUpViewModel = viewModel()
+    viewModel: SignInViewModel = viewModel()
 ) {
 
     Scaffold(
@@ -64,6 +69,7 @@ fun SignInScreen(
             var password by rememberSaveable { mutableStateOf("") }
             //val passwordError by viewModel.passwordError.collectAsState()
             //val nameError by viewModel.nameError.collectAsState()
+            val loginStatus by viewModel.loginStatus.observeAsState()
 
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -89,6 +95,7 @@ fun SignInScreen(
             )
             Spacer(modifier = Modifier.height(32.dp))
             PrimaryButton(onClick = {
+                viewModel.login(email, password)
 
             }, buttonText = "Sign In")
             Spacer(modifier = Modifier.height(16.dp))
@@ -102,6 +109,27 @@ fun SignInScreen(
                     text = "Sign Up",
                     style = ClickAbleTextStyle,
                     modifier = Modifier.clickable { navController.navigate(AppRoutes.SIGNUP_ROUTE) })
+            }
+            loginStatus?.let { status ->
+                when (status) {
+                    is LoginStatus.Success -> {
+                        Toast.makeText(
+                            LocalContext.current,
+                            "Login Successful! Token: ${status.loginResponse.token}",
+                            Toast.LENGTH_SHORT
+                        ).show()
+
+                    }
+
+                    is LoginStatus.Error -> {
+                        Toast.makeText(
+                            LocalContext.current,
+                            "Login failed! Error: ${status.message}",
+                            Toast.LENGTH_SHORT
+                        ).show()
+
+                    }
+                }
             }
 
         }

@@ -13,9 +13,9 @@ import com.example.speedoapp.constants.Constants.PASSWORD
 import com.example.speedoapp.navigation.AppRoutes.SIGNUP_ROUTE
 import com.example.speedoapp.navigation.AppRoutes.COUNTRYDATE_ROUTE
 import com.example.speedoapp.navigation.AppRoutes.SIGNIN_ROUTE
+import com.example.speedoapp.ui.signin.SignInScreen
 
 import com.example.speedoapp.ui.signup.CountryDateScreen
-import com.example.speedoapp.ui.signup.SignInScreen
 import com.example.speedoapp.ui.signup.SignUpScreen
 
 object AppRoutes {

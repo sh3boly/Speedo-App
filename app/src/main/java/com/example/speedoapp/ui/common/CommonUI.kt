@@ -124,6 +124,7 @@ fun SecondaryButton(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PasswordField(
     modifier: Modifier = Modifier,
@@ -141,6 +142,12 @@ fun PasswordField(
         Spacer(modifier = modifier.height(8.dp))
 
         OutlinedTextField(
+            colors = outlinedTextFieldColors(
+                containerColor = G0,
+                focusedBorderColor = PrimaryColor,
+                unfocusedBorderColor = G70,
+                cursorColor = colorResource(id = R.color.black)
+            ),
             isError = isError != null,
             visualTransformation = if (!passwordVisible) PasswordVisualTransformation() else VisualTransformation.None,
             value = value,
