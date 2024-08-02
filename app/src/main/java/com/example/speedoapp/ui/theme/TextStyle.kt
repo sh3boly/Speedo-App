@@ -73,4 +73,11 @@ val ClickAbleTextStyle = TextStyle(
     color = PrimaryColor,
     textDecoration = TextDecoration.Underline,
 
+    )
+
+
+val ButtonMedium = TextStyle(
+    fontSize = 16.sp,
+    lineHeight = 20.8.sp,
+    fontWeight = FontWeight(500),
 )
