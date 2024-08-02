@@ -48,7 +48,6 @@ import com.example.speedoapp.ui.theme.ButtonTextColor
 import com.example.speedoapp.ui.theme.P50
 import com.example.speedoapp.ui.theme.SubTitleTextStyle
 
-
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)

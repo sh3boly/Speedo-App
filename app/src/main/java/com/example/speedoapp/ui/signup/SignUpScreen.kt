@@ -1,7 +1,8 @@
 package com.example.speedoapp.ui.signup
 
 
-import android.util.Log
+import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,6 +16,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -22,8 +24,9 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.speedoapp.R
 import com.example.speedoapp.ui.common.DataField
@@ -36,14 +39,17 @@ import com.example.speedoapp.ui.theme.SubTitleTextStyle
 import com.example.speedoapp.ui.theme.TitleTextStyle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.speedoapp.model.RegisterStatus
 import com.example.speedoapp.navigation.AppRoutes
+import com.example.speedoapp.ui.theme.GradientEnd
+import com.example.speedoapp.ui.theme.GradientStart
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignUpScreen(
     navController: NavController,
     modifier: Modifier = Modifier,
-    viewModel: SignUpViewModel = viewModel()
+    viewModel: AuthViewModel = viewModel()
 ) {
 
     Scaffold(
@@ -58,7 +64,8 @@ fun SignUpScreen(
             modifier = modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .padding(16.dp),
+                .padding(16.dp)
+                .background(Brush.linearGradient(listOf(GradientStart, GradientEnd))),
         ) {
             var name by rememberSaveable { mutableStateOf("") }
             var email by rememberSaveable { mutableStateOf("") }
@@ -66,8 +73,10 @@ fun SignUpScreen(
             val passwordError by viewModel.passwordError.collectAsState()
             val emailError by viewModel.emailError.collectAsState()
             val nameError by viewModel.nameError.collectAsState()
-
+            val registerStatus by viewModel.registerStatus.collectAsState()
+            val context = LocalContext.current
             Spacer(modifier = Modifier.height(55.14.dp))
+
 
             Text(text = "Speedo Transfer", style = TitleTextStyle)
 
@@ -105,16 +114,18 @@ fun SignUpScreen(
             PrimaryButton(onClick = {
                 viewModel.validatePassword(password)
                 viewModel.validateEmail(email)
-                viewModel.validatePassword(password)
-                if (viewModel.validatePassword(password)
+                viewModel.validateName(name)
+                if (viewModel.validateName(name)
                     && viewModel.validateEmail(email)
                     && viewModel.validatePassword(password)
                 ) {
-                    try {
-                        navController.navigate("${AppRoutes.COUNTRYDATE_ROUTE}/$name/$email/$password")
-                    } catch (e: Exception) {
-                        Log.d("Exception", "Error during navigation: ${e.message} ")
-                    }
+                    viewModel.register(name, email, password, context)
+
+//                    try {
+//                        navController.navigate("${AppRoutes.COUNTRYDATE_ROUTE}/$name/$email/$password")
+//                    } catch (e: Exception) {
+//                        Log.d("Exception", "Error during navigation: ${e.message} ")
+//                    }
                 }
             }, buttonText = "Sign up")
             Spacer(modifier = Modifier.height(16.dp))
@@ -128,6 +139,30 @@ fun SignUpScreen(
                     navController.navigate(AppRoutes.SIGNIN_ROUTE)
                 })
             }
+            LaunchedEffect(registerStatus) {
+                registerStatus?.let { status ->
+                    when (status) {
+                        is RegisterStatus.Success -> {
+                            Toast.makeText(
+                                context,
+                                "Register Successful!",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            viewModel.login(email,password, context)
+                            navController.navigate(AppRoutes.HOME_ROUTE)
+                        }
+                        is RegisterStatus.Error -> {
+                            Toast.makeText(
+                                context,
+                                "Sign Up failed! Error: ${status.message}",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            viewModel.resetRegisterStatus()
+                        }
+                    }
+                }
+            }
+
 
         }
     }
