@@ -13,6 +13,18 @@
     <string name="favourite">Favourite</string>
     <string name="recipient_information">Recipient Information</string>
     <string name="recipient_name">Recipient Name</string>
-    <string name="recipient_account">Recipient Account</string>
+    <string name="recipient_account_number">Recipient Account Number</string>
     <string name="continue_button">Continue</string>
+    <string name="select_currency">Select Currency</string>
+    <string name="cancel">Cancel</string>
+    <string name="select">Select</string>
+    <string name="selected_currency">Selected Currency</string>
+    <string name="selected">Selected</string>
+    <string name="confirm">Confirm</string>
+    <string name="previous">Previous</string>
+    <string name="transfer_amount">Transfer amount</string>
+    <string name="add_to_favourite">Add to Favourite</string>
+    <string name="back_to_home">Back to Home</string>
+    <string name="total_amount">Total amount</string>
+    <string name="transaction_status">Transaction Status</string>
 </resources>
