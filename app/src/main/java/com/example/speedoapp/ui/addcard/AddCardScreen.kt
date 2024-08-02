@@ -1,6 +1,7 @@
 package com.example.speedoapp.ui.addcard
 
 import android.os.Build
+import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
@@ -8,12 +9,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
@@ -26,12 +29,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.VerticalAlignmentLine
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
@@ -50,7 +56,20 @@ import com.example.speedoapp.ui.theme.TitleTextStyle
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddCardScreen(modifier: Modifier = Modifier, cardViewModel: AddCardViewModel= viewModel()) {
-    val cardInfo by cardViewModel.cardInfo.collectAsState()
+    //val cardInfo by cardViewModel.cardInfo.collectAsState()
+    val demoCardInfo = CardInfo(
+        userID = "user123",
+        cardHolder = "John Doe",
+        cardNo = "1234567890123456",
+        expiryDate = "11/25",
+        CVV = "123",
+        isLoading = false,
+        error = null
+    )
+    val cardList= cardViewModel.addedCards
+    val democardInfo by remember { mutableStateOf(demoCardInfo) }
+    val listdemo = remember { mutableStateListOf(cardList) }
+    val context= LocalContext.current
 
     Scaffold(
         topBar = {
@@ -78,26 +97,28 @@ fun AddCardScreen(modifier: Modifier = Modifier, cardViewModel: AddCardViewModel
             Spacer(modifier = Modifier.height(22.dp))
 
             //to do: make text and outlined text field one composable function that can be reused instead of duplicating code
-            Text(text = "Card Holder name", modifier = Modifier.align(Alignment.Start).padding(bottom = 8.dp))
-            OutlinedTextField(
-                value = cardInfo.cardHolder,
-                onValueChange = { cardViewModel.updateCardholderName(cardInfo.cardHolder) },
-                placeholder = { Text(text = "Enter your name", style = AppTextStyle) },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-                //label = { Text(text = "Card Holder Name")},
-                modifier = modifier.fillMaxWidth()
-            )
-            OutlinedTextField(
-                value = cardInfo.cardNo,
-                onValueChange = { cardViewModel.updateCardNumber(cardInfo.cardNo) },
-                placeholder = { Text(text = "Enter your card NO", style = AppTextStyle) },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                modifier = modifier.fillMaxWidth()
-            )
-
+            Data(labelText = "Card Holder name", cardInfo = democardInfo.cardHolder, onValueChange = { cardViewModel.updateCardholderName(it)})
+            Data(labelText = "Card NO", cardInfo =democardInfo.cardNo, onValueChange = { cardViewModel.updateCardNumber(it) } )
+            Row (modifier = Modifier.fillMaxSize()){
+                Data(labelText = "CVV",
+                    cardInfo = democardInfo.CVV,
+                    onValueChange = { cardViewModel.updateCVV(it)},
+                    modifier = Modifier.weight(1f)
+                )
+                Data(labelText = "MM\\YY",
+                    cardInfo = democardInfo.expiryDate,
+                    onValueChange = { cardViewModel.updateExpiryDate(it)},
+                    modifier = Modifier.weight(1f)
+                )
+            }
             Spacer(modifier = Modifier.height(32.dp))
-            PrimaryButton(onClick = { /*TODO*/
-                //submit fun and send OTP function
+            PrimaryButton(onClick = {val result =cardViewModel.submitCard(democardInfo)
+                if (result){
+                    Toast.makeText(context, "success", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    Toast.makeText(context, "failure", Toast.LENGTH_SHORT).show();
+                }
             }, buttonText = "Sign on")
 
         }
@@ -106,8 +127,31 @@ fun AddCardScreen(modifier: Modifier = Modifier, cardViewModel: AddCardViewModel
 
 
 @Composable
-fun TextField(label: @Composable () -> Unit, singleLine: Boolean, modifier: Modifier) {
+fun Data(
+    labelText: String,
+    cardInfo: String,
+    onValueChange: (String) -> Unit,
+    modifier: Modifier=Modifier
+) {
+    Column(
+        modifier = Modifier
+            .padding(8.dp)
+    ) {
+        Text(
+            text = labelText,
+            modifier = Modifier
+                .align(Alignment.Start)
+                .padding(bottom = 8.dp)
+        )
 
+        OutlinedTextField(
+            value = cardInfo,
+            onValueChange = onValueChange,
+            placeholder = { Text(text = labelText, style = AppTextStyle) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+            modifier = Modifier.fillMaxHeight()
+        )
+    }
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -116,8 +160,4 @@ fun TextField(label: @Composable () -> Unit, singleLine: Boolean, modifier: Modi
 fun AddCardScreenPreview(){
         val cardViewModel: AddCardViewModel = viewModel()
         AddCardScreen(cardViewModel = cardViewModel)
-        LaunchedEffect(Unit) {
-            // Simulate some initial state for the DataFlow
-            //cardViewModel._cardInfo.value = CardInfo("m", "1000000000000000", "10\\10", "123", isLoading = false)
-        }
     }
