@@ -45,8 +45,8 @@ import com.example.speedoapp.ui.addcard.AddCardViewModel
 import com.example.speedoapp.ui.addcard.CardInfo
 import com.example.speedoapp.ui.common.PrimaryButton
 import com.example.speedoapp.ui.theme.ButtonTextColor
-import com.example.speedoapp.ui.theme.SubTitleTextStyle
 import com.example.speedoapp.ui.theme.P50
+import com.example.speedoapp.ui.theme.SubTitleTextStyle
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -126,9 +126,10 @@ fun MyCards(modifier: Modifier = Modifier, cardViewModel: AddCardViewModel = vie
         }
     }
 }
+
 @RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
 @Composable
-fun MyCardPreview(){
+fun MyCardPreview() {
     MyCards()
 }

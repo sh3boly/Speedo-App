@@ -13,7 +13,6 @@ import com.example.speedoapp.navigation.AppNavHost
 import com.example.speedoapp.ui.homepage.HomeScreen
 import com.example.speedoapp.ui.theme.SpeedoAppTheme
 import androidx.navigation.compose.NavHost
-import com.example.speedoapp.navigation.AppNavHost
 
 class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
@@ -23,9 +22,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             SpeedoAppTheme {
                 AppNavHost()
-                Log.d("CurrencyAPI", "Response received: ")
-                AppNavHost()
             }
         }
     }
 }
+

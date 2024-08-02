@@ -1,6 +1,5 @@
 package com.example.speedoapp.ui.signin
 
-import AuthTokenRepository
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -27,8 +26,8 @@ class SignInViewModel() : ViewModel() {
                     val loginResponse = response.body()
                     if (loginResponse != null) {
                         _loginStatus.postValue(LoginStatus.Success(loginResponse))
-                        val authTokenRepository = AuthTokenRepository(context)
-                        authTokenRepository.saveAuthToken(loginResponse.token)
+
+
                     } else {
                         _loginStatus.postValue(LoginStatus.Error("Empty response body"))
                     }
