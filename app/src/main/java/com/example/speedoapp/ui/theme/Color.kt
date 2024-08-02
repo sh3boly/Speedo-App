@@ -21,8 +21,8 @@ val G70 = Color(0xFFB0AFAE)
 val G40 = Color(0xFFE3E2E2)
 val G0 = Color(0xFFFFFFFF)
 
-val CircularIndicatorBig= Color(0xFFCEA3AC) // From add-card branch
-val cc=Color(0xFFF3E9EB)
+val CircularIndicatorBig= Color(0xFFCEA3AC)
+val P50 = Color(0xFFF3E9EB)
 
 val OffYellowColor = Color(0xFFFFF8E7)
 val RedYellowColor = Color(0xFFFFEAEE)

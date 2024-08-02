@@ -6,15 +6,10 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.speedoapp.ui.addcard.AddCardScreen
-import com.example.speedoapp.ui.signup.SignUpScreen
 import com.example.speedoapp.ui.theme.SpeedoAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -24,7 +19,6 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             SpeedoAppTheme {
-                //SignUpScreen()
             }
         }
     }
