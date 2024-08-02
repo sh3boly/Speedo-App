@@ -44,8 +44,8 @@ import com.example.speedoapp.R
 import com.example.speedoapp.ui.addcard.AddCardViewModel
 import com.example.speedoapp.ui.addcard.CardInfo
 import com.example.speedoapp.ui.common.PrimaryButton
+import com.example.speedoapp.ui.theme.ButtonTextColor
 import com.example.speedoapp.ui.theme.SubTitleTextStyle
-import com.example.speedoapp.ui.theme.cardColor
 import com.example.speedoapp.ui.theme.cc
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -55,15 +55,13 @@ fun MyCards(modifier: Modifier = Modifier, cardViewModel: AddCardViewModel = vie
 
     val addedCards by rememberUpdatedState(cardViewModel.addedCards)
 
-    val cardsState = remember { mutableStateOf<List<CardInfo>>(emptyList()) }
-
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(title = {
                 Text(text = "My Cards", style = SubTitleTextStyle)
             })
         },
-        modifier = Modifier.background(cardColor)
+        modifier = Modifier.background(ButtonTextColor)
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -72,7 +70,7 @@ fun MyCards(modifier: Modifier = Modifier, cardViewModel: AddCardViewModel = vie
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            cardsState.value.forEach { cardInfo ->
+            addedCards.forEach { cardInfo ->
                 Card(
                     colors = CardDefaults.cardColors(cc),
                     modifier = Modifier
@@ -91,7 +89,7 @@ fun MyCards(modifier: Modifier = Modifier, cardViewModel: AddCardViewModel = vie
                             modifier = Modifier
                                 .size(48.dp)
                                 .clip(CircleShape)
-                                .background(cardColor)
+                                .background(ButtonTextColor)
                                 .align(Alignment.CenterVertically)
                         ) {
                             Icon(

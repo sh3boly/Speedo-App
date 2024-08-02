@@ -52,8 +52,27 @@ class AddCardViewModel: ViewModel() {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
+//    fun isValidExpiryDate(date: String): Boolean {
+//        if (date.length != 4) return false
+//
+//        val monthStr = date.substring(0, 2)
+//        val yearStr = date.substring(3)
+//
+//        val month = monthStr.toIntOrNull() ?: return false
+//        if (month !in 1..12) return false
+//
+//        val currentYear = LocalDate.now().year
+//        val fullYear = (currentYear / 100) * 100 + yearStr.toInt()
+//
+//        val formatter = DateTimeFormatter.ofPattern("MM/yyyy")
+//        val expiryDate = LocalDate.parse("$month/$fullYear", formatter)
+//        val currentDate = LocalDate.now()
+//
+//        return expiryDate.year > currentDate.year ||
+//                (expiryDate.year == currentDate.year && expiryDate.month >= currentDate.month)
+//    }
     fun isValidExpiryDate(date: String): Boolean {
-        if (date.length != 4) return false
+        if (!Regex("^\\d{2}[\\\\/]\\d{2}$").matches(date)) return false
 
         val monthStr = date.substring(0, 2)
         val yearStr = date.substring(2)
@@ -68,21 +87,23 @@ class AddCardViewModel: ViewModel() {
         val expiryDate = LocalDate.parse("$month/$fullYear", formatter)
         val currentDate = LocalDate.now()
 
-        return expiryDate.year > currentDate.year ||
-                (expiryDate.year == currentDate.year && expiryDate.month >= currentDate.month)
+        return expiryDate.year > currentDate.year || (expiryDate.year == currentDate.year && expiryDate.monthValue >= currentDate.monthValue)
     }
 
 
+
+
     @RequiresApi(Build.VERSION_CODES.O)
-    fun submitCard(card:CardInfo):Boolean{
-        if(isValidCardNumber(card.cardNo)&&isValidCardHolder(card.cardHolder)
+    fun submitCard(card:CardInfo):Unit{
+        /*if(isValidCardNumber(card.cardNo)&&isValidCardHolder(card.cardHolder)
             &&isValidCVV(card.CVV)&&isValidExpiryDate(card.expiryDate)){
             card.isLoading=true
             _addedCards.add(card)
             return true
         }
         else {card.isLoading=false }
-        return false
+        return false*/
+        _addedCards.add(card.copy())
     }
 
     fun getAllCards(userID: String): List<CardInfo>{

@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import com.example.speedoapp.ui.theme.CircularIndicatorBig
-import com.example.speedoapp.ui.theme.CircularIndicatorSmall
+import com.example.speedoapp.ui.theme.PrimaryColor
 
 @Composable
 fun LoadingScreen() {
@@ -37,7 +37,7 @@ fun LoadingScreen() {
         ) {
             CircularProgressIndicator(
                 modifier = Modifier.size(174.dp),
-                color = CircularIndicatorSmall,
+                color = PrimaryColor,
                 trackColor = CircularIndicatorBig,
 
                 )
