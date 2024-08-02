@@ -1,7 +1,6 @@
 package com.example.speedoapp.api
 
 import AuthInterceptor
-import AuthTokenRepository
 import TokenManager
 import android.app.Application
 import android.content.Context

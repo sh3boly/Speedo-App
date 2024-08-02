@@ -652,15 +652,7 @@ fun AccountCard(
     }
 }
 
-@Preview(showBackground = true)
 @Composable
-fun ComposablePreview() {
-    AccountCard(
-        identifier = 0,
-        identifierText = "From",
-        cardHolder = "Asmaa Desoky",
-        cardNumber = "1102"
-    )
 fun UserIcon(modifier: Modifier = Modifier, initials: String) {
     Box(
         modifier = Modifier
