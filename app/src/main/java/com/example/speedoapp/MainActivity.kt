@@ -24,8 +24,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             SpeedoAppTheme {
-                //SignUpScreen()
-                AddCardScreen()
+                SignUpScreen()
             }
         }
     }

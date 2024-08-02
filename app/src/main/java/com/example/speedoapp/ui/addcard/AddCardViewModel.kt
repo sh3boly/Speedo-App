@@ -53,16 +53,25 @@ class AddCardViewModel: ViewModel() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun isValidExpiryDate(date: String): Boolean {
-        val formatter = DateTimeFormatter.ofPattern("MM\\yy")
-        try {
-            val expiryDate = LocalDate.parse(date, formatter)
-            val currentDate = LocalDate.now()
-            return expiryDate.year > currentDate.year ||
-                (expiryDate.year == currentDate.year && expiryDate.monthValue >= currentDate.monthValue)
-        } catch (e: Exception) {
-            return false
-        }
+        if (date.length != 4) return false
+
+        val monthStr = date.substring(0, 2)
+        val yearStr = date.substring(2)
+
+        val month = monthStr.toIntOrNull() ?: return false
+        if (month !in 1..12) return false
+
+        val currentYear = LocalDate.now().year
+        val fullYear = (currentYear / 100) * 100 + yearStr.toInt()
+
+        val formatter = DateTimeFormatter.ofPattern("MM/yyyy")
+        val expiryDate = LocalDate.parse("$month/$fullYear", formatter)
+        val currentDate = LocalDate.now()
+
+        return expiryDate.year > currentDate.year ||
+                (expiryDate.year == currentDate.year && expiryDate.month >= currentDate.month)
     }
+
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun submitCard(card:CardInfo):Boolean{

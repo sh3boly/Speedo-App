@@ -61,10 +61,8 @@ fun AddCardScreen(modifier: Modifier = Modifier, cardViewModel: AddCardViewModel
         userID = "user123",
         cardHolder = "John Doe",
         cardNo = "1234567890123456",
-        expiryDate = "11/25",
+        expiryDate = "11\\25",
         CVV = "123",
-        isLoading = false,
-        error = null
     )
     val cardList= cardViewModel.addedCards
     val democardInfo by remember { mutableStateOf(demoCardInfo) }
