@@ -84,4 +84,12 @@ val BoldNavTextStyle = TextStyle(
     lineHeight = 18.sp,
     textAlign = TextAlign.Center,
     fontWeight = FontWeight(500),
+
+    )
+
+
+val ButtonMedium = TextStyle(
+    fontSize = 16.sp,
+    lineHeight = 20.8.sp,
+    fontWeight = FontWeight(500),
 )
