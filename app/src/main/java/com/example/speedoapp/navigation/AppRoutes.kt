@@ -2,6 +2,7 @@ package com.example.speedoapp.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -49,7 +50,7 @@ fun AppNavHost(modifier: Modifier = Modifier) {
 
     NavHost(
         navController = navController,
-        startDestination = AMOUNT_TRANSFER,
+        startDestination = SIGNUP_ROUTE,
         modifier = modifier
     ) {
         composable(route = SIGNUP_ROUTE) { SignUpScreen(navController) }
@@ -72,7 +73,6 @@ fun AppNavHost(modifier: Modifier = Modifier) {
         }
         composable(route = HOME_ROUTE) { HomeScreen(navController = navController) }
 
-    }
         composable(AMOUNT_TRANSFER) {
             AmountScreen(
                 navController,

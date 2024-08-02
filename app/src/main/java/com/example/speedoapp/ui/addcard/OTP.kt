@@ -25,7 +25,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.speedoapp.ui.OTPfiles.OTPTextField
 import com.example.speedoapp.ui.OTPfiles.OtpTextFieldDefaults
 import com.example.speedoapp.ui.common.PrimaryButton
-import com.example.speedoapp.ui.signup.SignUpViewModel
+import com.example.speedoapp.ui.signup.AuthViewModel
 import com.example.speedoapp.ui.theme.AppTextStyle
 import com.example.speedoapp.ui.theme.ClickAbleTextStyle
 import com.example.speedoapp.ui.theme.DisabledColor
@@ -33,7 +33,7 @@ import com.example.speedoapp.ui.theme.SubTitleTextStyle
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun OTP(modifier: Modifier = Modifier, viewModel: SignUpViewModel = viewModel()) {
+fun OTP(modifier: Modifier = Modifier, viewModel: AuthViewModel = viewModel()) {
     var otp by remember {
         mutableStateOf("")
     }
