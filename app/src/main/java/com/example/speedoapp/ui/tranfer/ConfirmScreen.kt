@@ -1,5 +1,6 @@
 package com.example.speedoapp.ui.tranfer
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -7,9 +8,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.HorizontalDivider
@@ -22,11 +25,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.speedoapp.R
 import com.example.speedoapp.navigation.AppRoutes.PAYMENT_TRANSFER
+import com.example.speedoapp.ui.common.AccountCard
 import com.example.speedoapp.ui.common.PrimaryButton
 import com.example.speedoapp.ui.common.SecondaryButton
 import com.example.speedoapp.ui.common.Stepper
@@ -114,9 +120,35 @@ fun ConfirmScreen(
                 Spacer(modifier = modifier.height(16.dp))
                 HorizontalDivider(color = G40)
                 Spacer(modifier = modifier.height(16.dp))
-                //Card From with the from data
-                //Card To data
-                // and floating image
+                Box(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Column(
+                        modifier = Modifier.align(Alignment.Center)
+                    ) {
+                        AccountCard(
+                            identifier = 0,
+                            identifierText = "From",
+                            cardHolder = "Asmaa Dosuky",
+                            cardNumber = "7890"
+                        )
+                        Spacer(modifier = Modifier.height(11.dp))
+                        AccountCard(
+                            identifier = 0,
+                            identifierText = "To",
+                            cardHolder = transferData.recipient.name,
+                            cardNumber = transferData.recipient.accountNumber.takeLast(4)
+                        )
+                    }
+                    Image(
+                        painter = painterResource(R.drawable.transaction_image),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(44.dp)
+                            .align(Alignment.Center),
+                        contentScale = ContentScale.Crop
+                    )
+                }
                 Spacer(modifier = modifier.height(32.dp))
                 PrimaryButton(
                     onClick = {

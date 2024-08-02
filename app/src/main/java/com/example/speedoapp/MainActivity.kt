@@ -6,8 +6,13 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.navigation.compose.NavHost
+import androidx.annotation.RequiresApi
+import androidx.compose.ui.platform.LocalContext
+import com.example.speedoapp.api.RetrofitFactory
 import com.example.speedoapp.navigation.AppNavHost
+import com.example.speedoapp.ui.homepage.HomeScreen
+import com.example.speedoapp.ui.theme.SpeedoAppTheme
+import androidx.navigation.compose.NavHost
 
 class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
@@ -16,25 +21,9 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             SpeedoAppTheme {
-                Log.d("CurrencyAPI", "Response received: ")
                 AppNavHost()
             }
         }
     }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    SpeedoAppTheme {
-        Greeting("Android")
-    }
-}

@@ -16,12 +16,15 @@ import com.example.speedoapp.navigation.AppRoutes.AMOUNT_TRANSFER
 import com.example.speedoapp.navigation.AppRoutes.CONFIRM_TRANSFER
 import com.example.speedoapp.navigation.AppRoutes.SIGNUP_ROUTE
 import com.example.speedoapp.navigation.AppRoutes.COUNTRYDATE_ROUTE
+import com.example.speedoapp.navigation.AppRoutes.HOME_ROUTE
 import com.example.speedoapp.navigation.AppRoutes.PAYMENT_TRANSFER
 import com.example.speedoapp.navigation.AppRoutes.SELECT_CURRENCY
 import com.example.speedoapp.navigation.AppRoutes.SIGNIN_ROUTE
+import com.example.speedoapp.ui.homepage.HomeScreen
+import com.example.speedoapp.ui.signin.SignInScreen
+
 import com.example.speedoapp.ui.common.CurrenciesScreen
 import com.example.speedoapp.ui.signup.CountryDateScreen
-import com.example.speedoapp.ui.signup.SignInScreen
 import com.example.speedoapp.ui.signup.SignUpScreen
 import com.example.speedoapp.ui.tranfer.AmountScreen
 import com.example.speedoapp.ui.tranfer.AmountScreenViewModel
@@ -37,6 +40,7 @@ object AppRoutes {
     const val SELECT_CURRENCY = "select_currency"
     const val CONFIRM_TRANSFER = "confirm_transfer"
     const val PAYMENT_TRANSFER = "payment_Transfer"
+    const val HOME_ROUTE = "home"
 }
 
 @Composable
@@ -46,7 +50,7 @@ fun AppNavHost(modifier: Modifier = Modifier) {
 
     NavHost(
         navController = navController,
-        startDestination = AMOUNT_TRANSFER,
+        startDestination = SIGNUP_ROUTE,
         modifier = modifier
     ) {
         composable(route = SIGNUP_ROUTE) { SignUpScreen(navController) }
@@ -67,6 +71,8 @@ fun AppNavHost(modifier: Modifier = Modifier) {
 
             CountryDateScreen(navController, name, email, password)
         }
+        composable(route = HOME_ROUTE) { HomeScreen(navController = navController) }
+
         composable(AMOUNT_TRANSFER) {
             AmountScreen(
                 navController,
