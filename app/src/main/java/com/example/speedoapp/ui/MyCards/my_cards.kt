@@ -45,8 +45,9 @@ import com.example.speedoapp.ui.addcard.AddCardViewModel
 import com.example.speedoapp.ui.addcard.CardInfo
 import com.example.speedoapp.ui.common.PrimaryButton
 import com.example.speedoapp.ui.theme.ButtonTextColor
+import com.example.speedoapp.ui.theme.P50
 import com.example.speedoapp.ui.theme.SubTitleTextStyle
-import com.example.speedoapp.ui.theme.cc
+
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -72,7 +73,7 @@ fun MyCards(modifier: Modifier = Modifier, cardViewModel: AddCardViewModel = vie
         ) {
             addedCards.forEach { cardInfo ->
                 Card(
-                    colors = CardDefaults.cardColors(cc),
+                    colors = CardDefaults.cardColors(P50),
                     modifier = Modifier
                         .padding(top = 16.dp, bottom = 245.dp)
                         .height(94.dp)
@@ -126,9 +127,10 @@ fun MyCards(modifier: Modifier = Modifier, cardViewModel: AddCardViewModel = vie
         }
     }
 }
+
 @RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
 @Composable
-fun MyCardPreview(){
+fun MyCardPreview() {
     MyCards()
 }
