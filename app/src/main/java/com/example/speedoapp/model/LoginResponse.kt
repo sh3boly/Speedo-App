@@ -7,3 +7,7 @@ data class LoginResponse(
     val status: String,
 
 )
+sealed class LoginStatus {
+    data class Success(val loginResponse: LoginResponse) : LoginStatus()
+    data class Error(val message: String) : LoginStatus()
+}

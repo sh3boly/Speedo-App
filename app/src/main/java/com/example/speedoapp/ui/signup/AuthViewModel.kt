@@ -1,12 +1,11 @@
 package com.example.speedoapp.ui.signup
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.speedoapp.api.RetrofitFactory
 import com.example.speedoapp.model.LoginRequest
 import com.example.speedoapp.model.LoginStatus
+import com.example.speedoapp.model.RegisterRequest
 import com.example.speedoapp.model.RegisterStatus
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,7 +13,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class SignUpViewModel : ViewModel() {
+class AuthViewModel : ViewModel() {
 
     private val _passwordError = MutableStateFlow<String?>(null)
     val passwordError: StateFlow<String?> = _passwordError.asStateFlow()
@@ -57,11 +56,11 @@ class SignUpViewModel : ViewModel() {
     private val _registerStatus = MutableStateFlow<RegisterStatus?>(null)
     val registerStatus: StateFlow<RegisterStatus?>  = _registerStatus.asStateFlow()
 
-    fun register(email: String, password: String) {
+    fun register(name: String, email: String, password: String) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val request = LoginRequest(email, password)
-                val response = RetrofitFactory.apiService.register(request)
+                val request = RegisterRequest(name, email, password)
+                val response = RetrofitFactory.authApi.register(request)
 
                 if (response.isSuccessful) {
                     val registerResponse = response.body()
@@ -78,7 +77,37 @@ class SignUpViewModel : ViewModel() {
             }
         }
     }
-    fun resetStatus(){
+    fun resetRegisterStatus(){
         _registerStatus.value = null
     }
+
+    private val _loginStatus = MutableStateFlow<LoginStatus?>(null)
+    val loginStatus: StateFlow<LoginStatus?> = _loginStatus.asStateFlow()
+
+    fun login(email: String, password: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val request = LoginRequest(email, password)
+                val response = RetrofitFactory.authApi.login(request)
+
+                if (response.isSuccessful) {
+                    val loginResponse = response.body()
+                    if (loginResponse != null) {
+                        _loginStatus.value = (LoginStatus.Success(loginResponse))
+                    } else {
+                        _loginStatus.value = (LoginStatus.Error("Empty response body"))
+                    }
+                } else {
+                    _loginStatus.value = (LoginStatus.Error("Error: ${response.code()} ${response.message()}"))
+                }
+            } catch (e: Exception) {
+                _loginStatus.value = (LoginStatus.Error("Exception: ${e.localizedMessage}"))
+            }
+        }
+
+    }
+    fun resetLoginStatus(){
+        _loginStatus.value = null
+    }
+
 }

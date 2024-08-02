@@ -1,17 +1,14 @@
 package com.example.speedoapp.ui.signin
 
-import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.speedoapp.api.RetrofitFactory
 import com.example.speedoapp.model.LoginRequest
-import com.example.speedoapp.model.LoginResponse
 import com.example.speedoapp.model.LoginStatus
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import retrofit2.Response
 
 class SignInViewModel() : ViewModel() {
 
@@ -22,7 +19,7 @@ class SignInViewModel() : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val request = LoginRequest(email, password)
-                val response = RetrofitFactory.apiService.login(request)
+                val response = RetrofitFactory.authApi.login(request)
 
                 if (response.isSuccessful) {
                     val loginResponse = response.body()

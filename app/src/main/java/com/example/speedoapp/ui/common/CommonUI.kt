@@ -22,6 +22,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -62,13 +63,17 @@ import com.example.speedoapp.ui.theme.AppNumbersStyle
 import com.example.speedoapp.ui.theme.AppTextStyle
 import com.example.speedoapp.ui.theme.AppTextStyleSelected
 import com.example.speedoapp.ui.theme.BodyMedium
+import com.example.speedoapp.ui.theme.BoldNavTextStyle
 import com.example.speedoapp.ui.theme.ButtonTextColor
 import com.example.speedoapp.ui.theme.DisabledColor
 import com.example.speedoapp.ui.theme.G0
 import com.example.speedoapp.ui.theme.G100
+import com.example.speedoapp.ui.theme.G200
+import com.example.speedoapp.ui.theme.G40
 import com.example.speedoapp.ui.theme.G70
 import com.example.speedoapp.ui.theme.G700
 import com.example.speedoapp.ui.theme.G900
+import com.example.speedoapp.ui.theme.P300
 import com.example.speedoapp.ui.theme.PrimaryColor
 import com.example.speedoapp.ui.theme.SubTitleTextStyle
 
@@ -153,7 +158,7 @@ fun PasswordField(
             value = value,
             onValueChange = onValueChange,
             placeholder = {
-                Text(text = label, style = AppTextStyle)
+                Text(text = label, style = AppTextStyle, color = G70)
             },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             trailingIcon = {
@@ -442,12 +447,139 @@ fun DatePickerChooser(onConfirm: (DatePickerState) -> Unit, onDismiss: () -> Uni
     )
 }
 
+@Composable
+fun UserIcon(modifier: Modifier = Modifier, initials: String) {
+    Box(
+        modifier = Modifier
+            .size(48.dp)
+            .background(G40, CircleShape),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = initials, style = SubTitleTextStyle, color = G100
+        )
+
+    }
+
+}
+
+@Composable
+fun IconWithText(
+    modifier: Modifier = Modifier,
+    @DrawableRes icon: Int,
+    text: String,
+    onClick: () -> Unit
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.clickable(onClick = onClick)
+
+    ) {
+        Image(painter = painterResource(id = icon), contentDescription = text)
+        Spacer(modifier = modifier.padding(4.dp))
+        Text(text = text, style = AppTextStyleSelected, color = G700)
+    }
+}
+@Composable
+fun NavItem(
+    modifier: Modifier = Modifier,
+    @DrawableRes icon: Int,
+    text: String,
+    onClick: () -> Unit,
+    color: Color = G200
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.clickable(onClick = onClick)
+
+    ) {
+        Image(painter = painterResource(id = icon), contentDescription = text)
+        Spacer(modifier = modifier.padding(4.dp))
+        Text(text = text, style = BoldNavTextStyle, color = color)
+    }
+}
+
+@Composable
+fun MenuAppBar(modifier: Modifier = Modifier, currentScreen: String) {
+    BottomAppBar(actions = {
+        if (currentScreen == "home")
+            NavItem(
+                icon = R.drawable.ic_selected_home,
+                text = "Home",
+                onClick = {},
+                color = P300)
+        else
+            NavItem(
+                icon = R.drawable.ic_home,
+                text = "Home",
+                onClick = {})
+
+        Spacer(modifier = modifier.padding(8.dp))
+
+        if (currentScreen == "transfer")
+            NavItem(
+                icon = R.drawable.ic_selected_transfer,
+                text = "Transfer",
+                onClick = {},
+                color = P300)
+        else
+            NavItem(
+                icon = R.drawable.ic_normal_transfer,
+                text = "Transfer",
+                onClick = {})
+
+        Spacer(modifier = modifier.padding(8.dp))
+
+
+        if (currentScreen == "transactions")
+            NavItem(
+                icon = R.drawable.ic_selected_history,
+                text = "Transactions",
+                onClick = {},
+                color = P300)
+        else
+            NavItem(
+                icon = R.drawable.ic_normal_history,
+                text = "Transactions",
+                onClick = {})
+
+        Spacer(modifier = modifier.padding(8.dp))
+
+        if (currentScreen == "mycards")
+            NavItem(
+                icon = R.drawable.ic_selected_mycard,
+                text = "My Cards",
+                onClick = {},
+                color = P300)
+        else
+            NavItem(
+                icon = R.drawable.ic_mycard,
+                text = "My Cards",
+                onClick = {})
+
+        Spacer(modifier = modifier.padding(8.dp))
+
+        if (currentScreen == "more")
+            NavItem(
+                icon = R.drawable.ic_selected_more,
+                text = "More",
+                color = P300,
+                onClick = {})
+        else
+            NavItem(
+                icon = R.drawable.ic_more,
+                text = "More",
+                onClick = {})
+
+    },
+
+        modifier = modifier.padding(horizontal = 35.5.dp).fillMaxWidth()
+
+)
+}
+
 @Preview(showBackground = true)
 @Composable
 fun ComposablePreview() {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center
-    ) {
-        Stepper(currentStep = 3)
-    }
+    IconWithText(icon = R.drawable.ic_account, text = "Account", onClick = { })
 }
