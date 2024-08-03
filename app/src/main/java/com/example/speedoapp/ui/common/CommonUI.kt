@@ -1,6 +1,8 @@
 package com.example.speedoapp.ui.common
 
-import android.util.Log
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -10,6 +12,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,9 +29,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Card
@@ -50,11 +55,14 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults.outlinedTextFieldColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -62,22 +70,26 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.speedoapp.R
+import com.example.speedoapp.help.HelpItem
 import com.example.speedoapp.model.Currency
+import com.example.speedoapp.navigation.AppRoutes.AMOUNT_TRANSFER
+import com.example.speedoapp.navigation.AppRoutes.HOME_ROUTE
+import com.example.speedoapp.navigation.AppRoutes.MORE_ROUTE
 import com.example.speedoapp.ui.theme.AlertColor
 import com.example.speedoapp.ui.theme.AppNumbersStyle
 import com.example.speedoapp.ui.theme.AppTextStyle
@@ -98,6 +110,7 @@ import com.example.speedoapp.ui.theme.G900
 import com.example.speedoapp.ui.theme.GradientEnd
 import com.example.speedoapp.ui.theme.GradientStart
 import com.example.speedoapp.ui.theme.HeadingTextStyle
+import com.example.speedoapp.ui.theme.OffYellowColor
 import com.example.speedoapp.ui.theme.P300
 import com.example.speedoapp.ui.theme.P50
 import com.example.speedoapp.ui.theme.PrimaryColor
@@ -105,6 +118,7 @@ import com.example.speedoapp.ui.theme.RedYellowColor
 import com.example.speedoapp.ui.theme.SubTitleTextStyle
 import com.example.speedoapp.ui.theme.SubTitleTextStyleBold
 import com.example.speedoapp.ui.tranfer.AmountScreenViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun PrimaryButton(
@@ -192,11 +206,8 @@ fun PasswordField(
                 val image = if (isError == null) {
                     if (passwordVisible) {
                         R.drawable.ic_hidden_typing
-                    } else
-                        if (value.isEmpty())
-                            R.drawable.ic_shown
-                        else
-                            R.drawable.ic_shown_typing
+                    } else if (value.isEmpty()) R.drawable.ic_shown
+                    else R.drawable.ic_shown_typing
                 } else {
                     R.drawable.ic_shown_error
                 }
@@ -208,12 +219,9 @@ fun PasswordField(
             },
             modifier = modifier.fillMaxWidth()
         )
-        if (isError != null)
-            Text(
-                text = isError,
-                style = AppTextStyle,
-                color = AlertColor
-            )
+        if (isError != null) Text(
+            text = isError, style = AppTextStyle, color = AlertColor
+        )
 
     }
 }
@@ -261,17 +269,14 @@ fun DataField(
                 containerColor = G0,
                 focusedBorderColor = PrimaryColor,
                 unfocusedBorderColor = G70,
-                cursorColor = colorResource(id = R.color.black)
+                cursorColor = colorResource(id = R.color.black),
+                errorContainerColor = G0
             ),
-            modifier = modifier
-                .fillMaxWidth()
+            modifier = modifier.fillMaxWidth()
         )
-        if (isError != null)
-            Text(
-                text = isError,
-                style = AppTextStyle,
-                color = AlertColor
-            )
+        if (isError != null) Text(
+            text = isError, style = AppTextStyle, color = AlertColor
+        )
     }
 }
 
@@ -480,7 +485,6 @@ fun CurrenciesScreen(
     onCurrencySelected: (Currency) -> Unit,
     viewModel: AmountScreenViewModel = viewModel()
 ) {
-    Log.d("HELLO", viewModel.imageTo.collectAsState().value)
     var selectedCurrencyIndex by rememberSaveable { mutableStateOf<Int?>(null) }
     val currencies by viewModel.currencies.collectAsState()
     Box(
@@ -519,7 +523,7 @@ fun CurrenciesScreen(
                     .padding(innerPadding),
 
                 ) {
-                LazyColumn {
+                LazyColumn(modifier = modifier.height(600.dp)) {
                     itemsIndexed(currencies) { index, currency ->
                         ListItem(
                             modifier = modifier.clickable { selectedCurrencyIndex = index },
@@ -534,9 +538,7 @@ fun CurrenciesScreen(
                             },
                             headlineContent = {
                                 Text(
-                                    text = currency.name,
-                                    style = BodyMediumBold,
-                                    color = G100
+                                    text = currency.name, style = BodyMediumBold, color = G100
                                 )
                             },
                             trailingContent = {
@@ -638,9 +640,7 @@ fun AccountCard(
                 )
                 Spacer(modifier = Modifier.padding(6.dp))
                 Text(
-                    text = "Account xxxx$cardNumber",
-                    style = BodyMedium,
-                    color = G100
+                    text = "Account xxxx$cardNumber", style = BodyMedium, color = G100
                 )
             }
         }
@@ -665,10 +665,7 @@ fun UserIcon(modifier: Modifier = Modifier, initials: String) {
 
 @Composable
 fun IconWithText(
-    modifier: Modifier = Modifier,
-    @DrawableRes icon: Int,
-    text: String,
-    onClick: () -> Unit
+    modifier: Modifier = Modifier, @DrawableRes icon: Int, text: String, onClick: () -> Unit
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -694,96 +691,244 @@ fun NavItem(
         modifier = Modifier.clickable(onClick = onClick)
 
     ) {
-        Image(painter = painterResource(id = icon), contentDescription = text)
-        Spacer(modifier = modifier.padding(4.dp))
+        Image(
+            painter = painterResource(id = icon),
+            contentDescription = text,
+            modifier = modifier.size(20.dp)
+        )
+        Spacer(modifier = modifier.height(5.5.dp))
         Text(text = text, style = BoldNavTextStyle, color = color)
     }
 }
 
 @Composable
-fun MenuAppBar(modifier: Modifier = Modifier, currentScreen: String) {
+fun MenuAppBar(modifier: Modifier = Modifier, currentScreen: String, navController: NavController) {
     BottomAppBar(
+        containerColor = G0,
+        contentPadding = PaddingValues(
+            top = 10.dp,
+            start = 35.5.dp,
+            end = 35.5.dp
+        ),
         actions = {
-            if (currentScreen == "home")
-                NavItem(
-                    icon = R.drawable.ic_selected_home,
-                    text = "Home",
-                    onClick = {},
-                    color = P300
-                )
-            else
-                NavItem(
-                    icon = R.drawable.ic_home,
-                    text = "Home",
-                    onClick = {})
+            if (currentScreen == "home") NavItem(
+                icon = R.drawable.ic_selected_home,
+                text = "Home",
+                onClick = {},
+                color = P300
+            )
+            else NavItem(icon = R.drawable.ic_home,
+                text = "Home",
+                onClick = { navController.navigate(HOME_ROUTE) })
 
-            Spacer(modifier = modifier.padding(10.dp))
+            Spacer(modifier = modifier.padding(14.dp))
 
-            if (currentScreen == "transfer")
-                NavItem(
-                    icon = R.drawable.ic_selected_transfer,
-                    text = "Transfer",
-                    onClick = {},
-                    color = P300
-                )
-            else
-                NavItem(
-                    icon = R.drawable.ic_normal_transfer,
-                    text = "Transfer",
-                    onClick = {})
+            if (currentScreen == "transfer") NavItem(
+                icon = R.drawable.ic_selected_transfer,
+                text = "Transfer",
+                onClick = {},
+                color = P300
+            )
+            else NavItem(icon = R.drawable.ic_normal_transfer,
+                text = "Transfer",
+                onClick = { navController.navigate(AMOUNT_TRANSFER) })
 
-            Spacer(modifier = modifier.padding(10.dp))
+            Spacer(modifier = modifier.padding(14.dp))
 
 
-            if (currentScreen == "transactions")
-                NavItem(
-                    icon = R.drawable.ic_selected_history,
-                    text = "Transactions",
-                    onClick = {},
-                    color = P300
-                )
-            else
-                NavItem(
-                    icon = R.drawable.ic_normal_history,
-                    text = "Transactions",
-                    onClick = {})
+            if (currentScreen == "transactions") NavItem(
+                icon = R.drawable.ic_selected_history,
+                text = "Transactions",
+                onClick = {},
+                color = P300
+            )
+            else NavItem(icon = R.drawable.ic_normal_history, text = "Transactions", onClick = {})
 
-            Spacer(modifier = modifier.padding(10.dp))
+            Spacer(modifier = modifier.padding(14.dp))
 
-            if (currentScreen == "mycards")
-                NavItem(
-                    icon = R.drawable.ic_selected_mycard,
-                    text = "My Cards",
-                    onClick = {},
-                    color = P300
-                )
-            else
-                NavItem(
-                    icon = R.drawable.ic_mycard,
-                    text = "My Cards",
-                    onClick = {})
+            if (currentScreen == "mycards") NavItem(
+                icon = R.drawable.ic_selected_mycard, text = "My Cards", onClick = {}, color = P300
+            )
+            else NavItem(icon = R.drawable.ic_mycard, text = "My Cards", onClick = {})
 
-            Spacer(modifier = modifier.padding(10.dp))
+            Spacer(modifier = modifier.padding(14.dp))
 
-            if (currentScreen == "more")
-                NavItem(
-                    icon = R.drawable.ic_selected_more,
-                    text = "More",
-                    color = P300,
-                    onClick = {})
-            else
-                NavItem(
-                    icon = R.drawable.ic_more,
-                    text = "More",
-                    onClick = {})
+            if (currentScreen == "more") NavItem(icon = R.drawable.ic_selected_more,
+                text = "More",
+                color = P300,
+                onClick = {}
+            )
+            else NavItem(
+                icon = R.drawable.ic_more,
+                text = "More",
+                onClick = { navController.navigate(MORE_ROUTE) }
+            )
 
         },
 
         modifier = modifier
-            .padding(horizontal = 35.5.dp)
+            .clip(RoundedCornerShape(topEnd = 24.dp, topStart = 24.dp))
+            .height(83.dp)
             .fillMaxWidth()
 
     )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun MoreScreen(navController: NavController, modifier: Modifier = Modifier) {
+    val scaffoldState = rememberBottomSheetScaffoldState()
+    val scope = rememberCoroutineScope()
+    BottomSheetScaffold(
+        sheetShape = RoundedCornerShape(topStart = 50.dp, topEnd = 50.dp),
+        sheetPeekHeight = 0.dp,
+        sheetContainerColor = G0,
+        scaffoldState = scaffoldState,
+        sheetContent = {
+            Row(
+                horizontalArrangement = Arrangement.Center,
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(top = 55.43.dp)
+                    .padding(bottom = 83.dp)
+            ) {
+                HelpItem(
+                    text = stringResource(R.string.send_email),
+                    contentDescription = stringResource(R.string.send_email),
+                    image = R.drawable.ic_email,
+                    identifier = 1,
+                )
+                Spacer(modifier = modifier.width(32.dp))
+                HelpItem(
+                    text = stringResource(R.string.call_us),
+                    contentDescription = stringResource(R.string.call_us),
+                    isCall = true,
+                    phoneNumber = "19888",
+                    image = R.drawable.ic_call,
+                    identifier = 0
+                )
+            }
+        }
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    brush = Brush.verticalGradient(
+                        colors = listOf(OffYellowColor, RedYellowColor)
+                    )
+                )
+        ) {
+            Scaffold(
+                containerColor = Color.Transparent,
+                bottomBar = {
+                    MenuAppBar(currentScreen = "more", navController = navController)
+                },
+                topBar = {
+                    TopBar(
+                        title = stringResource(R.string.more),
+                        navigationIcon = true,
+                        color = Color.Transparent,
+                        onNavigationIconClick = {
+                            navController.navigate(HOME_ROUTE)
+                        },
+                        actions = false,
+                        onActionsClick = {},
+                        actionsText = ""
+                    )
+                },
+            ) { innerPadding ->
+                Column(
+                    modifier = modifier
+                        .imePadding()
+                        .fillMaxSize()
+                        .padding(innerPadding)
+                        .padding(horizontal = 16.dp)
+                ) {
+                    MoreItem(
+                        text = stringResource(R.string.transfer_from_website),
+                        image = R.drawable.ic_website,
+                        onClick = { /*TODO*/ },
+                        contentDescription = stringResource(R.string.transfer_from_website)
+                    )
+
+                    MoreItem(
+                        text = stringResource(R.string.favourites),
+                        image = R.drawable.ic_favorite,
+                        onClick = { /*TODO*/ },
+                        contentDescription = stringResource(R.string.favourites)
+                    )
+
+                    MoreItem(
+                        text = stringResource(R.string.profile),
+                        image = R.drawable.ic_user,
+                        onClick = { /*TODO*/ },
+                        contentDescription = stringResource(R.string.profile)
+                    )
+
+                    MoreItem(
+                        text = stringResource(R.string.help),
+                        image = R.drawable.ic_alert,
+                        onClick = {
+                            scope.launch {
+                                scaffoldState.bottomSheetState.expand() // Open the sheet
+                            }
+                        },
+                        contentDescription = stringResource(R.string.help)
+                    )
+
+                    MoreItem(
+                        text = stringResource(R.string.logout),
+                        image = R.drawable.ic_logout,
+                        onClick = { /*TODO*/ },
+                        contentDescription = stringResource(R.string.logout),
+                        divider = false
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun MoreItem(
+    modifier: Modifier = Modifier,
+    text: String,
+    @DrawableRes image: Int,
+    onClick: () -> Unit,
+    contentDescription: String,
+    divider: Boolean = true
+) {
+    Column(modifier = modifier.clickable { onClick() }) {
+        Spacer(modifier = modifier.height(16.dp))
+        Row(
+            modifier = modifier
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+        ) {
+
+            Row(horizontalArrangement = Arrangement.Center) {
+                Image(
+                    painter = painterResource(id = image),
+                    contentDescription = contentDescription,
+                    modifier = modifier.size(24.dp)
+                )
+                Spacer(modifier = modifier.width(8.dp))
+                Text(text = text, style = BodyMediumBold, color = G200)
+            }
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                tint = G200,
+                contentDescription = stringResource(
+                    R.string.arrow_icon
+                ),
+                modifier = modifier.size(24.dp)
+            )
+        }
+        Spacer(modifier = modifier.height(16.dp))
+        if (divider)
+            HorizontalDivider(color = G40)
+    }
 }
 
 @Composable
@@ -851,14 +996,4 @@ fun OnboardingScreen(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun ComposablePreview() {
-    OnboardingScreen(
-        onClick = {},
-        image = R.drawable.ic_amount,
-        title = "Amount",
-        skip = {},
-        text = "Send money fast with simple steps. Create account, Confirmation, Payment. Simple."
-    )
-}
+

@@ -72,6 +72,7 @@ fun SignInScreen(
                     )
                 )
                 .fillMaxSize()
+                .background(brush = Brush.linearGradient(listOf(GradientStart, GradientEnd)))
                 .padding(innerPadding)
                 .padding(16.dp)
         ) {
