@@ -149,6 +149,7 @@ fun AppNavHost(modifier: Modifier = Modifier, firstTime: Boolean) {
                 skip = { navController.navigate(SIGNUP_ROUTE) }
             )
         }
+
         composable(route = PAYMENT_ONBOARDING_ROUTE) {
             OnboardingScreen(
                 image = R.drawable.ic_payment,
