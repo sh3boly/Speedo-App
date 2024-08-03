@@ -20,13 +20,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.Check
@@ -39,7 +36,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerState
-import androidx.compose.material3.Divider
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
@@ -92,19 +88,18 @@ import com.example.speedoapp.ui.theme.G0
 import com.example.speedoapp.ui.theme.G100
 import com.example.speedoapp.ui.theme.G200
 import com.example.speedoapp.ui.theme.G40
-import com.example.speedoapp.ui.theme.G40
 import com.example.speedoapp.ui.theme.G70
 import com.example.speedoapp.ui.theme.G700
 import com.example.speedoapp.ui.theme.G900
+import com.example.speedoapp.ui.theme.GradientEnd
+import com.example.speedoapp.ui.theme.GradientStart
+import com.example.speedoapp.ui.theme.HeadingTextStyle
 import com.example.speedoapp.ui.theme.P300
-import com.example.speedoapp.ui.theme.OffYellowColor
 import com.example.speedoapp.ui.theme.P50
 import com.example.speedoapp.ui.theme.PrimaryColor
 import com.example.speedoapp.ui.theme.RedYellowColor
 import com.example.speedoapp.ui.theme.SubTitleTextStyle
 import com.example.speedoapp.ui.tranfer.AmountScreenViewModel
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 
 @Composable
 fun PrimaryButton(
@@ -613,6 +608,7 @@ fun IconWithText(
         Text(text = text, style = AppTextStyleSelected, color = G700)
     }
 }
+
 @Composable
 fun NavItem(
     modifier: Modifier = Modifier,
@@ -634,89 +630,163 @@ fun NavItem(
 
 @Composable
 fun MenuAppBar(modifier: Modifier = Modifier, currentScreen: String) {
-    BottomAppBar(actions = {
-        if (currentScreen == "home")
-            NavItem(
-                icon = R.drawable.ic_selected_home,
-                text = "Home",
-                onClick = {},
-                color = P300)
+    BottomAppBar(
+        actions = {
+            if (currentScreen == "home")
+                NavItem(
+                    icon = R.drawable.ic_selected_home,
+                    text = "Home",
+                    onClick = {},
+                    color = P300
+                )
+            else
+                NavItem(
+                    icon = R.drawable.ic_home,
+                    text = "Home",
+                    onClick = {})
+
+            Spacer(modifier = modifier.padding(10.dp))
+
+            if (currentScreen == "transfer")
+                NavItem(
+                    icon = R.drawable.ic_selected_transfer,
+                    text = "Transfer",
+                    onClick = {},
+                    color = P300
+                )
+            else
+                NavItem(
+                    icon = R.drawable.ic_normal_transfer,
+                    text = "Transfer",
+                    onClick = {})
+
+            Spacer(modifier = modifier.padding(10.dp))
+
+
+            if (currentScreen == "transactions")
+                NavItem(
+                    icon = R.drawable.ic_selected_history,
+                    text = "Transactions",
+                    onClick = {},
+                    color = P300
+                )
+            else
+                NavItem(
+                    icon = R.drawable.ic_normal_history,
+                    text = "Transactions",
+                    onClick = {})
+
+            Spacer(modifier = modifier.padding(10.dp))
+
+            if (currentScreen == "mycards")
+                NavItem(
+                    icon = R.drawable.ic_selected_mycard,
+                    text = "My Cards",
+                    onClick = {},
+                    color = P300
+                )
+            else
+                NavItem(
+                    icon = R.drawable.ic_mycard,
+                    text = "My Cards",
+                    onClick = {})
+
+            Spacer(modifier = modifier.padding(10.dp))
+
+            if (currentScreen == "more")
+                NavItem(
+                    icon = R.drawable.ic_selected_more,
+                    text = "More",
+                    color = P300,
+                    onClick = {})
+            else
+                NavItem(
+                    icon = R.drawable.ic_more,
+                    text = "More",
+                    onClick = {})
+
+        },
+
+        modifier = modifier
+            .padding(horizontal = 35.5.dp)
+            .fillMaxWidth()
+
+    )
+}
+
+@Composable
+fun OnboardingScreen(
+    modifier: Modifier = Modifier,
+    @DrawableRes image: Int,
+    title: String,
+    text: String,
+    onClick: () -> Unit,
+    skip: () -> Unit,
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier
+            .background(
+                brush = Brush.linearGradient(
+                    listOf(
+                        GradientStart,
+                        GradientEnd
+                    )
+                )
+            )
+            .padding(16.dp)
+            .fillMaxSize()
+    ) {
+        Spacer(modifier = modifier.padding(25.dp))
+
+        Text(
+            text = "Skip",
+            style = ButtonMedium,
+            color = G900,
+            modifier = modifier
+                .clickable(onClick = skip)
+                .align(Alignment.End),
+        )
+        Spacer(modifier = modifier.padding(15.dp))
+
+        Image(
+            painter = painterResource(id = image),
+            contentDescription = "$title image",
+            modifier = modifier
+                .width(350.dp)
+                .height(303.dp)
+        )
+        @DrawableRes var progress: Int
+        if (title == "Amount")
+            progress = R.drawable.ic_progress_1
+        else if (title == "Confirmation")
+            progress = R.drawable.ic_progress_2
         else
-            NavItem(
-                icon = R.drawable.ic_home,
-                text = "Home",
-                onClick = {})
-
-        Spacer(modifier = modifier.padding(10.dp))
-
-        if (currentScreen == "transfer")
-            NavItem(
-                icon = R.drawable.ic_selected_transfer,
-                text = "Transfer",
-                onClick = {},
-                color = P300)
-        else
-            NavItem(
-                icon = R.drawable.ic_normal_transfer,
-                text = "Transfer",
-                onClick = {})
-
-        Spacer(modifier = modifier.padding(10.dp))
+            progress = R.drawable.ic_progress_3
+        Spacer(modifier = modifier.padding(29.dp))
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Image(painter = painterResource(id = progress), contentDescription = "Progress Image")
+            Spacer(modifier = modifier.padding(32.dp))
+            Text(text = title, style = HeadingTextStyle, color = G900)
+            Spacer(modifier = modifier.padding(16.dp))
+            Text(text = text, style = BodyMedium, color = G700)
+            Spacer(modifier = modifier.padding(32.dp))
+            PrimaryButton(onClick = onClick, buttonText = "Next")
 
 
-        if (currentScreen == "transactions")
-            NavItem(
-                icon = R.drawable.ic_selected_history,
-                text = "Transactions",
-                onClick = {},
-                color = P300)
-        else
-            NavItem(
-                icon = R.drawable.ic_normal_history,
-                text = "Transactions",
-                onClick = {})
+        }
 
-        Spacer(modifier = modifier.padding(10.dp))
-
-        if (currentScreen == "mycards")
-            NavItem(
-                icon = R.drawable.ic_selected_mycard,
-                text = "My Cards",
-                onClick = {},
-                color = P300)
-        else
-            NavItem(
-                icon = R.drawable.ic_mycard,
-                text = "My Cards",
-                onClick = {})
-
-        Spacer(modifier = modifier.padding(10.dp))
-
-        if (currentScreen == "more")
-            NavItem(
-                icon = R.drawable.ic_selected_more,
-                text = "More",
-                color = P300,
-                onClick = {})
-        else
-            NavItem(
-                icon = R.drawable.ic_more,
-                text = "More",
-                onClick = {})
-
-    },
-
-        modifier = modifier.padding(horizontal = 35.5.dp).fillMaxWidth()
-
-)
+    }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun ComposablePreview() {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center
-    ) {
-        Stepper(currentStep = 3)
-    }
+    OnboardingScreen(
+        onClick = {},
+        image = R.drawable.ic_amount,
+        title = "Amount",
+        skip = {},
+        text = "Send money fast with simple steps. Create account, Confirmation, Payment. Simple."
+    )
 }

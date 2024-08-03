@@ -1,5 +1,6 @@
 package com.example.speedoapp
 
+import TokenManager
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -22,9 +23,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             SpeedoAppTheme {
-                AppNavHost()
-                Log.d("CurrencyAPI", "Response received: ")
-                AppNavHost()
+                AppNavHost(firstTime = TokenManager.isFirstTimeLaunch())
             }
         }
     }

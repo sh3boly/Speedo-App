@@ -32,3 +32,6 @@ val RedYellowColor = Color(0xFFFFEAEE)
 
 val GradientStart = Color(0xFFFFFFFF)
 val GradientEnd = Color(0xFFFFEAEE)
+
+val HomeGradientStart = Color(0xFFFFF8E7)
+val HomeGradientEnd = Color(0xFFFFEAEE)
