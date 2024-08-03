@@ -63,10 +63,17 @@ fun SignInScreen(
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = modifier
+                .background(
+                    brush = Brush.linearGradient(
+                        listOf(
+                            GradientStart,
+                            GradientEnd
+                        )
+                    )
+                )
                 .fillMaxSize()
                 .padding(innerPadding)
                 .padding(16.dp)
-                .background(brush = Brush.linearGradient(listOf(GradientStart, GradientEnd))),
         ) {
             var email by rememberSaveable { mutableStateOf("") }
             var password by rememberSaveable { mutableStateOf("") }
