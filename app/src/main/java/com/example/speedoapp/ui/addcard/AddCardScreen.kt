@@ -108,15 +108,15 @@ fun AddCardScreen(modifier: Modifier = Modifier, cardViewModel: AddCardViewModel
                 )
             }
             Spacer(modifier = Modifier.height(32.dp))
-//            PrimaryButton(onClick = {val result =cardViewModel.submitCard(democardInfo)
-//                if (result){
-//                    Toast.makeText(context, "success", Toast.LENGTH_SHORT).show();
-//                }
-//                else{
-//                    Toast.makeText(context, "failure", Toast.LENGTH_SHORT).show();
-//                }
-//            }, buttonText = "Sign on")
-            PrimaryButton(onClick = {cardViewModel.submitCard(cardInfo)}, buttonText ="sign on" ) //fix this line
+            PrimaryButton(onClick = {val result =cardViewModel.submitCard(democardInfo)
+                if (result){
+                    Toast.makeText(context, "success", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    Toast.makeText(context, "failure", Toast.LENGTH_SHORT).show();
+                }
+            }, buttonText = "Sign on")
+            //PrimaryButton(onClick = {cardViewModel.submitCard(cardInfo)}, buttonText ="sign on" ) //fix this line
 
         }
     }

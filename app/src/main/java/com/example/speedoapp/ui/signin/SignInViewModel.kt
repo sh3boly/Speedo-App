@@ -26,6 +26,8 @@ class SignInViewModel() : ViewModel() {
                     val loginResponse = response.body()
                     if (loginResponse != null) {
                         _loginStatus.postValue(LoginStatus.Success(loginResponse))
+
+
                     } else {
                         _loginStatus.postValue(LoginStatus.Error("Empty response body"))
                     }

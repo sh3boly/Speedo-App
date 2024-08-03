@@ -9,6 +9,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
 import com.example.speedoapp.navigation.AppNavHost
 import com.example.speedoapp.ui.theme.SpeedoAppTheme
+import androidx.navigation.compose.NavHost
 
 class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.O)

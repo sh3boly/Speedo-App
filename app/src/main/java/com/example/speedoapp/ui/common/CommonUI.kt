@@ -31,6 +31,8 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -63,12 +65,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
@@ -99,6 +103,7 @@ import com.example.speedoapp.ui.theme.P50
 import com.example.speedoapp.ui.theme.PrimaryColor
 import com.example.speedoapp.ui.theme.RedYellowColor
 import com.example.speedoapp.ui.theme.SubTitleTextStyle
+import com.example.speedoapp.ui.theme.SubTitleTextStyleBold
 import com.example.speedoapp.ui.tranfer.AmountScreenViewModel
 
 @Composable
@@ -570,6 +575,73 @@ fun CurrenciesScreen(
                         isEnabled = selectedCurrencyIndex != null
                     )
                 }
+            }
+        }
+    }
+}
+
+@Composable
+fun AccountCard(
+    modifier: Modifier = Modifier,
+    identifier: Int,
+    identifierText: String? = null,
+    cardHolder: String,
+    cardNumber: String,
+) {
+    Card(
+        colors = CardDefaults.cardColors(P50),
+        modifier = Modifier
+            .height(if (identifier == 0) 136.dp else 93.dp)
+            .fillMaxWidth(),
+        shape = RoundedCornerShape(8.dp),
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(start = 16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(48.dp)
+                    .clip(CircleShape)
+                    .background(ButtonTextColor)
+                    .align(Alignment.CenterVertically)
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.bank),
+                    contentDescription = stringResource(R.string.bank_icon),
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .size(32.dp)
+                )
+            }
+            Column(
+                modifier = Modifier
+                    .padding(top = 14.dp)
+                    .padding(start = 32.dp)
+                    .fillMaxSize(),
+                verticalArrangement = Arrangement.Center
+            ) {
+                if (identifier == 0) {
+                    Text(
+                        text = identifierText!!,
+                        style = BodyMediumBold,
+                        color = PrimaryColor,
+                    )
+                    Spacer(modifier = Modifier.padding(6.dp))
+                }
+                Text(
+                    text = cardHolder,
+                    style = SubTitleTextStyleBold,
+                    color = G900,
+                )
+                Spacer(modifier = Modifier.padding(6.dp))
+                Text(
+                    text = "Account xxxx$cardNumber",
+                    style = BodyMedium,
+                    color = G100
+                )
             }
         }
     }
