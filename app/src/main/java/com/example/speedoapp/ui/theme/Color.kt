@@ -17,18 +17,16 @@ val AlertColor = Color(216, 0, 39, 255)
 val G900 = Color(0xFF24221E)
 val G500 = Color(0xFF565552)
 val G700 = Color(0xFF3C3A37)
-val G200 = Color(0xFF7C7A78)
 val G100 = Color(0xFF898886)
 val G70 = Color(0xFFB0AFAE)
 val G40 = Color(0xFFE3E2E2)
 val G0 = Color(0xFFFFFFFF)
 val CircularIndicatorBig= Color(0xFFCEA3AC)
 val P50 = Color(0xFFF3E9EB)
-
-val P300 = Color(0xFF871E35)
-
 val OffYellowColor = Color(0xFFFFF8E7)
 val RedYellowColor = Color(0xFFFFEAEE)
-
+val G200 = Color(0xFF7C7A78)
 val GradientStart = Color(0xFFFFFFFF)
 val GradientEnd = Color(0xFFFFEAEE)
+val P300 = Color(0xFF871E35)
+
