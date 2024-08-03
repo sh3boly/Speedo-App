@@ -62,10 +62,10 @@ fun SignUpScreen(
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = modifier
+                .background(Brush.linearGradient(listOf(GradientStart, GradientEnd)))
                 .fillMaxSize()
                 .padding(innerPadding)
-                .padding(16.dp)
-                .background(Brush.linearGradient(listOf(GradientStart, GradientEnd))),
+                .padding(16.dp),
         ) {
             var name by rememberSaveable { mutableStateOf("") }
             var email by rememberSaveable { mutableStateOf("") }
@@ -148,9 +148,10 @@ fun SignUpScreen(
                                 "Register Successful!",
                                 Toast.LENGTH_SHORT
                             ).show()
-                            viewModel.login(email,password, context)
+                            viewModel.login(email, password, context)
                             navController.navigate(AppRoutes.HOME_ROUTE)
                         }
+
                         is RegisterStatus.Error -> {
                             Toast.makeText(
                                 context,
