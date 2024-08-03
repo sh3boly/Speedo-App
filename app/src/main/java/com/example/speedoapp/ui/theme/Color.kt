@@ -25,3 +25,8 @@ val CircularIndicatorBig= Color(0xFFCEA3AC)
 val P50 = Color(0xFFF3E9EB)
 val OffYellowColor = Color(0xFFFFF8E7)
 val RedYellowColor = Color(0xFFFFEAEE)
+val G200 = Color(0xFF7C7A78)
+val GradientStart = Color(0xFFFFFFFF)
+val GradientEnd = Color(0xFFFFEAEE)
+val P300 = Color(0xFF871E35)
+
