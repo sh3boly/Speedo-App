@@ -21,6 +21,7 @@ import com.example.speedoapp.navigation.AppRoutes.CONFIRM_TRANSFER
 import com.example.speedoapp.navigation.AppRoutes.SIGNUP_ROUTE
 import com.example.speedoapp.navigation.AppRoutes.COUNTRYDATE_ROUTE
 import com.example.speedoapp.navigation.AppRoutes.HOME_ROUTE
+import com.example.speedoapp.navigation.AppRoutes.MORE_ROUTE
 import com.example.speedoapp.navigation.AppRoutes.PAYMENT_ONBOARDING_ROUTE
 import com.example.speedoapp.navigation.AppRoutes.PAYMENT_TRANSFER
 import com.example.speedoapp.navigation.AppRoutes.SELECT_CURRENCY
@@ -29,6 +30,7 @@ import com.example.speedoapp.ui.homepage.HomeScreen
 import com.example.speedoapp.ui.signin.SignInScreen
 
 import com.example.speedoapp.ui.common.CurrenciesScreen
+import com.example.speedoapp.ui.common.MoreScreen
 import com.example.speedoapp.ui.common.OnboardingScreen
 import com.example.speedoapp.ui.signup.CountryDateScreen
 import com.example.speedoapp.ui.signup.SignUpScreen
@@ -47,6 +49,7 @@ object AppRoutes {
     const val CONFIRM_TRANSFER = "confirm_transfer"
     const val PAYMENT_TRANSFER = "payment_Transfer"
     const val HOME_ROUTE = "home"
+    const val MORE_ROUTE = "more"
     const val AMOUNT_ONBOARDING_ROUTE = "amount"
     const val CONFIRMATION_ONBOARDING_ROUTE = "confirmation"
     const val PAYMENT_ONBOARDING_ROUTE = "payment"
@@ -63,6 +66,7 @@ fun AppNavHost(modifier: Modifier = Modifier, firstTime: Boolean) {
         modifier = modifier
     ) {
         composable(route = SIGNUP_ROUTE) { SignUpScreen(navController) }
+
         composable(route = SIGNIN_ROUTE) { SignInScreen(navController) }
 
         composable(
@@ -80,7 +84,11 @@ fun AppNavHost(modifier: Modifier = Modifier, firstTime: Boolean) {
 
             CountryDateScreen(navController, name, email, password)
         }
-        composable(route = HOME_ROUTE) { HomeScreen(navController = navController) }
+
+        composable(route = HOME_ROUTE) {
+            amountScreenViewModel.reset()
+            HomeScreen(navController = navController)
+        }
 
         composable(AMOUNT_TRANSFER) {
             AmountScreen(
@@ -88,6 +96,7 @@ fun AppNavHost(modifier: Modifier = Modifier, firstTime: Boolean) {
                 viewModel = amountScreenViewModel
             )
         }
+
         composable(
             route = "$SELECT_CURRENCY/{$IDENTIFIER}",
             arguments = listOf(navArgument(IDENTIFIER) {
@@ -118,6 +127,11 @@ fun AppNavHost(modifier: Modifier = Modifier, firstTime: Boolean) {
         composable(route = PAYMENT_TRANSFER) {
             PaymentScreen(navController = navController, viewModel = amountScreenViewModel)
         }
+
+        composable(MORE_ROUTE) {
+            amountScreenViewModel.reset()
+            MoreScreen(navController = navController)
+        }
         composable(route = AMOUNT_ONBOARDING_ROUTE) {
             OnboardingScreen(
                 image = R.drawable.ic_amount,
@@ -136,6 +150,7 @@ fun AppNavHost(modifier: Modifier = Modifier, firstTime: Boolean) {
                 skip = { navController.navigate(SIGNUP_ROUTE) }
             )
         }
+
         composable(route = PAYMENT_ONBOARDING_ROUTE) {
             OnboardingScreen(
                 image = R.drawable.ic_payment,
@@ -147,4 +162,5 @@ fun AppNavHost(modifier: Modifier = Modifier, firstTime: Boolean) {
         }
     }
 }
+
 

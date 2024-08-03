@@ -21,6 +21,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -33,6 +35,7 @@ import androidx.navigation.NavController
 import com.example.speedoapp.R
 import com.example.speedoapp.navigation.AppRoutes.PAYMENT_TRANSFER
 import com.example.speedoapp.ui.common.AccountCard
+import com.example.speedoapp.ui.common.MenuAppBar
 import com.example.speedoapp.ui.common.PrimaryButton
 import com.example.speedoapp.ui.common.SecondaryButton
 import com.example.speedoapp.ui.common.Stepper
@@ -63,6 +66,9 @@ fun ConfirmScreen(
             )
     ) {
         Scaffold(
+            bottomBar = {
+                MenuAppBar(currentScreen = "transfer", navController = navController)
+            },
             containerColor = Color.Transparent,
             topBar = {
                 TopBar(
@@ -152,6 +158,7 @@ fun ConfirmScreen(
                 Spacer(modifier = modifier.height(32.dp))
                 PrimaryButton(
                     onClick = {
+                        viewModel.confirmTransfer()
                         navController.navigate(PAYMENT_TRANSFER)
                     },
                     buttonText = stringResource(R.string.confirm)

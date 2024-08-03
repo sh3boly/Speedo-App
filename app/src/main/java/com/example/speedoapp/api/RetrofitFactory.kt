@@ -31,6 +31,10 @@ object RetrofitFactory {
         authRetrofit.create(AuthApi::class.java)
     }
 
+    val transferApi: TransferApiCallable by lazy {
+        unauthRetrofit.create(TransferApiCallable::class.java)
+    }
+
     val homeApi: HomeApi by lazy {
         unauthRetrofit.create(HomeApi::class.java)
     }

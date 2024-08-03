@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.speedoapp.api.CurrencyApiService
+import com.example.speedoapp.api.RetrofitFactory
 import com.example.speedoapp.model.Currency
 import com.example.speedoapp.model.ExchangeRate
 import com.example.speedoapp.model.Recipient
@@ -30,6 +31,9 @@ class AmountScreenViewModel : ViewModel() {
 
     private val _exchangeRateText = MutableStateFlow("")
     val exchangeRateText = _exchangeRateText.asStateFlow()
+
+    private val _transferResult = MutableStateFlow<Boolean?>(null)
+    val transferResult = _transferResult.asStateFlow()
 
 
     // Here we save the latest data chosen by the user from money and receiver data
@@ -65,6 +69,14 @@ class AmountScreenViewModel : ViewModel() {
 
     private fun updateImageTo(imageUrl: String) {
         _chosenImageTo.value = imageUrl
+    }
+
+    fun reset() {
+        updateCurrencyFrom(_currencies.value[0])
+        updateCurrencyTo(_currencies.value[1])
+        updateAmountFrom("1000")
+        updateRecipientName("")
+        updateRecipientAccountNumber("")
     }
 
     // Here we update the value that should be sent from user account and updates the equivalent value that the recipient gets
@@ -172,9 +184,9 @@ class AmountScreenViewModel : ViewModel() {
     }
 
     fun validateData(): Boolean {
-        val valueTo = _transferData.value.to.amount.toBigDecimalOrNull()
+        val valueFrom = _transferData.value.from.amount.toBigDecimalOrNull()
 
-        return (valueTo != null && valueTo < 5000.toBigDecimal()
+        return (valueFrom != null && valueFrom < 5000.toBigDecimal()
                 && _transferData.value.from.amount.isNotEmpty()
                 && _transferData.value.recipient.name.isNotEmpty()
                 && _transferData.value.recipient.accountNumber.isNotEmpty()
@@ -182,7 +194,7 @@ class AmountScreenViewModel : ViewModel() {
     }
 
     fun amountValidation(): String? {
-        val amount = _transferData.value.to.amount.toBigDecimalOrNull()
+        val amount = _transferData.value.from.amount.toBigDecimalOrNull()
         if (amount == null)
             return amount
         return if (amount > 5000.toBigDecimal()) {
@@ -192,34 +204,75 @@ class AmountScreenViewModel : ViewModel() {
         }
     }
 
+    fun accountNumberValidation(): String? {
+        val accountNumber = _transferData.value.recipient.accountNumber
+        return if (accountNumber.length != 16)
+            "Please enter valid account number"
+        else
+            null
+    }
+
     private fun fetchCurrencies() {
-        Log.d("CurrencyAPI", "Response received: aaaaaaa")
 
         viewModelScope.launch {
-            Log.d("CurrencyAPI", "Response received: ssssss")
-
             try {
-                Log.d("CurrencyAPI", "Response received: as")
-                _currencies.update {
-                    CurrencyApiService.callable.getCurrencies()
+                val response = CurrencyApiService.callable.getCurrencies()
+
+                if (response.isSuccessful) {
+                    response.body()?.let { currencyList ->
+                        // Check if body is not null and update state
+                        _currencies.update { currencyList }
+                        if (currencyList.isNotEmpty()) {
+                            updateCurrencyFrom(currencyList[0])
+                            updateCurrencyTo(currencyList[1])
+                            updateAmountFrom("1000")
+                        }
+                        _hasError.value = false
+                    } ?: run {
+                        Log.e("API_ERROR", "Response body is null")
+                        _hasError.value = true
+                    }
+                } else {
+                    Log.e("API_ERROR", "Error: ${response.code()} - ${response.message()}")
+                    _hasError.value = true
                 }
-                Log.d("CurrencyAPI", "Response received: $_currencies")
-
-
-                if (_currencies.value.isNotEmpty()) {
-                    updateCurrencyFrom(_currencies.value[0])
-                    updateCurrencyTo(_currencies.value[1])
-                    updateAmountFrom("1000")
-                }
-
-
-                _hasError.value = false
             } catch (e: Exception) {
-                Log.d("CurrencyAPI", "Response received: $e")
-
                 _hasError.value = true
-                e.printStackTrace()
             }
         }
     }
+
+    private fun postTransferData() {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = RetrofitFactory.transferApi.postTransfer(_transferData.value)
+
+                if (response.isSuccessful) {
+                    // Handle success
+                    Log.d("API_RESULT", "Transfer successful")
+                    _transferResult.value = true
+                } else {
+                    // Handle error
+                    Log.e(
+                        "API_RESULT",
+                        "Transfer failed: ${response.code()} - ${response.message()}"
+                    )
+                    _transferResult.value = false
+                }
+            } catch (e: Exception) {
+                // Handle exception
+                Log.e("API_RESULT", "Exception: ${e.message}")
+                _transferResult.value = false
+            }
+        }
+    }
+
+    fun confirmTransfer() {
+        if (validateData()) {
+            postTransferData()
+        } else {
+            Log.e("TRANSFER_ERROR", "Validation failed")
+        }
+    }
+
 }

@@ -48,6 +48,7 @@ import com.example.speedoapp.ui.theme.G700
 import com.example.speedoapp.ui.theme.G900
 import com.example.speedoapp.ui.theme.PrimaryColor
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.speedoapp.navigation.AppRoutes.AMOUNT_TRANSFER
 import com.example.speedoapp.ui.theme.GradientEnd
 import com.example.speedoapp.ui.theme.GradientStart
 import com.example.speedoapp.ui.theme.HomeGradientEnd
@@ -72,7 +73,7 @@ fun HomeScreen(
 //        Toast.makeText(LocalContext.current, "Check your connection", Toast.LENGTH_SHORT).show()
     //val name = "Asmaa Desouky"
     Scaffold(
-        bottomBar = { MenuAppBar(currentScreen = "home") }
+        bottomBar = { MenuAppBar(currentScreen = "home", navController = navController) }
     )
     { innerPadding ->
         Column(
@@ -96,8 +97,6 @@ fun HomeScreen(
                     Text(text = name, style = AppTextStyle, color = G900)
                 }
 
-
-
                 Box(
                     modifier = Modifier.fillMaxWidth(),
                     contentAlignment = Alignment.CenterEnd
@@ -112,7 +111,7 @@ fun HomeScreen(
             Spacer(modifier = modifier.padding(15.dp))
             BalanceCard(balance = viewModel.balanceStringify(balance))
             Spacer(modifier = modifier.padding(16.dp))
-            Services()
+            Services(navController = navController)
             Spacer(modifier = modifier.padding(16.dp))
             RecentTransaction(transactions = transactions)
 
@@ -144,7 +143,7 @@ fun BalanceCard(modifier: Modifier = Modifier, balance: String) {
 }
 
 @Composable
-fun Services(modifier: Modifier = Modifier) {
+fun Services(modifier: Modifier = Modifier, navController: NavController) {
     Column(
         modifier = Modifier
             .width(343.dp)
@@ -165,7 +164,10 @@ fun Services(modifier: Modifier = Modifier) {
                 )
 
         ) {
-            IconWithText(icon = R.drawable.ic_transfer, text = "Transfer", onClick = {})
+            IconWithText(
+                icon = R.drawable.ic_transfer,
+                text = "Transfer",
+                onClick = { navController.navigate(AMOUNT_TRANSFER) })
             Spacer(modifier = Modifier.padding(horizontal = 16.dp))
 
             IconWithText(icon = R.drawable.ic_history, text = "Transactions", onClick = {})
