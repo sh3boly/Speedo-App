@@ -10,6 +10,7 @@ import androidx.annotation.RequiresApi
 import com.example.speedoapp.navigation.AppNavHost
 import com.example.speedoapp.ui.theme.SpeedoAppTheme
 import androidx.navigation.compose.NavHost
+import com.example.speedoapp.api.InactivityManager
 
 class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
@@ -19,7 +20,13 @@ class MainActivity : ComponentActivity() {
         setContent {
             SpeedoAppTheme {
                 AppNavHost(firstTime = TokenManager.isFirstTimeLaunch())
+
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        InactivityManager.userInteraction()
     }
 }
