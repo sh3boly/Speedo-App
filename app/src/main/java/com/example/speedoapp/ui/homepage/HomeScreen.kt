@@ -3,6 +3,7 @@ package com.example.speedoapp.ui.homepage
 
 import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,7 +26,10 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.speedoapp.R
@@ -45,6 +49,11 @@ import com.example.speedoapp.ui.theme.G900
 import com.example.speedoapp.ui.theme.PrimaryColor
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.speedoapp.navigation.AppRoutes.AMOUNT_TRANSFER
+import com.example.speedoapp.ui.theme.GradientEnd
+import com.example.speedoapp.ui.theme.GradientStart
+import com.example.speedoapp.ui.theme.HomeGradientEnd
+import com.example.speedoapp.ui.theme.HomeGradientStart
+import com.example.speedoapp.ui.theme.P50
 
 @Composable
 fun HomeScreen(
@@ -54,17 +63,14 @@ fun HomeScreen(
 ) {
 
 
-//    val balance by viewModel.balance.collectAsState()
-//    val transactions by viewModel.transactions.collectAsState()
+    val balance by viewModel.balance.collectAsState()
+    val transactions by viewModel.transactions.collectAsState()
     val name by viewModel.name.collectAsState()
     Log.d("trace", "The name is : $name")
 //
 //    val hasError by viewModel.hasError.collectAsState()
 //    if (hasError > 0)
 //        Toast.makeText(LocalContext.current, "Check your connection", Toast.LENGTH_SHORT).show()
-    var transactions = mutableListOf<Transaction>()
-    transactions.add(Transaction("Ahmed Hamdy", "Recieved", 1000f, "12/12/2024"))
-    transactions.add(Transaction("Ahmed Tarek", "Recieved", 1500f, "24/04/2024"))
     //val name = "Asmaa Desouky"
     Scaffold(
         bottomBar = { MenuAppBar(currentScreen = "home", navController = navController) }
@@ -72,6 +78,7 @@ fun HomeScreen(
     { innerPadding ->
         Column(
             modifier = Modifier
+                .background(Brush.linearGradient(listOf(HomeGradientStart, HomeGradientEnd)))
                 .padding(start = 16.dp, end = 16.dp, bottom = 15.dp, top = 78.dp)
                 .fillMaxSize()
                 .padding(innerPadding)
@@ -102,7 +109,7 @@ fun HomeScreen(
 
             }
             Spacer(modifier = modifier.padding(15.dp))
-            BalanceCard()
+            BalanceCard(balance = viewModel.balanceStringify(balance))
             Spacer(modifier = modifier.padding(16.dp))
             Services(navController = navController)
             Spacer(modifier = modifier.padding(16.dp))
@@ -113,7 +120,7 @@ fun HomeScreen(
 }
 
 @Composable
-fun BalanceCard(modifier: Modifier = Modifier) {
+fun BalanceCard(modifier: Modifier = Modifier, balance: String) {
     Card(
         colors = CardDefaults.cardColors(containerColor = PrimaryColor),
         modifier = modifier
@@ -129,7 +136,7 @@ fun BalanceCard(modifier: Modifier = Modifier) {
         ) {
             Text(text = "Current Balance", style = BodyMedium, color = G0)
             Spacer(modifier = Modifier.height(8.dp))
-            Text(text = "$2,85,865.20", style = BodyMedium, color = G0)
+            Text(text = "$$balance", style = BodyMedium, color = G0)
         }
 
     }
@@ -212,10 +219,15 @@ fun TransactionListItem(modifier: Modifier = Modifier, transaction: Transaction)
             .height(77.dp)
             .padding(8.dp)
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.ic_visa),
-            contentDescription = "Master Card Icon"
-        )
+        Box (
+            modifier = modifier.background(P50)
+        ){
+
+            Image(
+                painter = painterResource(id = R.drawable.ic_visa),
+                contentDescription = "Master Card Icon",
+            )
+        }
         Spacer(modifier = modifier.padding(8.dp))
         Column(
             modifier = modifier
@@ -242,5 +254,11 @@ fun TransactionListItem(modifier: Modifier = Modifier, transaction: Transaction)
 
 
     }
+}
+
+@Composable
+@Preview(showBackground = true)
+fun HomeScreenPreview() {
+    HomeScreen(navController = NavController(LocalContext.current))
 }
 

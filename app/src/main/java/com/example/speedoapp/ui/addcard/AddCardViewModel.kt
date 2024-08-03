@@ -94,16 +94,16 @@ class AddCardViewModel: ViewModel() {
 
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun submitCard(card:CardInfo):Unit{
-        /*if(isValidCardNumber(card.cardNo)&&isValidCardHolder(card.cardHolder)
-            &&isValidCVV(card.CVV)&&isValidExpiryDate(card.expiryDate)){
+    fun submitCard(card:CardInfo):Boolean{
+        if(isValidCardNumber(card.cardNo)&&isValidCardHolder(card.cardHolder)
+            &&isValidCVV(card.CVV)){
             card.isLoading=true
             _addedCards.add(card)
             return true
         }
         else {card.isLoading=false }
-        return false*/
-        _addedCards.add(card.copy())
+        return false
+        //_addedCards.add(card.copy())
     }
 
     fun getAllCards(userID: String): List<CardInfo>{

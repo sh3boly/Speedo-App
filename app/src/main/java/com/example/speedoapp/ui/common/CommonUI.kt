@@ -107,8 +107,11 @@ import com.example.speedoapp.ui.theme.G40
 import com.example.speedoapp.ui.theme.G70
 import com.example.speedoapp.ui.theme.G700
 import com.example.speedoapp.ui.theme.G900
-import com.example.speedoapp.ui.theme.P300
+import com.example.speedoapp.ui.theme.GradientEnd
+import com.example.speedoapp.ui.theme.GradientStart
+import com.example.speedoapp.ui.theme.HeadingTextStyle
 import com.example.speedoapp.ui.theme.OffYellowColor
+import com.example.speedoapp.ui.theme.P300
 import com.example.speedoapp.ui.theme.P50
 import com.example.speedoapp.ui.theme.PrimaryColor
 import com.example.speedoapp.ui.theme.RedYellowColor
@@ -928,13 +931,69 @@ fun MoreItem(
     }
 }
 
-@Preview(showBackground = true)
 @Composable
-fun ComposablePreview() {
+fun OnboardingScreen(
+    modifier: Modifier = Modifier,
+    @DrawableRes image: Int,
+    title: String,
+    text: String,
+    onClick: () -> Unit,
+    skip: () -> Unit,
+) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        modifier = modifier
+            .background(
+                brush = Brush.linearGradient(
+                    listOf(
+                        GradientStart,
+                        GradientEnd
+                    )
+                )
+            )
+            .padding(16.dp)
+            .fillMaxSize()
     ) {
-        Stepper(currentStep = 3)
+        Spacer(modifier = modifier.padding(25.dp))
+
+        Text(
+            text = "Skip",
+            style = ButtonMedium,
+            color = G900,
+            modifier = modifier
+                .clickable(onClick = skip)
+                .align(Alignment.End),
+        )
+        Spacer(modifier = modifier.padding(15.dp))
+
+        Image(
+            painter = painterResource(id = image),
+            contentDescription = "$title image",
+            modifier = modifier
+                .width(350.dp)
+                .height(303.dp)
+        )
+        @DrawableRes var progress: Int
+        if (title == "Amount")
+            progress = R.drawable.ic_progress_1
+        else if (title == "Confirmation")
+            progress = R.drawable.ic_progress_2
+        else
+            progress = R.drawable.ic_progress_3
+        Spacer(modifier = modifier.padding(29.dp))
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Image(painter = painterResource(id = progress), contentDescription = "Progress Image")
+            Spacer(modifier = modifier.padding(32.dp))
+            Text(text = title, style = HeadingTextStyle, color = G900)
+            Spacer(modifier = modifier.padding(16.dp))
+            Text(text = text, style = BodyMedium, color = G700)
+            Spacer(modifier = modifier.padding(32.dp))
+            PrimaryButton(onClick = onClick, buttonText = "Next")
+
+
+        }
+
     }
 }
+
+

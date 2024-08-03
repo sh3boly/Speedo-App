@@ -17,7 +17,6 @@ val AlertColor = Color(216, 0, 39, 255)
 val G900 = Color(0xFF24221E)
 val G500 = Color(0xFF565552)
 val G700 = Color(0xFF3C3A37)
-val G200 = Color(0xFF7C7A78)
 val G100 = Color(0xFF898886)
 val G70 = Color(0xFFB0AFAE)
 val G40 = Color(0xFFE3E2E2)
@@ -29,6 +28,9 @@ val D300 = Color(0xFFFF002E)
 
 val OffYellowColor = Color(0xFFFFF8E7)
 val RedYellowColor = Color(0xFFFFEAEE)
-
+val G200 = Color(0xFF7C7A78)
 val GradientStart = Color(0xFFFFFFFF)
 val GradientEnd = Color(0xFFFFEAEE)
+
+val HomeGradientStart = Color(0xFFFFF8E7)
+val HomeGradientEnd = Color(0xFFFFEAEE)

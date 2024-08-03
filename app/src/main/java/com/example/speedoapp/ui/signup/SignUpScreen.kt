@@ -65,7 +65,7 @@ fun SignUpScreen(
                 .background(Brush.linearGradient(listOf(GradientStart, GradientEnd)))
                 .fillMaxSize()
                 .padding(innerPadding)
-                .padding(16.dp),
+                .padding(16.dp)
         ) {
             var name by rememberSaveable { mutableStateOf("") }
             var email by rememberSaveable { mutableStateOf("") }
