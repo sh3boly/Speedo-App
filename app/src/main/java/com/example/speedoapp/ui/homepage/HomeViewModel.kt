@@ -28,6 +28,7 @@ class HomeViewModel : ViewModel() {
     init {
         getName()
         getBalance()
+        getTransactions()
     }
 
     fun getBalance() {
@@ -68,6 +69,17 @@ class HomeViewModel : ViewModel() {
                 Log.d("trace", "Exception: ${e.localizedMessage}")
                 _hasError.value += 1
 
+            }
+        }
+    }
+
+    fun logout(){
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                RetrofitFactory.homeApi.logout()
+            }
+            catch (e: Exception){
+                Log.d("trace", "Exception: ${e.localizedMessage}")
             }
         }
     }

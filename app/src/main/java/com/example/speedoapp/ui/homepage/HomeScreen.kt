@@ -63,16 +63,13 @@ fun HomeScreen(
 
 
     val balance by viewModel.balance.collectAsState()
-//    val transactions by viewModel.transactions.collectAsState()
+    val transactions by viewModel.transactions.collectAsState()
     val name by viewModel.name.collectAsState()
     Log.d("trace", "The name is : $name")
 //
 //    val hasError by viewModel.hasError.collectAsState()
 //    if (hasError > 0)
 //        Toast.makeText(LocalContext.current, "Check your connection", Toast.LENGTH_SHORT).show()
-    var transactions = mutableListOf<Transaction>()
-    transactions.add(Transaction("Ahmed Hamdy", "Recieved", 1000f, "12/12/2024"))
-    transactions.add(Transaction("Ahmed Tarek", "Recieved", 1500f, "24/04/2024"))
     //val name = "Asmaa Desouky"
     Scaffold(
         bottomBar = { MenuAppBar(currentScreen = "home") }
