@@ -39,6 +39,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -84,17 +85,18 @@ fun AmountScreen(
     val scaffoldState = rememberBottomSheetScaffoldState()
     val scope = rememberCoroutineScope()
     var isError by remember { mutableStateOf<String?>(null) }
-
+//    val context = LocalContext.current
+//    viewModel.loadCurrenciesFromLocal(context)
     BottomSheetScaffold(sheetShape = RoundedCornerShape(topStart = 50.dp, topEnd = 50.dp),
         sheetPeekHeight = 0.dp,
         sheetContainerColor = G0,
         scaffoldState = scaffoldState,
         sheetContent = {
             Column(
-                        modifier = modifier
-                            .imePadding()
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp)
+                modifier = modifier
+                    .imePadding()
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
                     .padding(top = 32.dp)
                     .height(400.dp), verticalArrangement = Arrangement.Center
 
@@ -130,7 +132,7 @@ fun AmountScreen(
         ) {
             Scaffold(
                 bottomBar = {
-                    MenuAppBar(currentScreen = "transfer")
+                    MenuAppBar(currentScreen = "transfer", navController = navController)
                 },
                 containerColor = Color.Transparent,
                 modifier = Modifier.imePadding(),

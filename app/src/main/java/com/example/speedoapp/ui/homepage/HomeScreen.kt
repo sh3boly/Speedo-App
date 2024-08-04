@@ -73,7 +73,7 @@ fun HomeScreen(
 //        Toast.makeText(LocalContext.current, "Check your connection", Toast.LENGTH_SHORT).show()
     //val name = "Asmaa Desouky"
     Scaffold(
-        bottomBar = { MenuAppBar(currentScreen = "home") }
+        bottomBar = { MenuAppBar(currentScreen = "home", navController = navController) }
     )
     { innerPadding ->
         Column(
@@ -261,4 +261,3 @@ fun TransactionListItem(modifier: Modifier = Modifier, transaction: Transaction)
 fun HomeScreenPreview() {
     HomeScreen(navController = NavController(LocalContext.current))
 }
-
