@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.text.DecimalFormat
 
 class HomeViewModel : ViewModel() {
     private val _balance = MutableStateFlow<Float>(0f)
@@ -26,23 +27,16 @@ class HomeViewModel : ViewModel() {
 
     init {
         getName()
+        getBalance()
+        getTransactions()
     }
 
     fun getBalance() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val response = RetrofitFactory.homeApi.getBalance()
-                if (response.isSuccessful) {
-                    val balanceResponse = response.body()
-                    if (balanceResponse != null)
-                        _balance.value = balanceResponse
+                val body = RetrofitFactory.homeApi.getBalance()
+                _balance.value = body.balance
 
-
-                } else {
-                    Log.d("trace", "Error: ${response.message()}")
-                    _hasError.value += 1
-
-                }
             } catch (e: Exception) {
                 Log.d("trace", "Exception: ${e.localizedMessage}")
                 _hasError.value += 1
@@ -79,6 +73,17 @@ class HomeViewModel : ViewModel() {
         }
     }
 
+    fun logout(){
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                RetrofitFactory.homeApi.logout()
+            }
+            catch (e: Exception){
+                Log.d("trace", "Exception: ${e.localizedMessage}")
+            }
+        }
+    }
+
     fun getInitials(fullName: String): String {
         if (fullName.isNullOrEmpty()) {
             return ""
@@ -88,5 +93,10 @@ class HomeViewModel : ViewModel() {
             return names.mapNotNull { it.firstOrNull()?.toString() }.take(2).joinToString("")
         }
         return fullName.first().toString()
+    }
+
+    fun balanceStringify(balance: Float): String {
+        val formatter = DecimalFormat("#,###.00")
+        return formatter.format(balance)
     }
 }

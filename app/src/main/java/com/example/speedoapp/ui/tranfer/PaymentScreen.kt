@@ -31,13 +31,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.speedoapp.R
+import com.example.speedoapp.navigation.AppRoutes.HOME_ROUTE
 import com.example.speedoapp.ui.common.AccountCard
+import com.example.speedoapp.ui.common.MenuAppBar
 import com.example.speedoapp.ui.common.PrimaryButton
 import com.example.speedoapp.ui.common.SecondaryButton
 import com.example.speedoapp.ui.common.Stepper
 import com.example.speedoapp.ui.common.TopBar
 import com.example.speedoapp.ui.theme.BodyMedium
 import com.example.speedoapp.ui.theme.BodyMediumBold
+import com.example.speedoapp.ui.theme.D300
 import com.example.speedoapp.ui.theme.G40
 import com.example.speedoapp.ui.theme.G500
 import com.example.speedoapp.ui.theme.G900
@@ -50,6 +53,7 @@ fun PaymentScreen(
     navController: NavController, viewModel: AmountScreenViewModel, modifier: Modifier = Modifier
 ) {
     val transferData by viewModel.transferData.collectAsState()
+    val transferResult by viewModel.transferResult.collectAsState()
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -61,13 +65,16 @@ fun PaymentScreen(
     ) {
         Scaffold(
             containerColor = Color.Transparent,
+            bottomBar = {
+                MenuAppBar(currentScreen = "transfer", navController = navController)
+            },
             topBar = {
                 TopBar(
                     title = stringResource(R.string.transfer),
                     navigationIcon = true,
                     color = Color.Transparent,
                     onNavigationIconClick = {
-                        navController.popBackStack()
+                        navController.navigate(HOME_ROUTE)
                     },
                     actions = false,
                     onActionsClick = {},
@@ -86,15 +93,18 @@ fun PaymentScreen(
                 Stepper(3)
                 Spacer(modifier = modifier.height(24.35.dp))
                 Image(
-                    painter = painterResource(id = R.drawable.successful_image),
+                    painter = painterResource(id = if (transferResult == true) R.drawable.successful_image else R.drawable.ic_failure),
                     contentDescription = stringResource(R.string.transaction_status),
-                    modifier = modifier.align(Alignment.CenterHorizontally)
+                    modifier = modifier
+                        .align(Alignment.CenterHorizontally)
                 )
                 Spacer(modifier = modifier.height(16.dp))
                 Text(
-                    text = "Your transfer was successful",
+                    text = if (transferResult == true) stringResource(R.string.your_transfer_was_successful) else stringResource(
+                        R.string.your_transfer_failed
+                    ),
                     style = SubTitleTextStyleBold,
-                    color = G900,
+                    color = if (transferResult == true) G900 else D300,
                     modifier = modifier.align(Alignment.CenterHorizontally)
                 )
                 Spacer(modifier = modifier.height(16.dp))
@@ -119,7 +129,7 @@ fun PaymentScreen(
                         )
                     }
                     Image(
-                        painter = painterResource(R.drawable.ic_success_transaction),
+                        painter = painterResource(if (transferResult == true) R.drawable.ic_success_transaction else R.drawable.ic_failure_transaction),
                         contentDescription = null,
                         modifier = Modifier
                             .size(44.dp)
@@ -147,7 +157,7 @@ fun PaymentScreen(
                 HorizontalDivider(color = G40)
                 Spacer(modifier = modifier.height(32.dp))
                 PrimaryButton(
-                    onClick = { /*TODO*/ },
+                    onClick = { navController.navigate(HOME_ROUTE) },
                     buttonText = stringResource(R.string.back_to_home)
                 )
                 Spacer(modifier = modifier.height(16.dp))

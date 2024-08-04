@@ -31,6 +31,7 @@ import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -50,6 +51,7 @@ import com.example.speedoapp.model.TransferData
 import com.example.speedoapp.navigation.AppRoutes.CONFIRM_TRANSFER
 import com.example.speedoapp.navigation.AppRoutes.SELECT_CURRENCY
 import com.example.speedoapp.ui.common.DataField
+import com.example.speedoapp.ui.common.MenuAppBar
 import com.example.speedoapp.ui.common.PrimaryButton
 import com.example.speedoapp.ui.common.Stepper
 import com.example.speedoapp.ui.theme.AlertColor
@@ -81,6 +83,7 @@ fun AmountScreen(
     //val hasError by viewModel.hasError.collectAsState() -> will use it to show error screen in case error
     val scaffoldState = rememberBottomSheetScaffoldState()
     val scope = rememberCoroutineScope()
+    var isError by remember { mutableStateOf<String?>(null) }
 
     BottomSheetScaffold(sheetShape = RoundedCornerShape(topStart = 50.dp, topEnd = 50.dp),
         sheetPeekHeight = 0.dp,
@@ -88,10 +91,10 @@ fun AmountScreen(
         scaffoldState = scaffoldState,
         sheetContent = {
             Column(
-                modifier = modifier
-                    .imePadding()
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
+                        modifier = modifier
+                            .imePadding()
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp)
                     .padding(top = 32.dp)
                     .height(400.dp), verticalArrangement = Arrangement.Center
 
@@ -126,13 +129,18 @@ fun AmountScreen(
                 )
         ) {
             Scaffold(
+                bottomBar = {
+                    MenuAppBar(currentScreen = "transfer", navController = navController)
+                },
                 containerColor = Color.Transparent,
+                modifier = Modifier.imePadding(),
                 topBar = {
                     TopBar(
                         title = stringResource(R.string.transfer),
                         navigationIcon = true,
                         color = Color.Transparent,
                         onNavigationIconClick = {
+                            viewModel.reset()
                             navController.popBackStack()
                         },
                         actions = false,
@@ -217,15 +225,22 @@ fun AmountScreen(
                         value = transferData.recipient.accountNumber,
                         onValueChange = {
                             viewModel.updateRecipientAccountNumber(it)
+                            isError = null
                         },
                         label = stringResource(id = R.string.recipient_account_number),
                         image = null,
                         typingImage = null,
-                        type = KeyboardType.Number
+                        type = KeyboardType.Number,
+                        isError = isError
                     )
                     Spacer(modifier = modifier.height(32.dp))
                     PrimaryButton(
-                        onClick = { navController.navigate(CONFIRM_TRANSFER) },
+                        onClick = {
+                            isError = viewModel.accountNumberValidation()
+                            if (isError == null)
+                                navController.navigate(CONFIRM_TRANSFER)
+
+                        },
                         buttonText = stringResource(R.string.continue_button),
                         isEnabled = viewModel.validateData()
                     )

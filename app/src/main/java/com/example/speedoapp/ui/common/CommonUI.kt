@@ -82,6 +82,9 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.speedoapp.R
 import com.example.speedoapp.model.Currency
+import com.example.speedoapp.navigation.AppRoutes.AMOUNT_TRANSFER
+import com.example.speedoapp.navigation.AppRoutes.HOME_ROUTE
+import com.example.speedoapp.navigation.AppRoutes.MORE_ROUTE
 import com.example.speedoapp.navigation.AppRoutes
 import com.example.speedoapp.ui.theme.AlertColor
 import com.example.speedoapp.ui.theme.AppNumbersStyle

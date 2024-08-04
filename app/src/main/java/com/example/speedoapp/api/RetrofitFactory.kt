@@ -2,9 +2,6 @@ package com.example.speedoapp.api
 
 import AuthInterceptor
 import TokenManager
-import android.app.Application
-import android.content.Context
-import androidx.compose.ui.platform.LocalContext
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -32,6 +29,10 @@ object RetrofitFactory {
 
     val authApi: AuthApi by lazy {
         authRetrofit.create(AuthApi::class.java)
+    }
+
+    val transferApi: TransferApiCallable by lazy {
+        unauthRetrofit.create(TransferApiCallable::class.java)
     }
 
     val homeApi: HomeApi by lazy {

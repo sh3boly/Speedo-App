@@ -93,3 +93,10 @@ val ButtonMedium = TextStyle(
     lineHeight = 20.8.sp,
     fontWeight = FontWeight(500),
 )
+
+val HeadingTextStyle = TextStyle(
+    fontSize = 24.sp,
+    lineHeight = 36.sp,
+    textAlign = TextAlign.Center,
+    fontWeight = FontWeight(600)
+)

@@ -10,20 +10,25 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.speedoapp.R
 import com.example.speedoapp.constants.Constants.EMAIL
 import com.example.speedoapp.constants.Constants.IDENTIFIER
 import com.example.speedoapp.constants.Constants.NAME
 import com.example.speedoapp.constants.Constants.PASSWORD
 import com.example.speedoapp.navigation.AppRoutes.ADDCARD_ROUTE
+import com.example.speedoapp.navigation.AppRoutes.AMOUNT_ONBOARDING_ROUTE
 import com.example.speedoapp.navigation.AppRoutes.AMOUNT_TRANSFER
+import com.example.speedoapp.navigation.AppRoutes.CONFIRMATION_ONBOARDING_ROUTE
 import com.example.speedoapp.navigation.AppRoutes.CONFIRM_TRANSFER
 import com.example.speedoapp.navigation.AppRoutes.SIGNUP_ROUTE
 import com.example.speedoapp.navigation.AppRoutes.COUNTRYDATE_ROUTE
 import com.example.speedoapp.navigation.AppRoutes.HOME_ROUTE
 import com.example.speedoapp.navigation.AppRoutes.LOADING_ROUTE
+import com.example.speedoapp.navigation.AppRoutes.MORE_ROUTE
 import com.example.speedoapp.navigation.AppRoutes.MY_CARDS
 import com.example.speedoapp.navigation.AppRoutes.OTP_CONNECT_ROUTE
 import com.example.speedoapp.navigation.AppRoutes.OTP_ROUTE
+import com.example.speedoapp.navigation.AppRoutes.PAYMENT_ONBOARDING_ROUTE
 import com.example.speedoapp.navigation.AppRoutes.PAYMENT_TRANSFER
 import com.example.speedoapp.navigation.AppRoutes.PROFILE
 import com.example.speedoapp.navigation.AppRoutes.SELECT_CURRENCY
@@ -37,6 +42,8 @@ import com.example.speedoapp.ui.homepage.HomeScreen
 import com.example.speedoapp.ui.signin.SignInScreen
 
 import com.example.speedoapp.ui.common.CurrenciesScreen
+import com.example.speedoapp.ui.common.MoreScreen
+import com.example.speedoapp.ui.common.OnboardingScreen
 import com.example.speedoapp.ui.profile.Profile
 import com.example.speedoapp.ui.signup.CountryDateScreen
 import com.example.speedoapp.ui.signup.SignUpScreen
@@ -61,6 +68,10 @@ object AppRoutes {
     const val OTP_CONNECT_ROUTE="connect"
     const val MY_CARDS="mycards"
     const val PROFILE="profile"
+    const val MORE_ROUTE = "more"
+    const val AMOUNT_ONBOARDING_ROUTE = "amount"
+    const val CONFIRMATION_ONBOARDING_ROUTE = "confirmation"
+    const val PAYMENT_ONBOARDING_ROUTE = "payment"
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -137,5 +148,38 @@ fun AppNavHost(modifier: Modifier = Modifier) {
         composable(route = MY_CARDS) { MyCards(navController) }
         composable(route = PROFILE) { Profile(navController) }
 
+
+        composable(MORE_ROUTE) {
+            amountScreenViewModel.reset()
+            MoreScreen(navController = navController)
+        }
+        composable(route = AMOUNT_ONBOARDING_ROUTE) {
+            OnboardingScreen(
+                image = R.drawable.ic_amount,
+                title = "Amount",
+                text = "Send money fast with simple steps. Create account, Confirmation, Payment. Simple",
+                onClick = { navController.navigate(CONFIRMATION_ONBOARDING_ROUTE) },
+                skip = { navController.navigate(SIGNUP_ROUTE) }
+            )
+        }
+        composable(route = CONFIRMATION_ONBOARDING_ROUTE) {
+            OnboardingScreen(
+                image = R.drawable.ic_confirmation,
+                title = "Confirmation",
+                text = "Transfer funds instantly to friends and family worldwide, strong shield protecting a money.",
+                onClick = { navController.navigate(PAYMENT_ONBOARDING_ROUTE) },
+                skip = { navController.navigate(SIGNUP_ROUTE) }
+            )
+        }
+
+        composable(route = PAYMENT_ONBOARDING_ROUTE) {
+            OnboardingScreen(
+                image = R.drawable.ic_payment,
+                title = "Payment",
+                text = "Enjoy peace of mind with our secure platform  Transfer funds instantly to friends.",
+                onClick = { navController.navigate(SIGNUP_ROUTE) },
+                skip = { navController.navigate(SIGNUP_ROUTE) }
+            )
+        }
     }
 }

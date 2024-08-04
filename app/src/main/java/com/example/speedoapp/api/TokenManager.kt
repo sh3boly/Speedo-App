@@ -23,4 +23,12 @@ object TokenManager {
         editor.remove("token")
         editor.apply()
     }
+
+    fun isFirstTimeLaunch(): Boolean {
+        val isFirstTime = prefs.getBoolean("first_time", true)
+        if (isFirstTime) {
+            prefs.edit().putBoolean("first_time", false).apply()
+        }
+        return isFirstTime
+    }
 }
