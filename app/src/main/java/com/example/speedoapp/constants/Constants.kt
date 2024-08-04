@@ -15,6 +15,7 @@ object Constants {
     const val COUNTRY_FLAG_IMAGE = "flag_url"
     const val COUNTRY_NAME = "currency_name"
     const val CURRENCIES_ENDPOINT = "/api/currencies" //to be modified
+    const val TRANSFER_ENDPOINT = "/api/transfer"
     const val BASE_URL = "http://10.0.2.2:3000" //to be modified
     const val IDENTIFIER = "identifier"
 }

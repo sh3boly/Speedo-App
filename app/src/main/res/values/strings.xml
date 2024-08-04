@@ -27,4 +27,16 @@
     <string name="back_to_home">Back to Home</string>
     <string name="total_amount">Total amount</string>
     <string name="transaction_status">Transaction Status</string>
+    <string name="bank_icon">Bank Icon</string>
+    <string name="your_transfer_was_successful">Your transfer was successful</string>
+    <string name="your_transfer_failed">Your transfer failed</string>
+    <string name="more">More</string>
+    <string name="arrow_icon">Arrow Icon</string>
+    <string name="transfer_from_website">Transfer From Website</string>
+    <string name="favourites">Favourites</string>
+    <string name="profile">Profile</string>
+    <string name="help">Help</string>
+    <string name="logout">Logout</string>
+    <string name="send_email">Send Email</string>
+    <string name="call_us">Call Us</string>
 </resources>

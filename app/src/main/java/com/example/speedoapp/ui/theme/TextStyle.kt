@@ -72,6 +72,18 @@ val ClickAbleTextStyle = TextStyle(
     fontWeight = FontWeight(500),
     color = PrimaryColor,
     textDecoration = TextDecoration.Underline,
+)
+val CardDetailsTextStyle = TextStyle(
+    fontSize = 12.sp,
+    lineHeight = 18.sp,
+    textAlign = TextAlign.Center,
+    fontWeight = FontWeight(400),
+)
+val BoldNavTextStyle = TextStyle(
+    fontSize = 12.sp,
+    lineHeight = 18.sp,
+    textAlign = TextAlign.Center,
+    fontWeight = FontWeight(500),
 
     )
 
@@ -80,4 +92,11 @@ val ButtonMedium = TextStyle(
     fontSize = 16.sp,
     lineHeight = 20.8.sp,
     fontWeight = FontWeight(500),
+)
+
+val HeadingTextStyle = TextStyle(
+    fontSize = 24.sp,
+    lineHeight = 36.sp,
+    textAlign = TextAlign.Center,
+    fontWeight = FontWeight(600)
 )

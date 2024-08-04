@@ -1,16 +1,23 @@
 package com.example.speedoapp.api
 
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
+
+import com.example.speedoapp.model.LoginRequest
+import com.example.speedoapp.model.LoginResponse
+import com.example.speedoapp.model.RegisterRequest
+import com.example.speedoapp.model.RegisterResponse
+import retrofit2.Response
+import retrofit2.http.Body
 import retrofit2.http.POST
 
 interface AuthApi {
 
-    @FormUrlEncoded
-    @POST("login")
-    fun login(
-        @Field("email") email: String,
-        @Field("password") password: String
+    @POST("api/login")
+    suspend fun login(
+        @Body request: LoginRequest
+    ): Response<LoginResponse>
 
-    ) : Any
+    @POST("api/register")
+    suspend fun register(
+        @Body request: RegisterRequest
+    ) : Response<RegisterResponse>
 }

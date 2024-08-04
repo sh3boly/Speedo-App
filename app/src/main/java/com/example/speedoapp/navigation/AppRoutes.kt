@@ -1,5 +1,7 @@
 package com.example.speedoapp.navigation
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -8,20 +10,40 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.speedoapp.R
 import com.example.speedoapp.constants.Constants.EMAIL
 import com.example.speedoapp.constants.Constants.IDENTIFIER
 import com.example.speedoapp.constants.Constants.NAME
 import com.example.speedoapp.constants.Constants.PASSWORD
+import com.example.speedoapp.navigation.AppRoutes.ADDCARD_ROUTE
+import com.example.speedoapp.navigation.AppRoutes.AMOUNT_ONBOARDING_ROUTE
 import com.example.speedoapp.navigation.AppRoutes.AMOUNT_TRANSFER
+import com.example.speedoapp.navigation.AppRoutes.CONFIRMATION_ONBOARDING_ROUTE
 import com.example.speedoapp.navigation.AppRoutes.CONFIRM_TRANSFER
 import com.example.speedoapp.navigation.AppRoutes.SIGNUP_ROUTE
 import com.example.speedoapp.navigation.AppRoutes.COUNTRYDATE_ROUTE
+import com.example.speedoapp.navigation.AppRoutes.HOME_ROUTE
+import com.example.speedoapp.navigation.AppRoutes.LOADING_ROUTE
+import com.example.speedoapp.navigation.AppRoutes.MORE_ROUTE
+import com.example.speedoapp.navigation.AppRoutes.MY_CARDS
+import com.example.speedoapp.navigation.AppRoutes.OTP_CONNECT_ROUTE
+import com.example.speedoapp.navigation.AppRoutes.OTP_ROUTE
+import com.example.speedoapp.navigation.AppRoutes.PAYMENT_ONBOARDING_ROUTE
 import com.example.speedoapp.navigation.AppRoutes.PAYMENT_TRANSFER
+import com.example.speedoapp.navigation.AppRoutes.PROFILE
 import com.example.speedoapp.navigation.AppRoutes.SELECT_CURRENCY
 import com.example.speedoapp.navigation.AppRoutes.SIGNIN_ROUTE
+import com.example.speedoapp.ui.MyCards.MyCards
+import com.example.speedoapp.ui.addcard.AddCardScreen
+import com.example.speedoapp.ui.addcard.LoadingScreen
+import com.example.speedoapp.ui.addcard.OTP
+import com.example.speedoapp.ui.addcard.OTPconnected
+import com.example.speedoapp.ui.homepage.HomeScreen
+import com.example.speedoapp.ui.signin.SignInScreen
+
 import com.example.speedoapp.ui.common.CurrenciesScreen
+import com.example.speedoapp.ui.profile.Profile
 import com.example.speedoapp.ui.signup.CountryDateScreen
-import com.example.speedoapp.ui.signup.SignInScreen
 import com.example.speedoapp.ui.signup.SignUpScreen
 import com.example.speedoapp.ui.tranfer.AmountScreen
 import com.example.speedoapp.ui.tranfer.AmountScreenViewModel
@@ -37,8 +59,20 @@ object AppRoutes {
     const val SELECT_CURRENCY = "select_currency"
     const val CONFIRM_TRANSFER = "confirm_transfer"
     const val PAYMENT_TRANSFER = "payment_Transfer"
+    const val HOME_ROUTE = "home"
+    const val ADDCARD_ROUTE= "addcard"
+    const val LOADING_ROUTE = "loading"
+    const val OTP_ROUTE = "otp"
+    const val OTP_CONNECT_ROUTE="connect"
+    const val MY_CARDS="mycards"
+    const val PROFILE="profile"
+    const val MORE_ROUTE = "more"
+    const val AMOUNT_ONBOARDING_ROUTE = "amount"
+    const val CONFIRMATION_ONBOARDING_ROUTE = "confirmation"
+    const val PAYMENT_ONBOARDING_ROUTE = "payment"
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AppNavHost(modifier: Modifier = Modifier) {
     val navController = rememberNavController()
@@ -46,7 +80,7 @@ fun AppNavHost(modifier: Modifier = Modifier) {
 
     NavHost(
         navController = navController,
-        startDestination = AMOUNT_TRANSFER,
+        startDestination = SIGNUP_ROUTE,
         modifier = modifier
     ) {
         composable(route = SIGNUP_ROUTE) { SignUpScreen(navController) }
@@ -67,6 +101,8 @@ fun AppNavHost(modifier: Modifier = Modifier) {
 
             CountryDateScreen(navController, name, email, password)
         }
+        composable(route = HOME_ROUTE) { HomeScreen(navController = navController) }
+
         composable(AMOUNT_TRANSFER) {
             AmountScreen(
                 navController,
@@ -103,5 +139,12 @@ fun AppNavHost(modifier: Modifier = Modifier) {
         composable(route = PAYMENT_TRANSFER) {
             PaymentScreen(navController = navController, viewModel = amountScreenViewModel)
         }
+        composable(route = ADDCARD_ROUTE) { AddCardScreen(navController) }
+        composable(route = LOADING_ROUTE) { LoadingScreen(navController) }
+        composable(route = OTP_ROUTE) { OTP(navController) }
+        composable(route = OTP_CONNECT_ROUTE) { OTPconnected(navController) }
+        composable(route = MY_CARDS) { MyCards(navController) }
+        composable(route = PROFILE) { Profile(navController) }
+
     }
 }

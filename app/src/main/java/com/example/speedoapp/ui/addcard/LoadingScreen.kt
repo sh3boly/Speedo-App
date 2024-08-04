@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -21,11 +22,14 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
+import androidx.navigation.NavController
+import com.example.speedoapp.navigation.AppRoutes
 import com.example.speedoapp.ui.theme.CircularIndicatorBig
 import com.example.speedoapp.ui.theme.PrimaryColor
+import kotlinx.coroutines.delay
 
 @Composable
-fun LoadingScreen() {
+fun LoadingScreen(navController: NavController) {
     Column(modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -53,10 +57,14 @@ fun LoadingScreen() {
             fontSize = 20.sp,
         )
     }
+    LaunchedEffect(Unit) {
+        delay(3000)
+        navController.navigate(AppRoutes.OTP_ROUTE)
+    }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun LoadingScreenPreview(){
-    LoadingScreen()
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun LoadingScreenPreview(){
+//    LoadingScreen()
+//}
