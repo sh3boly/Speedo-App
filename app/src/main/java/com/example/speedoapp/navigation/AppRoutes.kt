@@ -42,8 +42,6 @@ import com.example.speedoapp.ui.homepage.HomeScreen
 import com.example.speedoapp.ui.signin.SignInScreen
 
 import com.example.speedoapp.ui.common.CurrenciesScreen
-import com.example.speedoapp.ui.common.MoreScreen
-import com.example.speedoapp.ui.common.OnboardingScreen
 import com.example.speedoapp.ui.profile.Profile
 import com.example.speedoapp.ui.signup.CountryDateScreen
 import com.example.speedoapp.ui.signup.SignUpScreen
@@ -148,38 +146,5 @@ fun AppNavHost(modifier: Modifier = Modifier) {
         composable(route = MY_CARDS) { MyCards(navController) }
         composable(route = PROFILE) { Profile(navController) }
 
-
-        composable(MORE_ROUTE) {
-            amountScreenViewModel.reset()
-            MoreScreen(navController = navController)
-        }
-        composable(route = AMOUNT_ONBOARDING_ROUTE) {
-            OnboardingScreen(
-                image = R.drawable.ic_amount,
-                title = "Amount",
-                text = "Send money fast with simple steps. Create account, Confirmation, Payment. Simple",
-                onClick = { navController.navigate(CONFIRMATION_ONBOARDING_ROUTE) },
-                skip = { navController.navigate(SIGNUP_ROUTE) }
-            )
-        }
-        composable(route = CONFIRMATION_ONBOARDING_ROUTE) {
-            OnboardingScreen(
-                image = R.drawable.ic_confirmation,
-                title = "Confirmation",
-                text = "Transfer funds instantly to friends and family worldwide, strong shield protecting a money.",
-                onClick = { navController.navigate(PAYMENT_ONBOARDING_ROUTE) },
-                skip = { navController.navigate(SIGNUP_ROUTE) }
-            )
-        }
-
-        composable(route = PAYMENT_ONBOARDING_ROUTE) {
-            OnboardingScreen(
-                image = R.drawable.ic_payment,
-                title = "Payment",
-                text = "Enjoy peace of mind with our secure platform  Transfer funds instantly to friends.",
-                onClick = { navController.navigate(SIGNUP_ROUTE) },
-                skip = { navController.navigate(SIGNUP_ROUTE) }
-            )
-        }
     }
 }

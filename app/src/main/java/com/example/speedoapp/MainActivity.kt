@@ -19,8 +19,6 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             SpeedoAppTheme {
-                AppNavHost(firstTime = TokenManager.isFirstTimeLaunch())
-
             }
         }
     }
