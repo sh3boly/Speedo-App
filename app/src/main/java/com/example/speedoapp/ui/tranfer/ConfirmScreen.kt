@@ -67,7 +67,7 @@ fun ConfirmScreen(
     ) {
         Scaffold(
             bottomBar = {
-                MenuAppBar(currentScreen = "transfer", navController = navController)
+                MenuAppBar(currentScreen = "transfer")
             },
             containerColor = Color.Transparent,
             topBar = {

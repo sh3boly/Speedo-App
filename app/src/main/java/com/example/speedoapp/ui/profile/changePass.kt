@@ -18,6 +18,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.speedoapp.ui.common.PasswordField
 import com.example.speedoapp.ui.common.PrimaryButton
 import com.example.speedoapp.ui.theme.OffYellowColor
@@ -25,7 +26,7 @@ import com.example.speedoapp.ui.theme.SubTitleTextStyle
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ChangePass(modifier: Modifier = Modifier) {
+fun ChangePass(navController: NavController, modifier: Modifier = Modifier) {
     var password by rememberSaveable { mutableStateOf("") }
     Scaffold(
         topBar = {
@@ -50,9 +51,4 @@ fun ChangePass(modifier: Modifier = Modifier) {
             PrimaryButton(onClick = { /*TODO*/ }, buttonText = "Save")
         }
     }
-}
-@Preview(showBackground = true)
-@Composable
-fun ChangePassPreview(){
-    ChangePass()
 }
