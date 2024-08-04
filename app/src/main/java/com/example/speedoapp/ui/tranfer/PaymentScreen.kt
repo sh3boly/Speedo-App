@@ -66,7 +66,7 @@ fun PaymentScreen(
         Scaffold(
             containerColor = Color.Transparent,
             bottomBar = {
-                MenuAppBar(currentScreen = "transfer", navController = navController)
+                MenuAppBar(currentScreen = "transfer")
             },
             topBar = {
                 TopBar(

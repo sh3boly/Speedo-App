@@ -46,6 +46,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.speedoapp.R
+import com.example.speedoapp.navigation.AppRoutes
 import com.example.speedoapp.ui.addcard.AddCardViewModel
 import com.example.speedoapp.ui.addcard.CardInfo
 import com.example.speedoapp.ui.theme.G100
@@ -108,8 +109,8 @@ fun Profile(navController: NavController, modifier: Modifier = Modifier, cardVie
                     modifier = Modifier.padding(16.dp)
                 )
             }
-            ListItem(iconRes = R.drawable.group_18325, title = "Personal information", description ="Your information", onClick = {})
-            ListItem(iconRes = R.drawable.group_183252, title = "Settings", description ="Change your settings", onClick = {} )
+            ListItem(iconRes = R.drawable.group_18325, title = "Personal information", description ="Your information", onClick = {navController.navigate(AppRoutes.PROFILE_INFO)})
+            ListItem(iconRes = R.drawable.group_183252, title = "Settings", description ="Change your settings", onClick = {navController.navigate(AppRoutes.SETTINGS)} )
             ListItem(iconRes = R.drawable.group_183253, title = "Payment history", description = "view your transactions", onClick = {})
             ListItem(iconRes = R.drawable.group_183254, title = "My Favourite list", description ="view your favourite", onClick = {} )
 

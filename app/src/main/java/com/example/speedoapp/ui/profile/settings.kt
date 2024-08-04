@@ -14,13 +14,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.speedoapp.R
+import com.example.speedoapp.navigation.AppRoutes
 import com.example.speedoapp.ui.theme.OffYellowColor
 import com.example.speedoapp.ui.theme.SubTitleTextStyle
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Settings(modifier: Modifier = Modifier) {
+fun Settings(navController: NavController, modifier: Modifier = Modifier) {
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(title = {
@@ -33,14 +35,9 @@ fun Settings(modifier: Modifier = Modifier) {
         Column(modifier = Modifier.background(OffYellowColor)
             .fillMaxSize()
             .padding(innerPadding).padding(top=28.dp)) {
-            ListItem(iconRes = R.drawable.group_183255, title = "Change Password", description ="Change Password" , onClick = {}) 
-            ListItem(iconRes = R.drawable.group_183256, title = "Edit Profile", description ="Change your Information", onClick = {} )
+            ListItem(iconRes = R.drawable.group_183255, title = "Change Password", description ="Change Password" , onClick = {navController.navigate(AppRoutes.CHANGEPASS)})
+            ListItem(iconRes = R.drawable.group_183256, title = "Edit Profile", description ="Change your Information", onClick = {navController.navigate(AppRoutes.EDIT_PROFILE)} )
         }
 
 }
-}
-@Preview(showBackground = true)
-@Composable
-fun SettingsPreview(){
-    Settings()
 }
