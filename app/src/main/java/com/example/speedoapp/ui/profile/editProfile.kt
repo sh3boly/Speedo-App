@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.speedoapp.R
 import com.example.speedoapp.ui.common.DataField
 import com.example.speedoapp.ui.common.PrimaryButton
@@ -29,7 +30,7 @@ import com.example.speedoapp.ui.theme.SubTitleTextStyle
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EditProfile(modifier: Modifier = Modifier) {
+fun EditProfile(navController: NavController, modifier: Modifier = Modifier) {
     var name by rememberSaveable { mutableStateOf("") }
     var email by rememberSaveable { mutableStateOf("") }
     Scaffold(
@@ -75,9 +76,4 @@ fun EditProfile(modifier: Modifier = Modifier) {
         }
 
     }
-}
-@Preview(showBackground = true)
-@Composable
-fun EditProfilePreview(){
-    EditProfile()
 }

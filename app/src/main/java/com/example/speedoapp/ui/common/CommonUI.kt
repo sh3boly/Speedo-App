@@ -1,8 +1,6 @@
 package com.example.speedoapp.ui.common
 
-import android.content.Context
-import android.content.Intent
-import android.net.Uri
+import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -12,7 +10,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,17 +20,18 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
-import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Card
@@ -43,6 +41,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerState
+import androidx.compose.material3.Divider
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
@@ -55,14 +54,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults.outlinedTextFieldColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -70,22 +66,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.speedoapp.R
-import com.example.speedoapp.help.HelpItem
 import com.example.speedoapp.model.Currency
 import com.example.speedoapp.navigation.AppRoutes.AMOUNT_TRANSFER
 import com.example.speedoapp.navigation.AppRoutes.HOME_ROUTE
@@ -104,21 +99,20 @@ import com.example.speedoapp.ui.theme.G0
 import com.example.speedoapp.ui.theme.G100
 import com.example.speedoapp.ui.theme.G200
 import com.example.speedoapp.ui.theme.G40
+import com.example.speedoapp.ui.theme.G40
 import com.example.speedoapp.ui.theme.G70
 import com.example.speedoapp.ui.theme.G700
 import com.example.speedoapp.ui.theme.G900
-import com.example.speedoapp.ui.theme.GradientEnd
-import com.example.speedoapp.ui.theme.GradientStart
-import com.example.speedoapp.ui.theme.HeadingTextStyle
-import com.example.speedoapp.ui.theme.OffYellowColor
 import com.example.speedoapp.ui.theme.P300
+import com.example.speedoapp.ui.theme.OffYellowColor
 import com.example.speedoapp.ui.theme.P50
 import com.example.speedoapp.ui.theme.PrimaryColor
 import com.example.speedoapp.ui.theme.RedYellowColor
 import com.example.speedoapp.ui.theme.SubTitleTextStyle
 import com.example.speedoapp.ui.theme.SubTitleTextStyleBold
 import com.example.speedoapp.ui.tranfer.AmountScreenViewModel
-import kotlinx.coroutines.launch
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
 @Composable
 fun PrimaryButton(
@@ -206,8 +200,11 @@ fun PasswordField(
                 val image = if (isError == null) {
                     if (passwordVisible) {
                         R.drawable.ic_hidden_typing
-                    } else if (value.isEmpty()) R.drawable.ic_shown
-                    else R.drawable.ic_shown_typing
+                    } else
+                        if (value.isEmpty())
+                            R.drawable.ic_shown
+                        else
+                            R.drawable.ic_shown_typing
                 } else {
                     R.drawable.ic_shown_error
                 }
@@ -219,9 +216,12 @@ fun PasswordField(
             },
             modifier = modifier.fillMaxWidth()
         )
-        if (isError != null) Text(
-            text = isError, style = AppTextStyle, color = AlertColor
-        )
+        if (isError != null)
+            Text(
+                text = isError,
+                style = AppTextStyle,
+                color = AlertColor
+            )
 
     }
 }
@@ -269,14 +269,17 @@ fun DataField(
                 containerColor = G0,
                 focusedBorderColor = PrimaryColor,
                 unfocusedBorderColor = G70,
-                cursorColor = colorResource(id = R.color.black),
-                errorContainerColor = G0
+                cursorColor = colorResource(id = R.color.black)
             ),
-            modifier = modifier.fillMaxWidth()
+            modifier = modifier
+                .fillMaxWidth()
         )
-        if (isError != null) Text(
-            text = isError, style = AppTextStyle, color = AlertColor
-        )
+        if (isError != null)
+            Text(
+                text = isError,
+                style = AppTextStyle,
+                color = AlertColor
+            )
     }
 }
 
@@ -478,6 +481,114 @@ fun DatePickerChooser(onConfirm: (DatePickerState) -> Unit, onDismiss: () -> Uni
 }
 
 @Composable
+fun CurrenciesScreen(
+    modifier: Modifier = Modifier,
+    navController: NavController,
+    identifier: Int,
+    onCurrencySelected: (Currency) -> Unit,
+    viewModel: AmountScreenViewModel = viewModel()
+) {
+    Log.d("HELLO", viewModel.imageTo.collectAsState().value)
+    var selectedCurrencyIndex by rememberSaveable { mutableStateOf<Int?>(null) }
+    val currencies by viewModel.currencies.collectAsState()
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .imePadding()
+            .background(
+                brush = Brush.verticalGradient(
+                    colors = listOf(G0, RedYellowColor)
+                )
+            )
+    ) {
+        Scaffold(
+            containerColor = Color.Transparent,
+            topBar = {
+                TopBar(
+                    title = stringResource(R.string.select_currency),
+                    navigationIcon = true,
+                    color = Color.Transparent,
+                    onNavigationIconClick = {
+                        navController.popBackStack()
+                    },
+                    actions = true,
+                    onActionsClick = {
+                        navController.popBackStack()
+                    },
+                    actionsText = stringResource(R.string.cancel)
+                )
+            },
+        ) { innerPadding ->
+            Column(
+                modifier = modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp)
+                    .padding(top = 42.dp)
+                    .padding(innerPadding),
+
+                ) {
+                LazyColumn {
+                    itemsIndexed(currencies) { index, currency ->
+                        ListItem(
+                            modifier = modifier.clickable { selectedCurrencyIndex = index },
+                            leadingContent = {
+                                AsyncImage(
+                                    model = currency.imageUrl,
+                                    contentDescription = stringResource(id = R.string.country_icon),
+                                    modifier = Modifier
+                                        .size(24.dp)
+                                        .clip(CircleShape)
+                                )
+                            },
+                            headlineContent = {
+                                Text(
+                                    text = currency.name,
+                                    style = BodyMediumBold,
+                                    color = G100
+                                )
+                            },
+                            trailingContent = {
+                                if (selectedCurrencyIndex == index) {
+                                    Icon(
+                                        imageVector = Icons.Default.Check,
+                                        contentDescription = stringResource(R.string.selected),
+                                        tint = PrimaryColor
+                                    )
+                                }
+                            },
+                            colors = ListItemDefaults.colors(
+                                containerColor = if (selectedCurrencyIndex == index) P50 else Color.Transparent
+                            )
+                        )
+                        if (index != currencies.lastIndex) {
+                            HorizontalDivider(color = G40)
+                        }
+                    }
+                }
+                Box(
+                    contentAlignment = Alignment.BottomCenter,
+                    modifier = modifier
+                        .fillMaxSize()
+                        .padding(bottom = 77.dp)
+                ) {
+                    PrimaryButton(
+                        onClick = {
+                            if (selectedCurrencyIndex != null) {
+                                val selectedCurrency = currencies[selectedCurrencyIndex!!]
+                                onCurrencySelected(selectedCurrency)
+                            }
+                            navController.popBackStack()
+                        },
+                        buttonText = stringResource(R.string.select),
+                        isEnabled = selectedCurrencyIndex != null
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
 fun AccountCard(
     modifier: Modifier = Modifier,
     identifier: Int,
@@ -535,7 +646,9 @@ fun AccountCard(
                 )
                 Spacer(modifier = Modifier.padding(6.dp))
                 Text(
-                    text = "Account xxxx$cardNumber", style = BodyMedium, color = G100
+                    text = "Account xxxx$cardNumber",
+                    style = BodyMedium,
+                    color = G100
                 )
             }
         }
@@ -560,7 +673,10 @@ fun UserIcon(modifier: Modifier = Modifier, initials: String) {
 
 @Composable
 fun IconWithText(
-    modifier: Modifier = Modifier, @DrawableRes icon: Int, text: String, onClick: () -> Unit
+    modifier: Modifier = Modifier,
+    @DrawableRes icon: Int,
+    text: String,
+    onClick: () -> Unit
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -572,7 +688,6 @@ fun IconWithText(
         Text(text = text, style = AppTextStyleSelected, color = G700)
     }
 }
-
 @Composable
 fun NavItem(
     modifier: Modifier = Modifier,
@@ -586,87 +701,89 @@ fun NavItem(
         modifier = Modifier.clickable(onClick = onClick)
 
     ) {
-        Image(
-            painter = painterResource(id = icon),
-            contentDescription = text,
-            modifier = modifier.size(20.dp)
-        )
-        Spacer(modifier = modifier.height(5.5.dp))
+        Image(painter = painterResource(id = icon), contentDescription = text)
+        Spacer(modifier = modifier.padding(4.dp))
         Text(text = text, style = BoldNavTextStyle, color = color)
     }
 }
 
 @Composable
-fun MenuAppBar(modifier: Modifier = Modifier, currentScreen: String, navController: NavController) {
-    BottomAppBar(
-        containerColor = G0,
-        contentPadding = PaddingValues(
-            top = 10.dp,
-            start = 35.5.dp,
-            end = 35.5.dp
-        ),
-        actions = {
-            if (currentScreen == "home") NavItem(
+fun MenuAppBar(modifier: Modifier = Modifier, currentScreen: String) {
+    BottomAppBar(actions = {
+        if (currentScreen == "home")
+            NavItem(
                 icon = R.drawable.ic_selected_home,
                 text = "Home",
                 onClick = {},
-                color = P300
-            )
-            else NavItem(icon = R.drawable.ic_home,
+                color = P300)
+        else
+            NavItem(
+                icon = R.drawable.ic_home,
                 text = "Home",
-                onClick = { navController.navigate(HOME_ROUTE) })
+                onClick = {})
 
-            Spacer(modifier = modifier.padding(14.dp))
+        Spacer(modifier = modifier.padding(10.dp))
 
-            if (currentScreen == "transfer") NavItem(
+        if (currentScreen == "transfer")
+            NavItem(
                 icon = R.drawable.ic_selected_transfer,
                 text = "Transfer",
                 onClick = {},
-                color = P300
-            )
-            else NavItem(icon = R.drawable.ic_normal_transfer,
+                color = P300)
+        else
+            NavItem(
+                icon = R.drawable.ic_normal_transfer,
                 text = "Transfer",
-                onClick = { navController.navigate(AMOUNT_TRANSFER) })
+                onClick = {})
 
-            Spacer(modifier = modifier.padding(14.dp))
+        Spacer(modifier = modifier.padding(10.dp))
 
 
-            if (currentScreen == "transactions") NavItem(
+        if (currentScreen == "transactions")
+            NavItem(
                 icon = R.drawable.ic_selected_history,
                 text = "Transactions",
                 onClick = {},
-                color = P300
-            )
-            else NavItem(icon = R.drawable.ic_normal_history, text = "Transactions", onClick = {})
+                color = P300)
+        else
+            NavItem(
+                icon = R.drawable.ic_normal_history,
+                text = "Transactions",
+                onClick = {})
 
-            Spacer(modifier = modifier.padding(14.dp))
+        Spacer(modifier = modifier.padding(10.dp))
 
-            if (currentScreen == "mycards") NavItem(
-                icon = R.drawable.ic_selected_mycard, text = "My Cards", onClick = {}, color = P300
-            )
-            else NavItem(icon = R.drawable.ic_mycard, text = "My Cards", onClick = {})
+        if (currentScreen == "mycards")
+            NavItem(
+                icon = R.drawable.ic_selected_mycard,
+                text = "My Cards",
+                onClick = {},
+                color = P300)
+        else
+            NavItem(
+                icon = R.drawable.ic_mycard,
+                text = "My Cards",
+                onClick = {})
 
-            Spacer(modifier = modifier.padding(14.dp))
+        Spacer(modifier = modifier.padding(10.dp))
 
-            if (currentScreen == "more") NavItem(icon = R.drawable.ic_selected_more,
+        if (currentScreen == "more")
+            NavItem(
+                icon = R.drawable.ic_selected_more,
                 text = "More",
                 color = P300,
-                onClick = {}
-            )
-            else NavItem(
+                onClick = {})
+        else
+            NavItem(
                 icon = R.drawable.ic_more,
                 text = "More",
-                onClick = { navController.navigate(MORE_ROUTE) }
-            )
+                onClick = {})
 
-        },
+    },
 
-        modifier = modifier
-            .clip(RoundedCornerShape(topEnd = 24.dp, topStart = 24.dp))
-            .height(83.dp)
-            .fillMaxWidth()
+        modifier = modifier.padding(horizontal = 35.5.dp).fillMaxWidth()
 
-    )
+)
 }
 
 
@@ -680,59 +797,8 @@ fun OnboardingScreen(
     skip: () -> Unit,
 ) {
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier
-            .background(
-                brush = Brush.linearGradient(
-                    listOf(
-                        GradientStart,
-                        GradientEnd
-                    )
-                )
-            )
-            .padding(16.dp)
-            .fillMaxSize()
+        horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center
     ) {
-        Spacer(modifier = modifier.padding(25.dp))
-
-        Text(
-            text = "Skip",
-            style = ButtonMedium,
-            color = G900,
-            modifier = modifier
-                .clickable(onClick = skip)
-                .align(Alignment.End),
-        )
-        Spacer(modifier = modifier.padding(15.dp))
-
-        Image(
-            painter = painterResource(id = image),
-            contentDescription = "$title image",
-            modifier = modifier
-                .width(350.dp)
-                .height(303.dp)
-        )
-        @DrawableRes var progress: Int
-        if (title == "Amount")
-            progress = R.drawable.ic_progress_1
-        else if (title == "Confirmation")
-            progress = R.drawable.ic_progress_2
-        else
-            progress = R.drawable.ic_progress_3
-        Spacer(modifier = modifier.padding(29.dp))
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Image(painter = painterResource(id = progress), contentDescription = "Progress Image")
-            Spacer(modifier = modifier.padding(32.dp))
-            Text(text = title, style = HeadingTextStyle, color = G900)
-            Spacer(modifier = modifier.padding(16.dp))
-            Text(text = text, style = BodyMedium, color = G700)
-            Spacer(modifier = modifier.padding(32.dp))
-            PrimaryButton(onClick = onClick, buttonText = "Next")
-
-
-        }
-
+        Stepper(currentStep = 3)
     }
 }
-
-

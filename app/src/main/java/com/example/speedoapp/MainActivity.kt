@@ -12,6 +12,8 @@ import com.example.speedoapp.navigation.AppNavHost
 import com.example.speedoapp.ui.theme.SpeedoAppTheme
 import com.delasign.samplestarterproject.utils.readJsonFromAssets
 
+import androidx.navigation.compose.NavHost
+import com.example.speedoapp.api.InactivityManager
 
 class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
@@ -20,8 +22,12 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             SpeedoAppTheme {
-                AppNavHost(firstTime = TokenManager.isFirstTimeLaunch())
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        InactivityManager.userInteraction()
     }
 }
