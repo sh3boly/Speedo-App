@@ -1,8 +1,8 @@
 package com.example.speedoapp.ui.addcard
 
 import android.os.Build
+import android.util.Log
 import android.widget.Toast
-import androidx.annotation.DrawableRes
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -45,6 +45,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import com.example.speedoapp.navigation.AppRoutes
 import com.example.speedoapp.ui.common.DataField
 import com.example.speedoapp.ui.common.PrimaryButton
 import com.example.speedoapp.ui.theme.AlertColor
@@ -55,16 +57,17 @@ import com.example.speedoapp.ui.theme.TitleTextStyle
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddCardScreen(modifier: Modifier = Modifier, cardViewModel: AddCardViewModel= viewModel()) {
+fun AddCardScreen(navController:NavController,modifier: Modifier = Modifier, cardViewModel: AddCardViewModel= viewModel()) {
     val cardInfo by cardViewModel.cardInfo.collectAsState()
-    val demoCardInfo = CardInfo(
+   // val cardInfo = remember { mutableStateOf(emptyList<CardInfo>()) }
+    val democardInfo = CardInfo(
         userID = "user123",
         cardHolder = "John Doe",
         cardNo = "1234567890123456",
         expiryDate = "11\\25",
         CVV = "123",
     )
-    val democardInfo by remember { mutableStateOf(demoCardInfo) }
+    //val listofdemo=mutableListOf(democardInfo)
     val context= LocalContext.current
 
     Scaffold(
@@ -108,15 +111,23 @@ fun AddCardScreen(modifier: Modifier = Modifier, cardViewModel: AddCardViewModel
                 )
             }
             Spacer(modifier = Modifier.height(32.dp))
-            PrimaryButton(onClick = {val result =cardViewModel.submitCard(democardInfo)
+            PrimaryButton(onClick = {
+                val result =cardViewModel.submitCard(democardInfo)
                 if (result){
                     Toast.makeText(context, "success", Toast.LENGTH_SHORT).show();
+                    //cardViewModel._addedCards.add(democardInfo)
+                    navController.navigate(AppRoutes.LOADING_ROUTE)
                 }
                 else{
-                    Toast.makeText(context, "failure", Toast.LENGTH_SHORT).show();
-                }
+                    Toast.makeText(context, "failure", Toast.LENGTH_SHORT).show();}
+//                try{
+//                navController.navigate(AppRoutes.LOADING_ROUTE)}
+//                catch (e: Exception) {
+//                    Log.d("ButtonClick", "Error: ${e.message}", e)
+//                }
             }, buttonText = "Sign on")
-            //PrimaryButton(onClick = {cardViewModel.submitCard(cardInfo)}, buttonText ="sign on" ) //fix this line
+            PrimaryButton(onClick = { navController.navigate(AppRoutes.MY_CARDS)
+                }, buttonText = "my cards")
 
         }
     }
@@ -150,11 +161,3 @@ fun Data(
         )
     }
 }
-
-@RequiresApi(Build.VERSION_CODES.O)
-@Preview(showBackground = true)
-@Composable
-fun AddCardScreenPreview(){
-        val cardViewModel: AddCardViewModel = viewModel()
-        AddCardScreen(cardViewModel = cardViewModel)
-    }

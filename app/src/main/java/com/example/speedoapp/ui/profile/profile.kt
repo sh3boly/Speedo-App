@@ -44,6 +44,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.example.speedoapp.R
 import com.example.speedoapp.ui.addcard.AddCardViewModel
 import com.example.speedoapp.ui.addcard.CardInfo
@@ -54,7 +55,7 @@ import com.example.speedoapp.ui.theme.SubTitleTextStyle
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Profile(modifier: Modifier = Modifier,cardViewModel: AddCardViewModel = viewModel()) {
+fun Profile(navController: NavController, modifier: Modifier = Modifier, cardViewModel: AddCardViewModel = viewModel()) {
     val cardInfo by cardViewModel.cardInfo.collectAsState()
     val demoCardInfo = CardInfo(
         userID = "user123",
@@ -150,9 +151,4 @@ fun ListItem(
         }
 
     }
-}
-@Preview(showBackground = true)
-@Composable
-fun ProfilePreview(){
-    Profile()
 }

@@ -1,6 +1,7 @@
 package com.example.speedoapp.ui.MyCards
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -30,6 +31,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -40,20 +42,31 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.example.speedoapp.R
 import com.example.speedoapp.ui.addcard.AddCardViewModel
 import com.example.speedoapp.ui.addcard.CardInfo
+import com.example.speedoapp.ui.common.MenuAppBar
 import com.example.speedoapp.ui.common.PrimaryButton
 import com.example.speedoapp.ui.theme.ButtonTextColor
 import com.example.speedoapp.ui.theme.P50
 import com.example.speedoapp.ui.theme.SubTitleTextStyle
+import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-fun MyCards(modifier: Modifier = Modifier, cardViewModel: AddCardViewModel = viewModel()) {
+fun MyCards(
+    navController: NavController,
+    modifier: Modifier = Modifier,
+    cardViewModel: AddCardViewModel = viewModel(),
+) {
 
-    val addedCards by rememberUpdatedState(cardViewModel.addedCards)
+    //val addedCards by rememberUpdatedState(cardViewModel._addedCards)
+    val addedCards = cardViewModel.addedCards.collectAsState()
+    //val addedCards = cardViewModel._addedCards.collectAsState()
+    //var addedCards by remember { mutableStateOf(emptyList<CardInfo>()) }
+    Log.d("MyCards", "Number of cards: ${addedCards.value.size}")
 
     Scaffold(
         topBar = {
@@ -61,6 +74,7 @@ fun MyCards(modifier: Modifier = Modifier, cardViewModel: AddCardViewModel = vie
                 Text(text = "My Cards", style = SubTitleTextStyle)
             })
         },
+        bottomBar = { MenuAppBar(currentScreen = "mycards")},
         modifier = Modifier.background(ButtonTextColor)
     ) { innerPadding ->
         Column(
@@ -70,7 +84,7 @@ fun MyCards(modifier: Modifier = Modifier, cardViewModel: AddCardViewModel = vie
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            addedCards.forEach { cardInfo ->
+            addedCards.value.forEach { cardInfo ->
                 Card(
                     colors = CardDefaults.cardColors(P50),
                     modifier = Modifier
@@ -127,9 +141,9 @@ fun MyCards(modifier: Modifier = Modifier, cardViewModel: AddCardViewModel = vie
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
-@Preview(showBackground = true)
-@Composable
-fun MyCardPreview() {
-    MyCards()
-}
+//@RequiresApi(Build.VERSION_CODES.O)
+//@Preview(showBackground = true)
+//@Composable
+//fun MyCardPreview() {
+//    MyCards()
+//}
