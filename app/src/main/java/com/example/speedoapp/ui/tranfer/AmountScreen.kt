@@ -132,7 +132,7 @@ fun AmountScreen(
         ) {
             Scaffold(
                 bottomBar = {
-                    MenuAppBar(currentScreen = "transfer")
+                    MenuAppBar(currentScreen = "transfer", navController = navController)
                 },
                 containerColor = Color.Transparent,
                 modifier = Modifier.imePadding(),

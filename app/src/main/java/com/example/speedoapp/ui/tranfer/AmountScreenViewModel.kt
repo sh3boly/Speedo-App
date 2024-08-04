@@ -238,36 +238,34 @@ class AmountScreenViewModel : ViewModel() {
         }
     }
 
-    private fun postTransferData() {
-        viewModelScope.launch(Dispatchers.IO) {
-            try {
-                val response = RetrofitFactory.transferApi.postTransfer(_transferData.value)
-
-                if (response.isSuccessful) {
-                    _transferResult.value = true
-                } else {
-                    _transferResult.value = false
-                }
-            } catch (e: Exception) {
-                _transferResult.value = false
-            }
+    private suspend fun postTransferData(): Boolean {
+        return try {
+            val response = RetrofitFactory.transferApi.postTransfer(_transferData.value)
+            response.isSuccessful
+        } catch (e: Exception) {
+            false
         }
     }
 
     fun confirmTransfer(context: Context) {
-        postTransferData()
-        sendNotification(context)
+        viewModelScope.launch {
+            val transferSuccessful = postTransferData()
+
+            _transferResult.value = transferSuccessful
+
+            sendNotification(context, transferSuccessful)
+        }
     }
 
-
-    private fun sendNotification(context: Context) {
+    private fun sendNotification(context: Context, transferSuccessful: Boolean) {
         val service = NotificationService(context)
-        if (_transferResult.value == true) {
+        if (transferSuccessful) {
             service.showNotification("Your transfer was successful")
         } else {
             service.showNotification("Your transfer failed")
         }
     }
+
 
     fun loadCurrenciesFromLocal(context: Context) {
         viewModelScope.launch {

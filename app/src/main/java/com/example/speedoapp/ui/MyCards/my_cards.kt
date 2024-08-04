@@ -74,7 +74,7 @@ fun MyCards(
                 Text(text = "My Cards", style = SubTitleTextStyle)
             })
         },
-        bottomBar = { MenuAppBar(currentScreen = "mycards")},
+        bottomBar = { MenuAppBar(currentScreen = "mycards", navController = navController)},
         modifier = Modifier.background(ButtonTextColor)
     ) { innerPadding ->
         Column(
