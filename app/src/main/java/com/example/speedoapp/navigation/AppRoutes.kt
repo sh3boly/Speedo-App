@@ -2,6 +2,7 @@ package com.example.speedoapp.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -27,15 +28,14 @@ import com.example.speedoapp.navigation.AppRoutes.SELECT_CURRENCY
 import com.example.speedoapp.navigation.AppRoutes.SIGNIN_ROUTE
 import com.example.speedoapp.ui.homepage.HomeScreen
 import com.example.speedoapp.ui.signin.SignInScreen
-
-import com.example.speedoapp.ui.common.CurrenciesScreen
-import com.example.speedoapp.ui.common.MoreScreen
 import com.example.speedoapp.ui.common.OnboardingScreen
+import com.example.speedoapp.ui.more.MoreScreen
 import com.example.speedoapp.ui.signup.CountryDateScreen
 import com.example.speedoapp.ui.signup.SignUpScreen
 import com.example.speedoapp.ui.tranfer.AmountScreen
 import com.example.speedoapp.ui.tranfer.AmountScreenViewModel
 import com.example.speedoapp.ui.tranfer.ConfirmScreen
+import com.example.speedoapp.ui.tranfer.CurrenciesScreen
 import com.example.speedoapp.ui.tranfer.PaymentScreen
 
 
@@ -58,6 +58,8 @@ object AppRoutes {
 fun AppNavHost(modifier: Modifier = Modifier, firstTime: Boolean) {
     val navController = rememberNavController()
     val amountScreenViewModel: AmountScreenViewModel = viewModel()
+    val context = LocalContext.current
+    amountScreenViewModel.loadCurrenciesFromLocal(context)
 
     NavHost(
         navController = navController,

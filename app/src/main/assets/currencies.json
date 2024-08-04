@@ -1,0 +1,224 @@
+[
+  {
+    "currency_code": "USD",
+    "currency_name": "United States Dollar",
+    "exchange_rate": "1.0",
+    "flag_url": "https://cdn.countryflags.com/thumbs/united-states-of-america/flag-square-250.png"
+  },
+  {
+    "currency_code": "EUR",
+    "currency_name": "Euro",
+    "exchange_rate": "0.92",
+    "flag_url": "https://cdn.countryflags.com/thumbs/europe/flag-square-250.png"
+  },
+  {
+    "currency_code": "JPY",
+    "currency_name": "Japanese Yen",
+    "exchange_rate": "156.93",
+    "flag_url": "https://cdn.countryflags.com/thumbs/japan/flag-square-250.png"
+  },
+  {
+    "currency_code": "GBP",
+    "currency_name": "British Pound Sterling",
+    "exchange_rate": "0.77",
+    "flag_url": "https://cdn.countryflags.com/thumbs/united-kingdom/flag-square-250.png"
+  },
+  {
+    "currency_code": "AUD",
+    "currency_name": "Australian Dollar",
+    "exchange_rate": "1.49",
+    "flag_url": "https://cdn.countryflags.com/thumbs/australia/flag-square-250.png"
+  },
+  {
+    "currency_code": "CAD",
+    "currency_name": "Canadian Dollar",
+    "exchange_rate": "1.34",
+    "flag_url": "https://cdn.countryflags.com/thumbs/canada/flag-square-250.png"
+  },
+  {
+    "currency_code": "CHF",
+    "currency_name": "Swiss Franc",
+    "exchange_rate": "0.88",
+    "flag_url": "https://cdn.countryflags.com/thumbs/switzerland/flag-square-250.png"
+  },
+  {
+    "currency_code": "CNY",
+    "currency_name": "Chinese Yuan",
+    "exchange_rate": "7.13",
+    "flag_url": "https://cdn.countryflags.com/thumbs/china/flag-square-250.png"
+  },
+  {
+    "currency_code": "INR",
+    "currency_name": "Indian Rupee",
+    "exchange_rate": "82.75",
+    "flag_url": "https://cdn.countryflags.com/thumbs/india/flag-square-250.png"
+  },
+  {
+    "currency_code": "NZD",
+    "currency_name": "New Zealand Dollar",
+    "exchange_rate": "1.63",
+    "flag_url": "https://cdn.countryflags.com/thumbs/new-zealand/flag-square-250.png"
+  },
+  {
+    "currency_code": "BRL",
+    "currency_name": "Brazilian Real",
+    "exchange_rate": "4.92",
+    "flag_url": "https://cdn.countryflags.com/thumbs/brazil/flag-square-250.png"
+  },
+  {
+    "currency_code": "RUB",
+    "currency_name": "Russian Ruble",
+    "exchange_rate": "90.25",
+    "flag_url": "https://cdn.countryflags.com/thumbs/russia/flag-square-250.png"
+  },
+  {
+    "currency_code": "ZAR",
+    "currency_name": "South African Rand",
+    "exchange_rate": "18.12",
+    "flag_url": "https://cdn.countryflags.com/thumbs/south-africa/flag-square-250.png"
+  },
+  {
+    "currency_code": "SGD",
+    "currency_name": "Singapore Dollar",
+    "exchange_rate": "1.35",
+    "flag_url": "https://cdn.countryflags.com/thumbs/singapore/flag-square-250.png"
+  },
+  {
+    "currency_code": "KRW",
+    "currency_name": "South Korean Won",
+    "exchange_rate": "1280.05",
+    "flag_url": "https://cdn.countryflags.com/thumbs/south-korea/flag-square-250.png"
+  },
+  {
+    "currency_code": "MXN",
+    "currency_name": "Mexican Peso",
+    "exchange_rate": "16.85",
+    "flag_url": "https://cdn.countryflags.com/thumbs/mexico/flag-square-250.png"
+  },
+  {
+    "currency_code": "TRY",
+    "currency_name": "Turkish Lira",
+    "exchange_rate": "27.12",
+    "flag_url": "https://cdn.countryflags.com/thumbs/turkey/flag-square-250.png"
+  },
+  {
+    "currency_code": "SEK",
+    "currency_name": "Swedish Krona",
+    "exchange_rate": "10.95",
+    "flag_url": "https://cdn.countryflags.com/thumbs/sweden/flag-square-250.png"
+  },
+  {
+    "currency_code": "NOK",
+    "currency_name": "Norwegian Krone",
+    "exchange_rate": "10.34",
+    "flag_url": "https://cdn.countryflags.com/thumbs/norway/flag-square-250.png"
+  },
+  {
+    "currency_code": "DKK",
+    "currency_name": "Danish Krone",
+    "exchange_rate": "6.87",
+    "flag_url": "https://cdn.countryflags.com/thumbs/denmark/flag-square-250.png"
+  },
+  {
+    "currency_code": "PLN",
+    "currency_name": "Polish Zloty",
+    "exchange_rate": "4.12",
+    "flag_url": "https://cdn.countryflags.com/thumbs/poland/flag-square-250.png"
+  },
+  {
+    "currency_code": "THB",
+    "currency_name": "Thai Baht",
+    "exchange_rate": "34.07",
+    "flag_url": "https://cdn.countryflags.com/thumbs/thailand/flag-square-250.png"
+  },
+  {
+    "currency_code": "MYR",
+    "currency_name": "Malaysian Ringgit",
+    "exchange_rate": "4.55",
+    "flag_url": "https://cdn.countryflags.com/thumbs/malaysia/flag-square-250.png"
+  },
+  {
+    "currency_code": "IDR",
+    "currency_name": "Indonesian Rupiah",
+    "exchange_rate": "15300.5",
+    "flag_url": "https://cdn.countryflags.com/thumbs/indonesia/flag-square-250.png"
+  },
+  {
+    "currency_code": "SAR",
+    "currency_name": "Saudi Riyal",
+    "exchange_rate": "3.75",
+    "flag_url": "https://cdn.countryflags.com/thumbs/saudi-arabia/flag-square-250.png"
+  },
+  {
+    "currency_code": "AED",
+    "currency_name": "United Arab Emirates Durham",
+    "exchange_rate": "3.67",
+    "flag_url": "https://cdn.countryflags.com/thumbs/united-arab-emirates/flag-square-250.png"
+  },
+  {
+    "currency_code": "PHP",
+    "currency_name": "Philippine Peso",
+    "exchange_rate": "55.1",
+    "flag_url": "https://cdn.countryflags.com/thumbs/philippines/flag-square-250.png"
+  },
+  {
+    "currency_code": "EGP",
+    "currency_name": "Egyptian Pound",
+    "exchange_rate": "30.9",
+    "flag_url": "https://cdn.countryflags.com/thumbs/egypt/flag-square-250.png"
+  },
+  {
+    "currency_code": "VND",
+    "currency_name": "Vietnamese Dong",
+    "exchange_rate": "23500.0",
+    "flag_url": "https://cdn.countryflags.com/thumbs/vietnam/flag-square-250.png"
+  },
+  {
+    "currency_code": "ARS",
+    "currency_name": "Argentine Peso",
+    "exchange_rate": "275.5",
+    "flag_url": "https://cdn.countryflags.com/thumbs/argentina/flag-square-250.png"
+  },
+  {
+    "currency_code": "CLP",
+    "currency_name": "Chilean Peso",
+    "exchange_rate": "790.5",
+    "flag_url": "https://cdn.countryflags.com/thumbs/chile/flag-square-250.png"
+  },
+  {
+    "currency_code": "COP",
+    "currency_name": "Colombian Peso",
+    "exchange_rate": "4100.0",
+    "flag_url": "https://cdn.countryflags.com/thumbs/colombia/flag-square-250.png"
+  },
+  {
+    "currency_code": "PEN",
+    "currency_name": "Peruvian Sol",
+    "exchange_rate": "3.85",
+    "flag_url": "https://cdn.countryflags.com/thumbs/peru/flag-square-250.png"
+  },
+  {
+    "currency_code": "UYU",
+    "currency_name": "Uruguayan Peso",
+    "exchange_rate": "40.0",
+    "flag_url": "https://cdn.countryflags.com/thumbs/uruguay/flag-square-250.png"
+  },
+  {
+    "currency_code": "BOB",
+    "currency_name": "Bolivian Bolivian",
+    "exchange_rate": "6.9",
+    "flag_url": "https://cdn.countryflags.com/thumbs/bolivia/flag-square-250.png"
+  },
+  {
+    "currency_code": "PYG",
+    "currency_name": "Paraguayan Guarani",
+    "exchange_rate": "7400.0",
+    "flag_url": "https://cdn.countryflags.com/thumbs/paraguay/flag-square-250.png"
+  },
+  {
+    "currency_code": "GHS",
+    "currency_name": "Ghanaian Cede",
+    "exchange_rate": "12.4",
+    "flag_url": "https://cdn.countryflags.com/thumbs/ghana/flag-square-250.png"
+  }
+]

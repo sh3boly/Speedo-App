@@ -1,15 +1,20 @@
 package com.example.speedoapp.ui.tranfer
 
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.delasign.samplestarterproject.utils.readJsonFromAssets
+import com.example.speedoapp.NotificationService
 import com.example.speedoapp.api.CurrencyApiService
 import com.example.speedoapp.api.RetrofitFactory
 import com.example.speedoapp.model.Currency
 import com.example.speedoapp.model.ExchangeRate
 import com.example.speedoapp.model.Recipient
 import com.example.speedoapp.model.TransferData
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -57,12 +62,6 @@ class AmountScreenViewModel : ViewModel() {
     private val _hasError = MutableStateFlow(false)
     val hasError = _hasError.asStateFlow()
 
-    init {
-        Log.d("CurrencyAPI", "Response received: ssssss")
-
-        fetchCurrencies()
-    }
-
     private fun updateImageFrom(imageUrl: String) {
         _chosenImageFrom.value = imageUrl
     }
@@ -84,7 +83,7 @@ class AmountScreenViewModel : ViewModel() {
         _transferData.update { current ->
             val updatedFrom = current.from.copy(amount = amount.toString())
             val updatedToAmount =
-                _exchangeRateCalculator(amount, updatedFrom.currency, current.to.currency)
+                exchangeRateCalculator(amount, updatedFrom.currency, current.to.currency)
             current.copy(
                 from = updatedFrom, to = current.to.copy(amount = updatedToAmount.toString())
             )
@@ -95,7 +94,7 @@ class AmountScreenViewModel : ViewModel() {
         _transferData.update { current ->
             val updatedTo = current.to.copy(amount = amount.toString())
             val updatedFromAmount =
-                _exchangeRateCalculator(amount, updatedTo.currency, current.from.currency)
+                exchangeRateCalculator(amount, updatedTo.currency, current.from.currency)
             current.copy(
                 to = updatedTo, from = current.from.copy(amount = updatedFromAmount.toString())
             )
@@ -108,7 +107,7 @@ class AmountScreenViewModel : ViewModel() {
             val updatedFrom =
                 current.from.copy(currency = currency.code, exchangeRate = currency.exchangeRate)
 
-            val updatedToAmount = _exchangeRateCalculator(
+            val updatedToAmount = exchangeRateCalculator(
                 current.from.amount,
                 currency.code,
                 current.to.currency
@@ -127,7 +126,7 @@ class AmountScreenViewModel : ViewModel() {
             val updatedTo =
                 current.to.copy(currency = currency.code, exchangeRate = currency.exchangeRate)
 
-            val updatedToAmount = _exchangeRateCalculator(
+            val updatedToAmount = exchangeRateCalculator(
                 current.from.amount,
                 current.from.currency,
                 currency.code
@@ -152,10 +151,10 @@ class AmountScreenViewModel : ViewModel() {
 
     private fun updateExchangeRateText(currencyFrom: String, currencyTo: String) {
         _exchangeRateText.value =
-            _exchangeRateCalculator("1", currencyFrom, currencyTo).toString()
+            exchangeRateCalculator("1", currencyFrom, currencyTo).toString()
     }
 
-    private fun _exchangeRateCalculator(
+    private fun exchangeRateCalculator(
         amount: String, currencyFrom: String, currencyTo: String
     ): String {
         if (amount.isEmpty())
@@ -220,7 +219,6 @@ class AmountScreenViewModel : ViewModel() {
 
                 if (response.isSuccessful) {
                     response.body()?.let { currencyList ->
-                        // Check if body is not null and update state
                         _currencies.update { currencyList }
                         if (currencyList.isNotEmpty()) {
                             updateCurrencyFrom(currencyList[0])
@@ -229,11 +227,9 @@ class AmountScreenViewModel : ViewModel() {
                         }
                         _hasError.value = false
                     } ?: run {
-                        Log.e("API_ERROR", "Response body is null")
                         _hasError.value = true
                     }
                 } else {
-                    Log.e("API_ERROR", "Error: ${response.code()} - ${response.message()}")
                     _hasError.value = true
                 }
             } catch (e: Exception) {
@@ -248,30 +244,49 @@ class AmountScreenViewModel : ViewModel() {
                 val response = RetrofitFactory.transferApi.postTransfer(_transferData.value)
 
                 if (response.isSuccessful) {
-                    // Handle success
-                    Log.d("API_RESULT", "Transfer successful")
                     _transferResult.value = true
                 } else {
-                    // Handle error
-                    Log.e(
-                        "API_RESULT",
-                        "Transfer failed: ${response.code()} - ${response.message()}"
-                    )
                     _transferResult.value = false
                 }
             } catch (e: Exception) {
-                // Handle exception
-                Log.e("API_RESULT", "Exception: ${e.message}")
                 _transferResult.value = false
             }
         }
     }
 
-    fun confirmTransfer() {
-        if (validateData()) {
-            postTransferData()
+    fun confirmTransfer(context: Context) {
+        postTransferData()
+        sendNotification(context)
+    }
+
+
+    private fun sendNotification(context: Context) {
+        val service = NotificationService(context)
+        if (_transferResult.value == true) {
+            service.showNotification("Your transfer was successful")
         } else {
-            Log.e("TRANSFER_ERROR", "Validation failed")
+            service.showNotification("Your transfer failed")
+        }
+    }
+
+    fun loadCurrenciesFromLocal(context: Context) {
+        viewModelScope.launch {
+            val jsonString = readJsonFromAssets(context, "currencies.json")
+            val currencyType = object : TypeToken<List<Currency>>() {}.type
+            val currencyList = Gson().fromJson<List<Currency>>(jsonString, currencyType)
+
+            if (currencyList != null) {
+                _currencies.update { currencyList }
+                if (currencyList.isNotEmpty()) {
+                    updateCurrencyFrom(currencyList[0])
+                    updateCurrencyTo(currencyList[1])
+                    updateAmountFrom("1000")
+                }
+                _hasError.value = false
+            } else {
+                Log.e("DATA_ERROR", "Failed to parse currency data")
+                _hasError.value = true
+            }
         }
     }
 

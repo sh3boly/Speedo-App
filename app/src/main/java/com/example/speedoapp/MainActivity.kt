@@ -7,9 +7,11 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
+import androidx.compose.ui.platform.LocalContext
 import com.example.speedoapp.navigation.AppNavHost
 import com.example.speedoapp.ui.theme.SpeedoAppTheme
-import androidx.navigation.compose.NavHost
+import com.delasign.samplestarterproject.utils.readJsonFromAssets
+
 
 class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
