@@ -44,7 +44,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.example.speedoapp.R
+import com.example.speedoapp.navigation.AppRoutes
 import com.example.speedoapp.ui.addcard.AddCardViewModel
 import com.example.speedoapp.ui.addcard.CardInfo
 import com.example.speedoapp.ui.theme.G100
@@ -54,7 +56,7 @@ import com.example.speedoapp.ui.theme.SubTitleTextStyle
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Profile(modifier: Modifier = Modifier,cardViewModel: AddCardViewModel = viewModel()) {
+fun Profile(navController: NavController, modifier: Modifier = Modifier, cardViewModel: AddCardViewModel = viewModel()) {
     val cardInfo by cardViewModel.cardInfo.collectAsState()
     val demoCardInfo = CardInfo(
         userID = "user123",
@@ -107,8 +109,8 @@ fun Profile(modifier: Modifier = Modifier,cardViewModel: AddCardViewModel = view
                     modifier = Modifier.padding(16.dp)
                 )
             }
-            ListItem(iconRes = R.drawable.group_18325, title = "Personal information", description ="Your information", onClick = {})
-            ListItem(iconRes = R.drawable.group_183252, title = "Settings", description ="Change your settings", onClick = {} )
+            ListItem(iconRes = R.drawable.group_18325, title = "Personal information", description ="Your information", onClick = {navController.navigate(AppRoutes.PROFILE_INFO)})
+            ListItem(iconRes = R.drawable.group_183252, title = "Settings", description ="Change your settings", onClick = {navController.navigate(AppRoutes.SETTINGS)} )
             ListItem(iconRes = R.drawable.group_183253, title = "Payment history", description = "view your transactions", onClick = {})
             ListItem(iconRes = R.drawable.group_183254, title = "My Favourite list", description ="view your favourite", onClick = {} )
 
@@ -150,9 +152,4 @@ fun ListItem(
         }
 
     }
-}
-@Preview(showBackground = true)
-@Composable
-fun ProfilePreview(){
-    Profile()
 }

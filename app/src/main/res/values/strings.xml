@@ -39,4 +39,10 @@
     <string name="logout">Logout</string>
     <string name="send_email">Send Email</string>
     <string name="call_us">Call Us</string>
+    <string name="no_internet">No Internet</string>
+    <string name="internet_connection_disabled">Internet connection disabled...</string>
+    <string name="update">Update</string>
+    <string name="server_error">Server error</string>
+    <string name="server_error_message">It seems like we’re having some difficulties , please don’t leave your aspirations, we are sending for help</string>
+    <string name="message_us">Message Us</string>
 </resources>

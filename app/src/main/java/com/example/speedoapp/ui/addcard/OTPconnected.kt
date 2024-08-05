@@ -26,7 +26,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.speedoapp.R
+import com.example.speedoapp.navigation.AppRoutes
 import com.example.speedoapp.ui.common.PrimaryButton
 import com.example.speedoapp.ui.common.SecondaryButton
 import com.example.speedoapp.ui.theme.DisabledColor
@@ -34,7 +36,7 @@ import com.example.speedoapp.ui.theme.SubTitleTextStyle
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun OTPconnected(modifier: Modifier = Modifier) {
+fun OTPconnected(navController: NavController, modifier: Modifier = Modifier) {
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(title = {
@@ -67,15 +69,11 @@ fun OTPconnected(modifier: Modifier = Modifier) {
                 color = DisabledColor
                 )
             Spacer(modifier = modifier.padding(100.dp))
-            PrimaryButton(onClick = { /*TODO*/ }, buttonText = "connect another account",
+            PrimaryButton(onClick = {navController.navigate(AppRoutes.ADDCARD_ROUTE) }, buttonText = "connect another account",
                 modifier = Modifier.height(51.dp).width(344.dp))
             Spacer(modifier = Modifier.padding(8.dp))
-            SecondaryButton(onClick = { /*TODO*/ }, buttonText ="Back to Home")
+            SecondaryButton(onClick = {navController.navigate(AppRoutes.HOME_ROUTE)}, buttonText ="Back to Home")
         }
 
         }
 }
-@Preview(showBackground = true)
-@Composable
-fun OTPconnectedPreview(){
-    OTPconnected()}

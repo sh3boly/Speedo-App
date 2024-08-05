@@ -261,4 +261,3 @@ fun TransactionListItem(modifier: Modifier = Modifier, transaction: Transaction)
 fun HomeScreenPreview() {
     HomeScreen(navController = NavController(LocalContext.current))
 }
-

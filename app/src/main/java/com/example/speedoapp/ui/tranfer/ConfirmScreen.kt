@@ -28,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -56,6 +57,7 @@ fun ConfirmScreen(
     modifier: Modifier = Modifier
 ) {
     val transferData by viewModel.transferData.collectAsState()
+    val context = LocalContext.current
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -158,7 +160,8 @@ fun ConfirmScreen(
                 Spacer(modifier = modifier.height(32.dp))
                 PrimaryButton(
                     onClick = {
-                        viewModel.confirmTransfer()
+
+                        viewModel.confirmTransfer(context)
                         navController.navigate(PAYMENT_TRANSFER)
                     },
                     buttonText = stringResource(R.string.confirm)
