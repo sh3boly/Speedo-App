@@ -1,6 +1,6 @@
 package com.example.speedoapp
 
-import TokenManager
+import PreferencesManager
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -9,7 +9,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
 import com.example.speedoapp.navigation.AppNavHost
 import com.example.speedoapp.ui.theme.SpeedoAppTheme
-import androidx.navigation.compose.NavHost
 import com.example.speedoapp.api.InactivityManager
 
 class MainActivity : ComponentActivity() {
@@ -19,7 +18,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             SpeedoAppTheme {
-                AppNavHost(firstTime = TokenManager.isFirstTimeLaunch())
+                AppNavHost(firstTime = PreferencesManager.isFirstTimeLaunch())
 
             }
         }

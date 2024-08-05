@@ -1,6 +1,7 @@
 package com.example.speedoapp.api
 
 import com.example.speedoapp.model.Balance
+import com.example.speedoapp.model.TokenValidation
 import com.example.speedoapp.model.TransactionRoot
 import com.example.speedoapp.model.User
 import retrofit2.Response
@@ -19,5 +20,8 @@ interface HomeApi {
 
     @POST("api/logout")
     suspend fun logout(): Response<Unit>
+
+    @POST("api/validate")
+    suspend fun validate(): Response<TokenValidation>
 
 }

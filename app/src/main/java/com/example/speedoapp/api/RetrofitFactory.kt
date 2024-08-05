@@ -1,7 +1,7 @@
 package com.example.speedoapp.api
 
 import AuthInterceptor
-import TokenManager
+import PreferencesManager
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -10,7 +10,7 @@ object RetrofitFactory {
     private const val BASE_URL = "http://10.0.2.2:3000/"
 
 
-    val tokenManager = TokenManager
+    val tokenManager = PreferencesManager
     private val okHttpClient = OkHttpClient.Builder()
         .addInterceptor(AuthInterceptor(tokenManager))
         .build()

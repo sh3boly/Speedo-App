@@ -73,16 +73,16 @@ class HomeViewModel : ViewModel() {
         }
     }
 
-    fun logout(){
+    fun logout() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 RetrofitFactory.homeApi.logout()
-            }
-            catch (e: Exception){
+            } catch (e: Exception) {
                 Log.d("trace", "Exception: ${e.localizedMessage}")
             }
         }
     }
+
 
     fun getInitials(fullName: String): String {
         if (fullName.isNullOrEmpty()) {
@@ -94,6 +94,7 @@ class HomeViewModel : ViewModel() {
         }
         return fullName.first().toString()
     }
+
 
     fun balanceStringify(balance: Float): String {
         val formatter = DecimalFormat("#,###.00")

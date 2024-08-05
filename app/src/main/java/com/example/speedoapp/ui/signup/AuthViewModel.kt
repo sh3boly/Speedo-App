@@ -1,6 +1,6 @@
 package com.example.speedoapp.ui.signup
 
-import TokenManager
+import PreferencesManager
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -96,7 +96,7 @@ class AuthViewModel : ViewModel() {
                     val loginResponse = response.body()
                     if (loginResponse != null) {
                         _loginStatus.value = (LoginStatus.Success(loginResponse))
-                        val tokenManager = TokenManager
+                        val tokenManager = PreferencesManager
                         tokenManager.saveToken(loginResponse.token)
                     } else {
                         _loginStatus.value = (LoginStatus.Error("Empty response body"))
