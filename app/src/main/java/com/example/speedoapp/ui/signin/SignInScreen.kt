@@ -1,6 +1,7 @@
 package com.example.speedoapp.ui.signin
 
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -42,6 +43,7 @@ import androidx.navigation.NavController
 import com.example.speedoapp.api.RetrofitFactory
 import com.example.speedoapp.model.LoginStatus
 import com.example.speedoapp.navigation.AppRoutes
+import com.example.speedoapp.navigation.AppRoutes.HOME_ROUTE
 import com.example.speedoapp.ui.signup.AuthViewModel
 import com.example.speedoapp.ui.theme.GradientEnd
 import com.example.speedoapp.ui.theme.GradientStart
@@ -127,12 +129,17 @@ fun SignInScreen(
                 loginStatus?.let { status ->
                     when (status) {
                         is LoginStatus.Success -> {
+                            Log.d("API", "eh el 3abat da")
                             Toast.makeText(
                                 context,
                                 "login Successful!",
                                 Toast.LENGTH_SHORT
                             ).show()
-                            navController.navigate(AppRoutes.HOME_ROUTE)
+                            Log.d("API", "ba3d el 3abat")
+
+                            navController.navigate(HOME_ROUTE)
+                            Log.d("API", "eh da")
+
 
                         }
 

@@ -5,7 +5,6 @@ import com.example.speedoapp.constants.Constants.COUNTRY_EXCHANGE_RATE
 import com.example.speedoapp.constants.Constants.COUNTRY_FLAG_IMAGE
 import com.example.speedoapp.constants.Constants.COUNTRY_NAME
 import com.google.gson.annotations.SerializedName
-import java.math.BigDecimal
 
 
 data class Currency(

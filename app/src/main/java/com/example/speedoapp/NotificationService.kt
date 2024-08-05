@@ -22,7 +22,7 @@ class NotificationService(
 
 
         val notification = NotificationCompat.Builder(context, TRANSFER_NOTIFICATION_ID)
-            .setSmallIcon(R.drawable.ic_cards)
+            .setSmallIcon(R.drawable.ic_speedo_app)
             .setContentTitle("Transfer Status")
             .setContentText(message)
             .setContentIntent(activityPendingIntent)

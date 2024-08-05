@@ -1,6 +1,7 @@
 package com.example.speedoapp.navigation
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -23,6 +24,7 @@ import com.example.speedoapp.navigation.AppRoutes.CONFIRMATION_ONBOARDING_ROUTE
 import com.example.speedoapp.navigation.AppRoutes.CONFIRM_TRANSFER
 import com.example.speedoapp.navigation.AppRoutes.SIGNUP_ROUTE
 import com.example.speedoapp.navigation.AppRoutes.COUNTRYDATE_ROUTE
+import com.example.speedoapp.navigation.AppRoutes.FAVOURITE_ROUTE
 import com.example.speedoapp.navigation.AppRoutes.HOME_ROUTE
 import com.example.speedoapp.navigation.AppRoutes.LOADING_ROUTE
 import com.example.speedoapp.navigation.AppRoutes.MORE_ROUTE
@@ -40,6 +42,7 @@ import com.example.speedoapp.ui.addcard.LoadingScreen
 import com.example.speedoapp.ui.addcard.OTP
 import com.example.speedoapp.ui.addcard.OTPconnected
 import com.example.speedoapp.ui.common.OnboardingScreen
+import com.example.speedoapp.ui.favourite.FavouriteScreen
 import com.example.speedoapp.ui.homepage.HomeScreen
 import com.example.speedoapp.ui.more.MoreScreen
 import com.example.speedoapp.ui.signin.SignInScreen
@@ -76,13 +79,14 @@ object AppRoutes {
     const val AMOUNT_ONBOARDING_ROUTE = "amount"
     const val CONFIRMATION_ONBOARDING_ROUTE = "confirmation"
     const val PAYMENT_ONBOARDING_ROUTE = "payment"
+    const val FAVOURITE_ROUTE = "favourite"
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AppNavHost(modifier: Modifier = Modifier, firstTime: Boolean) {
     val navController = rememberNavController()
-    val amountScreenViewModel: AmountScreenViewModel = viewModel()
+   val amountScreenViewModel: AmountScreenViewModel = viewModel()
     val context = LocalContext.current
     amountScreenViewModel.loadCurrenciesFromLocal(context)
 
@@ -112,8 +116,10 @@ fun AppNavHost(modifier: Modifier = Modifier, firstTime: Boolean) {
         }
 
         composable(route = HOME_ROUTE) {
-            amountScreenViewModel.reset()
+            Log.d("API", "da5el el home")
             HomeScreen(navController = navController)
+            Log.d("API", "mad5ltesh el home")
+
         }
 
         composable(AMOUNT_TRANSFER) {
@@ -148,16 +154,16 @@ fun AppNavHost(modifier: Modifier = Modifier, firstTime: Boolean) {
         }
 
         composable(route = CONFIRM_TRANSFER) {
-            ConfirmScreen(navController = navController, viewModel = amountScreenViewModel)
+            ConfirmScreen(
+                navController = navController,
+                viewModel = amountScreenViewModel
+            )
         }
         composable(route = PAYMENT_TRANSFER) {
             PaymentScreen(navController = navController, viewModel = amountScreenViewModel)
         }
 
-        composable(MORE_ROUTE) {
-            amountScreenViewModel.reset()
-            MoreScreen(navController = navController)
-        }
+        composable(MORE_ROUTE) { MoreScreen(navController = navController) }
         composable(route = AMOUNT_ONBOARDING_ROUTE) {
             OnboardingScreen(
                 image = R.drawable.ic_amount,
@@ -193,6 +199,6 @@ fun AppNavHost(modifier: Modifier = Modifier, firstTime: Boolean) {
         composable(route = OTP_CONNECT_ROUTE) { OTPconnected(navController) }
         composable(route = MY_CARDS) { MyCards(navController) }
         composable(route = PROFILE) { Profile(navController) }
-
+        composable(route = FAVOURITE_ROUTE) { FavouriteScreen(navController = navController) }
     }
 }

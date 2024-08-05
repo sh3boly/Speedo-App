@@ -1,11 +1,9 @@
 package com.example.speedoapp.api
 
-import TokenManager
-import android.content.Context
+import PreferencesManager
 import android.os.Handler
 import android.os.Looper
 import android.widget.Toast
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.speedoapp.navigation.AppRoutes
 
@@ -17,8 +15,8 @@ object InactivityManager {
     }
 
     private val onInactivity: () -> Unit = {
-        if (TokenManager.getToken() != null) {
-            TokenManager.removeToken()
+        if (PreferencesManager.getToken() != null) {
+            PreferencesManager.removeToken()
             navController.navigate(AppRoutes.SIGNIN_ROUTE)
             Toast.makeText(navController.context, "Session expired", Toast.LENGTH_LONG).show()
             userInteraction()

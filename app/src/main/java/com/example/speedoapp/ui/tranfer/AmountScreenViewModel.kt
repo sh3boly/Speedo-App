@@ -5,7 +5,6 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.delasign.samplestarterproject.utils.readJsonFromAssets
 import com.example.speedoapp.NotificationService
 import com.example.speedoapp.api.CurrencyApiService
 import com.example.speedoapp.api.RetrofitFactory
@@ -13,9 +12,9 @@ import com.example.speedoapp.model.Currency
 import com.example.speedoapp.model.ExchangeRate
 import com.example.speedoapp.model.Recipient
 import com.example.speedoapp.model.TransferData
+import com.example.speedoapp.utils.readJsonFromAssets
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -81,22 +80,22 @@ class AmountScreenViewModel : ViewModel() {
     // Here we update the value that should be sent from user account and updates the equivalent value that the recipient gets
     fun updateAmountFrom(amount: String) {
         _transferData.update { current ->
-            val updatedFrom = current.from.copy(amount = amount.toString())
+            val updatedFrom = current.from.copy(amount = amount)
             val updatedToAmount =
                 exchangeRateCalculator(amount, updatedFrom.currency, current.to.currency)
             current.copy(
-                from = updatedFrom, to = current.to.copy(amount = updatedToAmount.toString())
+                from = updatedFrom, to = current.to.copy(amount = updatedToAmount)
             )
         }
     }
 
     fun updateAmountTo(amount: String) {
         _transferData.update { current ->
-            val updatedTo = current.to.copy(amount = amount.toString())
+            val updatedTo = current.to.copy(amount = amount)
             val updatedFromAmount =
                 exchangeRateCalculator(amount, updatedTo.currency, current.from.currency)
             current.copy(
-                to = updatedTo, from = current.from.copy(amount = updatedFromAmount.toString())
+                to = updatedTo, from = current.from.copy(amount = updatedFromAmount)
             )
         }
     }
@@ -113,7 +112,7 @@ class AmountScreenViewModel : ViewModel() {
                 current.to.currency
             )
             current.copy(
-                from = updatedFrom, to = current.to.copy(amount = updatedToAmount.toString())
+                from = updatedFrom, to = current.to.copy(amount = updatedToAmount)
             )
         }
         updateExchangeRateText(_transferData.value.from.currency, _transferData.value.to.currency)
@@ -131,7 +130,7 @@ class AmountScreenViewModel : ViewModel() {
                 current.from.currency,
                 currency.code
             )
-            current.copy(to = updatedTo.copy(amount = updatedToAmount.toString()))
+            current.copy(to = updatedTo.copy(amount = updatedToAmount))
         }
 
         updateExchangeRateText(_transferData.value.from.currency, _transferData.value.to.currency)
@@ -151,7 +150,7 @@ class AmountScreenViewModel : ViewModel() {
 
     private fun updateExchangeRateText(currencyFrom: String, currencyTo: String) {
         _exchangeRateText.value =
-            exchangeRateCalculator("1", currencyFrom, currencyTo).toString()
+            exchangeRateCalculator("1", currencyFrom, currencyTo)
     }
 
     private fun exchangeRateCalculator(

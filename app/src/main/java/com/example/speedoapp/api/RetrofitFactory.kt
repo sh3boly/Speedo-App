@@ -1,24 +1,27 @@
 package com.example.speedoapp.api
 
 import AuthInterceptor
-import TokenManager
+import PreferencesManager
+import android.util.Log
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitFactory {
-    private const val BASE_URL = "http://10.0.2.2:3000/"
+    private const val BASE_URL =
+        "http://basic-spring-app-env.eba-i6chqiqc.eu-north-1.elasticbeanstalk.com/"
 
 
-    val tokenManager = TokenManager
+    val tokenManager = PreferencesManager
     private val okHttpClient = OkHttpClient.Builder()
         .addInterceptor(AuthInterceptor(tokenManager))
         .build()
+
     private val unauthRetrofit = Retrofit.Builder()
-    .baseUrl(BASE_URL)
-    .client(okHttpClient)
-    .addConverterFactory(GsonConverterFactory.create())
-    .build()
+        .baseUrl(BASE_URL)
+        .client(okHttpClient)
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
 
     private val authRetrofit = Retrofit
         .Builder()
@@ -36,6 +39,12 @@ object RetrofitFactory {
     }
 
     val homeApi: HomeApi by lazy {
-        unauthRetrofit.create(HomeApi::class.java)
+        try {
+            Log.d("API", "Initializing HomeApi")
+            unauthRetrofit.create(HomeApi::class.java)
+        } catch (e: Exception) {
+            Log.d("API", "Error initializing HomeApi", e)
+            throw e
+        }
     }
 }

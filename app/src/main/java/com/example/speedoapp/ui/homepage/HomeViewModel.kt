@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.speedoapp.api.RetrofitFactory
+import com.example.speedoapp.model.BalanceResponse
 import com.example.speedoapp.model.Transaction
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,7 +14,9 @@ import kotlinx.coroutines.launch
 import java.text.DecimalFormat
 
 class HomeViewModel : ViewModel() {
-    private val _balance = MutableStateFlow<Float>(0f)
+    private val _balance = MutableStateFlow<BalanceResponse>(
+        BalanceResponse("", 0, "", "")
+    )
     val balance = _balance.asStateFlow()
 
     private val _name = MutableStateFlow("")
@@ -26,63 +29,67 @@ class HomeViewModel : ViewModel() {
     val hasError = _hasError.asStateFlow()
 
     init {
-        getName()
+        //getName()
         getBalance()
-        getTransactions()
+        //getTransactions()
     }
 
-    fun getBalance() {
+    private fun getBalance() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val body = RetrofitFactory.homeApi.getBalance()
-                _balance.value = body.balance
+                Log.d("API", "before api call")
+                val response = RetrofitFactory.homeApi.getBalance()
+                Log.d("API", "after: ${response.body()?.name}")
 
+                if (response.isSuccessful)
+                    _balance.value = response.body() ?: BalanceResponse("", 0, "", "")
             } catch (e: Exception) {
-                Log.d("trace", "Exception: ${e.localizedMessage}")
+                Log.d("API", "Exception: ${e.localizedMessage}")
                 _hasError.value += 1
+                Log.d("API", "Exception: ${e.stackTrace}")
 
             }
         }
     }
 
-    fun getTransactions() {
-        viewModelScope.launch(Dispatchers.IO) {
-            try {
-                _transactions.update {
-                    RetrofitFactory.homeApi.getTransactions().transactions
-
-                }
-            } catch (e: Exception) {
-                Log.d("trace", "Exception: ${e.localizedMessage}")
-                _hasError.value += 1
-            }
-        }
-    }
-
-    fun getName() {
-        viewModelScope.launch(Dispatchers.IO) {
-            try {
-                val body = RetrofitFactory.homeApi.getUser()
-                _name.value = body.name
-
-            } catch (e: Exception) {
-                Log.d("trace", "Exception: ${e.localizedMessage}")
-                _hasError.value += 1
-
-            }
-        }
-    }
-
-    fun logout(){
-        viewModelScope.launch(Dispatchers.IO) {
-            try {
-                RetrofitFactory.homeApi.logout()
-            }
-            catch (e: Exception){
-                Log.d("trace", "Exception: ${e.localizedMessage}")
-            }
-        }
-    }
+//    fun getTransactions() {
+//        viewModelScope.launch(Dispatchers.IO) {
+//            try {
+//                _transactions.update {
+//                    RetrofitFactory.homeApi.getTransactions().transactions
+//
+//                }
+//            } catch (e: Exception) {
+//                Log.d("trace", "Exception: ${e.localizedMessage}")
+//                _hasError.value += 1
+//            }
+//        }
+//    }
+//
+//    fun getName() {
+//        viewModelScope.launch(Dispatchers.IO) {
+//            try {
+//                val body = RetrofitFactory.homeApi.getUser()
+//                _name.value = body.name
+//
+//            } catch (e: Exception) {
+//                Log.d("trace", "Exception: ${e.localizedMessage}")
+//                _hasError.value += 1
+//
+//            }
+//        }
+//    }
+//
+//    fun logout(){
+//        viewModelScope.launch(Dispatchers.IO) {
+//            try {
+//                RetrofitFactory.homeApi.logout()
+//            }
+//            catch (e: Exception){
+//                Log.d("trace", "Exception: ${e.localizedMessage}")
+//            }
+//        }
+//    }
 
     fun getInitials(fullName: String): String {
         if (fullName.isNullOrEmpty()) {
@@ -95,7 +102,7 @@ class HomeViewModel : ViewModel() {
         return fullName.first().toString()
     }
 
-    fun balanceStringify(balance: Float): String {
+    fun balanceStringify(balance: Long): String {
         val formatter = DecimalFormat("#,###.00")
         return formatter.format(balance)
     }
