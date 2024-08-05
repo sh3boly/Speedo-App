@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.speedoapp.api.RetrofitFactory
+import com.example.speedoapp.model.BalanceResponse
 import com.example.speedoapp.model.Transaction
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,7 +14,7 @@ import kotlinx.coroutines.launch
 import java.text.DecimalFormat
 
 class HomeViewModel : ViewModel() {
-    private val _balance = MutableStateFlow<Float>(0f)
+    private val _balance = MutableStateFlow<BalanceResponse?>(null)
     val balance = _balance.asStateFlow()
 
     private val _name = MutableStateFlow("")
@@ -26,21 +27,26 @@ class HomeViewModel : ViewModel() {
     val hasError = _hasError.asStateFlow()
 
     init {
-        getName()
+        //getName()
         getBalance()
-        getTransactions()
+        //getTransactions()
     }
 
     fun getBalance() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val body = RetrofitFactory.homeApi.getBalance()
-                _balance.value = body.balance
-
+                Log.d(
+                    "APIT", "homeApi: ${RetrofitFactory.homeApi}"
+                )
+                val response = RetrofitFactory.homeApi.getBalance()
+                if (response.isSuccessful) {
+                    _balance.value = response.body()
+                } else {
+                    Log.d("API", "Failed to fetch balance: ${response.errorBody()?.string()}")
+                }
             } catch (e: Exception) {
                 Log.d("trace", "Exception: ${e.localizedMessage}")
                 _hasError.value += 1
-
             }
         }
     }
@@ -96,7 +102,7 @@ class HomeViewModel : ViewModel() {
     }
 
 
-    fun balanceStringify(balance: Float): String {
+    fun balanceStringify(balance: Int): String {
         val formatter = DecimalFormat("#,###.00")
         return formatter.format(balance)
     }
