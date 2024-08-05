@@ -142,7 +142,6 @@ fun SignInScreen(
 
 
                         }
-
                         is LoginStatus.Error -> {
                             Toast.makeText(
                                 context,

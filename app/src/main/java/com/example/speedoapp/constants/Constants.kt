@@ -18,4 +18,5 @@ object Constants {
     const val TRANSFER_ENDPOINT = "/api/transfer"
     const val BASE_URL = "http://10.0.2.2:3000" //to be modified
     const val IDENTIFIER = "identifier"
+    const val INACTIVITY_TIME: Long = 3600000 / 2
 }
