@@ -27,7 +27,7 @@ object InactivityManager {
 
     private val handler = Handler(Looper.getMainLooper())
     private val inactivityRunnable = Runnable { onInactivity() }
-    private var inactivityTimeoutMillis: Long = 3600000 / 2 * 30 * 6 // 30 minutes in milliseconds
+    private var inactivityTimeoutMillis: Long = (3600000 / 2) // 30 minutes in milliseconds
 
 
 
