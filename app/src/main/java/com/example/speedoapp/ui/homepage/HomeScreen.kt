@@ -60,7 +60,7 @@ fun HomeScreen(
     viewModel: HomeViewModel = viewModel()
 ) {
 
-    Log.d("balance", "Here")
+
     val balance by viewModel.balance.collectAsState()
     Log.d("balance", "Here: ${balance?.balance}")
 
