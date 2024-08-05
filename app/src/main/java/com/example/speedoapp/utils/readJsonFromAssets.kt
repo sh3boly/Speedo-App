@@ -1,7 +1,6 @@
-package com.delasign.samplestarterproject.utils
+package com.example.speedoapp.utils
 
 import android.content.Context
-import android.util.Log
 import java.io.BufferedReader
 import java.io.InputStreamReader
 

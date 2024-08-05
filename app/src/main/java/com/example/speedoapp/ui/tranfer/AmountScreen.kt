@@ -39,7 +39,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -70,7 +69,6 @@ import com.example.speedoapp.ui.theme.PrimaryColor
 import com.example.speedoapp.ui.theme.RedYellowColor
 import com.example.speedoapp.ui.theme.SubTitleTextStyleBold
 import com.example.speedoapp.ui.theme.SubTitleTextStyleLight
-import com.google.gson.Gson
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)

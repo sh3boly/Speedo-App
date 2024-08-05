@@ -49,8 +49,6 @@ import com.example.speedoapp.ui.theme.G900
 import com.example.speedoapp.ui.theme.PrimaryColor
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.speedoapp.navigation.AppRoutes.AMOUNT_TRANSFER
-import com.example.speedoapp.ui.theme.GradientEnd
-import com.example.speedoapp.ui.theme.GradientStart
 import com.example.speedoapp.ui.theme.HomeGradientEnd
 import com.example.speedoapp.ui.theme.HomeGradientStart
 import com.example.speedoapp.ui.theme.P50
@@ -62,16 +60,20 @@ fun HomeScreen(
     viewModel: HomeViewModel = viewModel()
 ) {
 
-
+    Log.d("balance", "Here")
     val balance by viewModel.balance.collectAsState()
-    val transactions by viewModel.transactions.collectAsState()
-    val name by viewModel.name.collectAsState()
-    Log.d("trace", "The name is : $name")
+    Log.d("balance", "Here: ${balance?.balance}")
+
+    //val transactions by viewModel.transactions.collectAsState()
+    //val name by viewModel.name.collectAsState()
+    //Log.d("trace", "The name is : $name")
 //
 //    val hasError by viewModel.hasError.collectAsState()
 //    if (hasError > 0)
 //        Toast.makeText(LocalContext.current, "Check your connection", Toast.LENGTH_SHORT).show()
     //val name = "Asmaa Desouky"
+    val transactions = mutableListOf<Transaction>()
+    transactions.add(Transaction("Ahmed", "Credit", 1000f, "12/12/2022"))
     Scaffold(
         bottomBar = { MenuAppBar(currentScreen = "home", navController = navController) }
     )
@@ -88,13 +90,13 @@ fun HomeScreen(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = modifier.fillMaxWidth()
             ) {
-                UserIcon(initials = viewModel.getInitials(name))
+                UserIcon(initials = viewModel.getInitials(balance!!.name))
 
                 Spacer(modifier = Modifier.padding(8.dp))
 
                 Column() {
                     Text(text = "Welcome back,", style = AppTextStyle, color = PrimaryColor)
-                    Text(text = name, style = AppTextStyle, color = G900)
+                    Text(text = balance!!.name, style = AppTextStyle, color = G900)
                 }
 
                 Box(
@@ -109,7 +111,7 @@ fun HomeScreen(
 
             }
             Spacer(modifier = modifier.padding(15.dp))
-            BalanceCard(balance = viewModel.balanceStringify(balance))
+            BalanceCard(balance = viewModel.balanceStringify(balance!!.balance))
             Spacer(modifier = modifier.padding(16.dp))
             Services(navController = navController)
             Spacer(modifier = modifier.padding(16.dp))
@@ -219,9 +221,9 @@ fun TransactionListItem(modifier: Modifier = Modifier, transaction: Transaction)
             .height(77.dp)
             .padding(8.dp)
     ) {
-        Box (
+        Box(
             modifier = modifier.background(P50)
-        ){
+        ) {
 
             Image(
                 painter = painterResource(id = R.drawable.ic_visa),

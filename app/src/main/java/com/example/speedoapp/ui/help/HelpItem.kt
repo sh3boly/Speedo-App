@@ -1,4 +1,4 @@
-package com.example.speedoapp.help
+package com.example.speedoapp.ui.help
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image

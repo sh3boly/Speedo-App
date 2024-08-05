@@ -1,7 +1,7 @@
 import android.content.Context
 import android.content.SharedPreferences
 
-object TokenManager {
+object PreferencesManager {
     private lateinit var prefs: SharedPreferences
 
     fun init(context: Context) {

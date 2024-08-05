@@ -2,6 +2,7 @@ package com.example.speedoapp.ui.more
 
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -37,10 +38,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.speedoapp.R
-import com.example.speedoapp.help.HelpItem
+import com.example.speedoapp.ui.help.HelpItem
+import com.example.speedoapp.navigation.AppRoutes.FAVOURITE_ROUTE
 import com.example.speedoapp.navigation.AppRoutes.HOME_ROUTE
 import com.example.speedoapp.ui.common.MenuAppBar
 import com.example.speedoapp.ui.common.TopBar
@@ -139,7 +140,12 @@ fun MoreScreen(navController: NavController, modifier: Modifier = Modifier) {
                     MoreItem(
                         text = stringResource(R.string.favourites),
                         image = R.drawable.ic_favorite,
-                        onClick = { /*TODO*/ },
+                        onClick = {
+                            Log.d("YOO",  "Iam here")
+                            navController.navigate(FAVOURITE_ROUTE)
+                            Log.d("YOO",  "Iam here")
+
+                        },
                         contentDescription = stringResource(R.string.favourites)
                     )
 

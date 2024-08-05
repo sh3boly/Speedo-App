@@ -39,7 +39,6 @@ import com.example.speedoapp.ui.common.SecondaryButton
 import com.example.speedoapp.ui.common.Stepper
 import com.example.speedoapp.ui.common.TopBar
 import com.example.speedoapp.ui.theme.BodyMedium
-import com.example.speedoapp.ui.theme.BodyMediumBold
 import com.example.speedoapp.ui.theme.D300
 import com.example.speedoapp.ui.theme.G40
 import com.example.speedoapp.ui.theme.G500
