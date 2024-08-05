@@ -45,4 +45,6 @@
     <string name="server_error">Server error</string>
     <string name="server_error_message">It seems like we’re having some difficulties , please don’t leave your aspirations, we are sending for help</string>
     <string name="message_us">Message Us</string>
+    <string name="your_favourite_list">Your favourite list</string>
+    <string name="edit">edit</string>
 </resources>

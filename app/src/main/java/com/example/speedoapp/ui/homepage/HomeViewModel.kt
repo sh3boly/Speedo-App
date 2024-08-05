@@ -14,7 +14,9 @@ import kotlinx.coroutines.launch
 import java.text.DecimalFormat
 
 class HomeViewModel : ViewModel() {
-    private val _balance = MutableStateFlow<BalanceResponse?>(null)
+    private val _balance = MutableStateFlow<BalanceResponse>(
+        BalanceResponse("", 0, "", "")
+    )
     val balance = _balance.asStateFlow()
 
     private val _name = MutableStateFlow("")
@@ -32,63 +34,60 @@ class HomeViewModel : ViewModel() {
         //getTransactions()
     }
 
-    fun getBalance() {
+    private fun getBalance() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                Log.d(
-                    "APIT", "homeApi: ${RetrofitFactory.homeApi}"
-                )
                 val response = RetrofitFactory.homeApi.getBalance()
-                if (response.isSuccessful) {
-                    _balance.value = response.body()
-                } else {
-                    Log.d("API", "Failed to fetch balance: ${response.errorBody()?.string()}")
-                }
+
+                if (response.isSuccessful)
+                    _balance.value = response.body() ?: BalanceResponse("", 0, "", "")
             } catch (e: Exception) {
-                Log.d("trace", "Exception: ${e.localizedMessage}")
+                Log.d("API", "Exception: ${e.localizedMessage}")
                 _hasError.value += 1
-            }
-        }
-    }
-
-    fun getTransactions() {
-        viewModelScope.launch(Dispatchers.IO) {
-            try {
-                _transactions.update {
-                    RetrofitFactory.homeApi.getTransactions().transactions
-
-                }
-            } catch (e: Exception) {
-                Log.d("trace", "Exception: ${e.localizedMessage}")
-                _hasError.value += 1
-            }
-        }
-    }
-
-    fun getName() {
-        viewModelScope.launch(Dispatchers.IO) {
-            try {
-                val body = RetrofitFactory.homeApi.getUser()
-                _name.value = body.name
-
-            } catch (e: Exception) {
-                Log.d("trace", "Exception: ${e.localizedMessage}")
-                _hasError.value += 1
+                Log.d("API", "Exception: ${e.stackTrace}")
 
             }
         }
     }
 
-    fun logout() {
-        viewModelScope.launch(Dispatchers.IO) {
-            try {
-                RetrofitFactory.homeApi.logout()
-            } catch (e: Exception) {
-                Log.d("trace", "Exception: ${e.localizedMessage}")
-            }
-        }
-    }
-
+//    fun getTransactions() {
+//        viewModelScope.launch(Dispatchers.IO) {
+//            try {
+//                _transactions.update {
+//                    RetrofitFactory.homeApi.getTransactions().transactions
+//
+//                }
+//            } catch (e: Exception) {
+//                Log.d("trace", "Exception: ${e.localizedMessage}")
+//                _hasError.value += 1
+//            }
+//        }
+//    }
+//
+//    fun getName() {
+//        viewModelScope.launch(Dispatchers.IO) {
+//            try {
+//                val body = RetrofitFactory.homeApi.getUser()
+//                _name.value = body.name
+//
+//            } catch (e: Exception) {
+//                Log.d("trace", "Exception: ${e.localizedMessage}")
+//                _hasError.value += 1
+//
+//            }
+//        }
+//    }
+//
+//    fun logout(){
+//        viewModelScope.launch(Dispatchers.IO) {
+//            try {
+//                RetrofitFactory.homeApi.logout()
+//            }
+//            catch (e: Exception){
+//                Log.d("trace", "Exception: ${e.localizedMessage}")
+//            }
+//        }
+//    }
 
     fun getInitials(fullName: String): String {
         if (fullName.isNullOrEmpty()) {
@@ -101,8 +100,7 @@ class HomeViewModel : ViewModel() {
         return fullName.first().toString()
     }
 
-
-    fun balanceStringify(balance: Int): String {
+    fun balanceStringify(balance: Long): String {
         val formatter = DecimalFormat("#,###.00")
         return formatter.format(balance)
     }

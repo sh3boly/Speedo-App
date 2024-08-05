@@ -6,10 +6,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
-import android.os.Bundle
-import android.widget.Toast
 import com.example.speedoapp.api.InactivityManager
-import com.example.speedoapp.api.RetrofitFactory
 
 class MyApp : Application() {
 

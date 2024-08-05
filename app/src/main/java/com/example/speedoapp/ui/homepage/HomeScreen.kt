@@ -49,8 +49,6 @@ import com.example.speedoapp.ui.theme.G900
 import com.example.speedoapp.ui.theme.PrimaryColor
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.speedoapp.navigation.AppRoutes.AMOUNT_TRANSFER
-import com.example.speedoapp.ui.theme.GradientEnd
-import com.example.speedoapp.ui.theme.GradientStart
 import com.example.speedoapp.ui.theme.HomeGradientEnd
 import com.example.speedoapp.ui.theme.HomeGradientStart
 import com.example.speedoapp.ui.theme.P50
@@ -64,6 +62,8 @@ fun HomeScreen(
 
 
     val balance by viewModel.balance.collectAsState()
+    Log.d("balance", "Here: ${balance?.balance}")
+
     //val transactions by viewModel.transactions.collectAsState()
     //val name by viewModel.name.collectAsState()
     //Log.d("trace", "The name is : $name")
@@ -221,9 +221,9 @@ fun TransactionListItem(modifier: Modifier = Modifier, transaction: Transaction)
             .height(77.dp)
             .padding(8.dp)
     ) {
-        Box (
+        Box(
             modifier = modifier.background(P50)
-        ){
+        ) {
 
             Image(
                 painter = painterResource(id = R.drawable.ic_visa),
