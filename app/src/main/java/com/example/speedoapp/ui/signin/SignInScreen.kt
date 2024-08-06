@@ -139,7 +139,7 @@ fun SignInScreen(
                         is LoginStatus.Error -> {
                             Toast.makeText(
                                 context,
-                                "Sign Up failed! Error: ${status.message}",
+                                "${status.message}",
                                 Toast.LENGTH_SHORT
                             ).show()
                             viewModel.resetLoginStatus()

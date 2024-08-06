@@ -53,6 +53,7 @@ import com.example.speedoapp.ui.theme.G700
 import com.example.speedoapp.ui.theme.G900
 import com.example.speedoapp.ui.theme.PrimaryColor
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.speedoapp.api.InactivityManager
 import com.example.speedoapp.navigation.AppRoutes.AMOUNT_TRANSFER
 import com.example.speedoapp.ui.theme.G40
 import com.example.speedoapp.ui.theme.HeadingSemiBold
@@ -69,7 +70,7 @@ fun HomeScreen(
 
 
     val balance by viewModel.balance.collectAsState()
-
+    InactivityManager.initViewModel(viewModel)
     //val transactions by viewModel.transactions.collectAsState()
     //val name by viewModel.name.collectAsState()
     //Log.d("trace", "The name is : $name")

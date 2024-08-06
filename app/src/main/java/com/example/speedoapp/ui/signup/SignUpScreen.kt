@@ -155,7 +155,7 @@ fun SignUpScreen(
                         is RegisterStatus.Error -> {
                             Toast.makeText(
                                 context,
-                                "Sign Up failed! Error: ${status.message}",
+                                "${status.message}",
                                 Toast.LENGTH_SHORT
                             ).show()
                             viewModel.resetRegisterStatus()
