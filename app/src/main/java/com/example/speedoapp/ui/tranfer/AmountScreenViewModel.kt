@@ -173,7 +173,7 @@ class AmountScreenViewModel(application: Application) : AndroidViewModel(applica
         }
     }
 
-    private fun getBalance() {
+     fun getBalance() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val response = RetrofitFactory.homeApi.getBalance()
@@ -187,8 +187,8 @@ class AmountScreenViewModel(application: Application) : AndroidViewModel(applica
         }
     }
 
-    private fun getFavourites() {
-        viewModelScope.launch {
+    fun getFavourites() {
+        viewModelScope.launch(Dispatchers.IO) {
             try {
                 val response = RetrofitFactory.favouriteApi.getFavourites()
                 if (response.isSuccessful) {
