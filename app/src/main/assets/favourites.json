@@ -1,0 +1,52 @@
+[
+  {
+    "userId": 1,
+    "recipientName": "Mohamed",
+    "recipientAccountId": "325235"
+  },
+  {
+    "userId": 2,
+    "recipientName": "Alice Johnson",
+    "recipientAccountId": "478192"
+  },
+  {
+    "userId": 3,
+    "recipientName": "Bob Smith",
+    "recipientAccountId": "592384"
+  },
+  {
+    "userId": 4,
+    "recipientName": "Charlie Brown",
+    "recipientAccountId": "734829"
+  },
+  {
+    "userId": 5,
+    "recipientName": "Diana Prince",
+    "recipientAccountId": "920483"
+  },
+  {
+    "userId": 6,
+    "recipientName": "Ethan Hunt",
+    "recipientAccountId": "183294"
+  },
+  {
+    "userId": 7,
+    "recipientName": "Fiona Gallagher",
+    "recipientAccountId": "293847"
+  },
+  {
+    "userId": 8,
+    "recipientName": "George Clooney",
+    "recipientAccountId": "384756"
+  },
+  {
+    "userId": 9,
+    "recipientName": "Hannah Montana",
+    "recipientAccountId": "495867"
+  },
+  {
+    "userId": 10,
+    "recipientName": "Ian Malcolm",
+    "recipientAccountId": "567890"
+  }
+]

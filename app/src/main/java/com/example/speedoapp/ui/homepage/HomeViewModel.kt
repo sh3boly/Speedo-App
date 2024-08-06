@@ -54,9 +54,7 @@ class HomeViewModel : ViewModel() {
                 if (response.isSuccessful)
                     _balance.value = response.body() ?: BalanceResponse("", 0, "", "")
             } catch (e: Exception) {
-                Log.d("API", "Exception: ${e.localizedMessage}")
                 _hasError.value += 1
-                Log.d("API", "Exception: ${e.stackTrace}")
 
             }
         }

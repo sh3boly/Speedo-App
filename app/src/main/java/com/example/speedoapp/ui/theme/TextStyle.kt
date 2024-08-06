@@ -11,6 +11,11 @@ val AppTextStyle = TextStyle(
     lineHeight = 21.sp,
     fontWeight = FontWeight(400),
 )
+val HeadingSemiBold = TextStyle(
+    fontSize = 28.sp,
+    lineHeight = 42.sp,
+    fontWeight = FontWeight(600),
+)
 
 val AppTextStyleSelected = TextStyle(
     fontSize = 14.sp,

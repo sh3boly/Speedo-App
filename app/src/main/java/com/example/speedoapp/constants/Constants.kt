@@ -14,9 +14,16 @@ object Constants {
     const val COUNTRY_EXCHANGE_RATE = "exchange_rate"
     const val COUNTRY_FLAG_IMAGE = "flag_url"
     const val COUNTRY_NAME = "currency_name"
-    const val CURRENCIES_ENDPOINT = "/api/currencies" //to be modified
-    const val TRANSFER_ENDPOINT = "/api/transfer"
-    const val BASE_URL = "http://10.0.2.2:3000" //to be modified
+    const val CURRENCIES_ENDPOINT = "api/currencies" //to be modified
+    const val TRANSFER_ENDPOINT = "api/transfer"
+    const val ADD_FAVOURITE_ENDPOINT = "api/favorites/addFavorite"
+    const val DELETE_FAVOURITE_ENDPOINT = "api/favorites/delete/{id}"
+    const val UPDATE_FAVOURITE_ENDPOINT = "api/favorites/updateFavorite/{id}"
+    const val GET_FAVOURITE_ENDPOINT = "api/favorites/getFavorites"
+    const val BASE_URL = "http://bm-app-env.eba-yspz5pwf.eu-north-1.elasticbeanstalk.com/" //to be modified
     const val IDENTIFIER = "identifier"
+    const val FAVOURITE_RECIPIENT_ID = "id"
+    const val FAVOURITE_RECIPIENT_NAME = "recipientName"
+    const val FAVOURITE_RECIPIENT_ACCOUNT_NUMBER = "recipientAccountId"
     const val INACTIVITY_TIME: Long = 3600000 / 2
 }

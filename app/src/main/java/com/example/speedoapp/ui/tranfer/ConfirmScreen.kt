@@ -1,5 +1,6 @@
 package com.example.speedoapp.ui.tranfer
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -55,6 +56,8 @@ fun ConfirmScreen(
     modifier: Modifier = Modifier
 ) {
     val transferData by viewModel.transferData.collectAsState()
+    val balance by viewModel.balance.collectAsState()
+    Log.d("BALANCE", balance.name)
     val context = LocalContext.current
     Box(
         modifier = Modifier
@@ -135,7 +138,7 @@ fun ConfirmScreen(
                         AccountCard(
                             identifier = 0,
                             identifierText = "From",
-                            cardHolder = "Asmaa Dosuky",
+                            cardHolder = balance.name,
                             cardNumber = "7890"
                         )
                         Spacer(modifier = Modifier.height(11.dp))
@@ -159,7 +162,7 @@ fun ConfirmScreen(
                 PrimaryButton(
                     onClick = {
 
-                        viewModel.confirmTransfer(context)
+                        viewModel.confirmTransferInDb(context)
                         navController.navigate(PAYMENT_TRANSFER)
                     },
                     buttonText = stringResource(R.string.confirm)
