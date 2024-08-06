@@ -112,7 +112,7 @@ fun HomeScreen(
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_notification),
-                        contentDescription = "Notification bell Icon"
+                        contentDescription = "com.example.speedoapp.ui.notifications.Notification bell Icon"
                     )
                 }
 

@@ -1,0 +1,25 @@
+{
+  "notifications": [
+    {
+      "type": "Receive Transaction",
+      "amount": "1000 USD",
+      "name": "Asmaa Dosuky",
+      "account_no": "1234 xxx",
+      "time": "12 Jul 2024 09:00 PM"
+    },
+    {
+      "type": "send Transaction",
+      "amount": "2000 USD",
+      "name": "Asmaa Dosuky",
+      "account_no": "1234 xxx",
+      "time": "12 Jul 2024 09:00 PM"
+    },
+    {
+      "type": "send Transaction",
+      "amount": "3000 USD",
+      "name": "Asmaa Dosuky",
+      "account_no": "1234 xxx",
+      "time": "12 Jul 2024 09:00 PM"
+    }
+  ]
+}

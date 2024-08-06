@@ -57,10 +57,10 @@ fun OTP(navController: NavController, modifier: Modifier = Modifier, viewModel: 
 
             OTPTextField(
                 modifier = Modifier.padding(start=48.dp,end=48.dp, bottom = 48.dp),
-                value = otp, // Initial value
+                value = otp,
                 onTextChanged = { otp = it },
-                numDigits = 6, // Number of digits in OTP
-                isMasked = false, // Mask digits for security
+                numDigits = 6,
+                isMasked = false,
                 digitContainerStyle = OtpTextFieldDefaults.outlinedContainer(),
                 textStyle = MaterialTheme.typography.titleLarge,
                 isError = false

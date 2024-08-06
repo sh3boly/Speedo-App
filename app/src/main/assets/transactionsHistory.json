@@ -1,0 +1,25 @@
+{
+  "transactions": [
+    {
+      "cardType": "credit_card",
+      "cardNumber": "1234",
+      "transactionDate": "2023-11-22T11:00:00",
+      "status": "successful",
+      "amount": 1000
+    },
+    {
+      "cardType": "bank",
+      "cardNumber": "1234",
+      "transactionDate": "2023-11-22T11:00:00",
+      "status": "failed",
+      "amount": 1000
+    },
+    {
+      "cardType": "credit_card",
+      "cardNumber": "1234",
+      "transactionDate": "2023-11-22T11:00:00",
+      "status": "successful",
+      "amount": 1000
+    }
+  ]
+}
