@@ -1,149 +1,105 @@
 package com.example.speedoapp.ui.MyCards
 
-import android.os.Build
-import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import cardList
 import com.example.speedoapp.R
-import com.example.speedoapp.ui.addcard.AddCardViewModel
-import com.example.speedoapp.ui.addcard.CardInfo
+import com.example.speedoapp.model.CardInfo
+import com.example.speedoapp.navigation.AppRoutes
 import com.example.speedoapp.ui.common.MenuAppBar
-import com.example.speedoapp.ui.common.PrimaryButton
-import com.example.speedoapp.ui.theme.ButtonTextColor
-import com.example.speedoapp.ui.theme.P50
+import com.example.speedoapp.ui.common.MycardsItem
+import com.example.speedoapp.ui.theme.OffYellowColor
+import com.example.speedoapp.ui.theme.PrimaryColor
 import com.example.speedoapp.ui.theme.SubTitleTextStyle
-import kotlinx.coroutines.launch
+import com.example.speedoapp.utils.readJsonFromAssets
+import com.google.gson.Gson
 
-@RequiresApi(Build.VERSION_CODES.O)
-@Composable
 @OptIn(ExperimentalMaterial3Api::class)
+@Composable
 fun MyCards(
     navController: NavController,
-    modifier: Modifier = Modifier,
-    cardViewModel: AddCardViewModel = viewModel(),
 ) {
+    val context = LocalContext.current
+    var card by remember { mutableStateOf<List<CardInfo>?>(null) }
+    val jsonString = readJsonFromAssets(context, "cardList.json")
 
-    //val addedCards by rememberUpdatedState(cardViewModel._addedCards)
-    val addedCards = cardViewModel.addedCards.collectAsState()
-    //val addedCards = cardViewModel._addedCards.collectAsState()
-    //var addedCards by remember { mutableStateOf(emptyList<CardInfo>()) }
-    Log.d("MyCards", "Number of cards: ${addedCards.value.size}")
+    if (jsonString.isNotEmpty()) {
+        try {
+            val gson = Gson()
+            val x= cardList::class.java
+            val cardListObject = gson.fromJson(jsonString,x)
+            card = cardListObject?.Cards
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
 
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(title = {
-                Text(text = "My Cards", style = SubTitleTextStyle)
+                Text(text = "My cards", style = SubTitleTextStyle)
             })
-        },
-        bottomBar = { MenuAppBar(currentScreen = "mycards", navController = navController)},
-        modifier = Modifier.background(ButtonTextColor)
+            Icon(
+                painter = painterResource(id = R.drawable.ic_back),
+                contentDescription = "Back Icon",
+                modifier = Modifier
+                    .padding(20.dp)
+                    .clickable { navController.popBackStack() }
+            )
+        }, bottomBar = { MenuAppBar(modifier = Modifier, currentScreen = "transactions", navController = navController) },
+        modifier = Modifier.background(OffYellowColor)
+
     ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .padding(innerPadding)
-                .fillMaxWidth(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            addedCards.value.forEach { cardInfo ->
-                Card(
-                    colors = CardDefaults.cardColors(P50),
-                    modifier = Modifier
-                        .padding(top = 16.dp, bottom = 245.dp)
-                        .height(94.dp)
-                        .width(360.dp),
-                    shape = RoundedCornerShape(8.dp),
-                ) {
-                    Row(
+        if(card!=null) {
+            Button(onClick = { navController.navigate(AppRoutes.ADDCARD_ROUTE) }) {
+                Text(text = "add Account", textAlign = TextAlign.Center)
+            }
+            LazyColumn(
+                modifier = Modifier
+                    .padding(innerPadding).fillMaxSize(),
+            ) {
+                items(card!!) { cardInfo ->
+                    MycardsItem(text1 = cardInfo.cardHolder, text2 = cardInfo.cardNo)
+                }
+                item {
+                    Button(
+                        onClick = { navController.navigate(AppRoutes.ADDCARD_ROUTE) },
                         modifier = Modifier
-                            .fillMaxSize()
-                            .padding(start = 16.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .size(48.dp)
-                                .clip(CircleShape)
-                                .background(ButtonTextColor)
-                                .align(Alignment.CenterVertically)
-                        ) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.bank),
-                                contentDescription = "Bank Icon",
-                                modifier = Modifier.align(Alignment.Center)
-                            )
-                        }
-                        Column(
-                            modifier = Modifier
-                                .padding(16.dp)
-                                .fillMaxSize(),
-                            verticalArrangement = Arrangement.Center
-                        ) {
-                            Text(
-                                text = cardInfo.cardHolder,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 20.sp,
-                            )
-                            Spacer(modifier = Modifier.padding(8.dp))
-                            Text(
-                                text = cardInfo.cardNo,
-                                fontSize = 16.sp,
-                                color = Color.Gray
-                            )
-                        }
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor
+                            = PrimaryColor,
+                            contentColor = Color.White
+                        )) {
+                        Text(text = "Add Account", textAlign = TextAlign.Center)
                     }
                 }
-                PrimaryButton(
-                    onClick = { /*TODO*/ }, buttonText = "Add new Account",
-                    modifier = Modifier.padding(16.dp)
-                )
             }
         }
     }
 }
-
-//@RequiresApi(Build.VERSION_CODES.O)
-//@Preview(showBackground = true)
-//@Composable
-//fun MyCardPreview() {
-//    MyCards()
-//}
+@Preview(showBackground = true)
+@Composable
+fun MyCardsPreview(){
+    val nav = rememberNavController()
+    MyCards(navController =nav )
+}
