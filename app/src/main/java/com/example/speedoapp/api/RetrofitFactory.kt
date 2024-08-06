@@ -2,6 +2,7 @@ package com.example.speedoapp.api
 
 import AuthInterceptor
 import PreferencesManager
+import androidx.navigation.NavController
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -14,6 +15,7 @@ object RetrofitFactory {
 
 
     val tokenManager = PreferencesManager
+
     private val okHttpClient = OkHttpClient.Builder()
         .addInterceptor(AuthInterceptor(tokenManager))
         .build()

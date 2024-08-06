@@ -93,6 +93,9 @@ import com.example.speedoapp.model.Currency
 import com.example.speedoapp.navigation.AppRoutes.AMOUNT_TRANSFER
 import com.example.speedoapp.navigation.AppRoutes.HOME_ROUTE
 import com.example.speedoapp.navigation.AppRoutes.MORE_ROUTE
+import com.example.speedoapp.navigation.AppRoutes.MY_CARDS
+import com.example.speedoapp.navigation.AppRoutes.TRANSACTIONS_DETAILS
+import com.example.speedoapp.navigation.AppRoutes.TRANSACTIONS_HISTORY
 import com.example.speedoapp.ui.theme.AlertColor
 import com.example.speedoapp.ui.theme.AppNumbersStyle
 import com.example.speedoapp.ui.theme.AppTextStyle
@@ -102,6 +105,7 @@ import com.example.speedoapp.ui.theme.BodyMediumBold
 import com.example.speedoapp.ui.theme.ButtonMedium
 import com.example.speedoapp.ui.theme.BoldNavTextStyle
 import com.example.speedoapp.ui.theme.ButtonTextColor
+import com.example.speedoapp.ui.theme.CardDetailsTextStyle
 import com.example.speedoapp.ui.theme.DisabledColor
 import com.example.speedoapp.ui.theme.G0
 import com.example.speedoapp.ui.theme.G100
@@ -119,6 +123,7 @@ import com.example.speedoapp.ui.theme.P50
 import com.example.speedoapp.ui.theme.P75
 import com.example.speedoapp.ui.theme.PrimaryColor
 import com.example.speedoapp.ui.theme.RedYellowColor
+import com.example.speedoapp.ui.theme.SmallTextStyle
 import com.example.speedoapp.ui.theme.SubTitleTextStyle
 import com.example.speedoapp.ui.theme.SubTitleTextStyleBold
 import com.example.speedoapp.ui.tranfer.AmountScreenViewModel
@@ -287,6 +292,7 @@ fun DataField(
         )
     }
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DataFieldInt(
@@ -316,7 +322,8 @@ fun DataFieldInt(
             value = value.toString(), // Convert value to String for display
             onValueChange = { newValue ->
                 try {
-                    val intValue = newValue.toIntOrNull() ?: return@OutlinedTextField // Handle invalid input
+                    val intValue =
+                        newValue.toIntOrNull() ?: return@OutlinedTextField // Handle invalid input
                     onValueChange(intValue)
                 } catch (e: NumberFormatException) {
                     // Handle potential exception for invalid input (optional)
@@ -732,7 +739,7 @@ fun MenuAppBar(
                 text = "Home",
                 onClick = { navController.navigate(HOME_ROUTE) })
 
-            Spacer(modifier = modifier.padding(14.dp))
+            Spacer(modifier = modifier.padding(10.dp))
 
             if (currentScreen == "transfer") NavItem(
                 icon = R.drawable.ic_selected_transfer,
@@ -744,7 +751,7 @@ fun MenuAppBar(
                 text = "Transfer",
                 onClick = { navController.navigate(AMOUNT_TRANSFER) })
 
-            Spacer(modifier = modifier.padding(14.dp))
+            Spacer(modifier = modifier.padding(10.dp))
 
 
             if (currentScreen == "transactions") NavItem(
@@ -753,16 +760,21 @@ fun MenuAppBar(
                 onClick = {},
                 color = P300
             )
-            else NavItem(icon = R.drawable.ic_normal_history, text = "Transactions", onClick = {})
+            else NavItem(
+                icon = R.drawable.ic_normal_history,
+                text = "Transactions",
+                onClick = { navController.navigate(TRANSACTIONS_HISTORY) })
 
-            Spacer(modifier = modifier.padding(14.dp))
+            Spacer(modifier = modifier.padding(10.dp))
 
             if (currentScreen == "mycards") NavItem(
                 icon = R.drawable.ic_selected_mycard, text = "My Cards", onClick = {}, color = P300
             )
-            else NavItem(icon = R.drawable.ic_mycard, text = "My Cards", onClick = {})
+            else NavItem(icon = R.drawable.ic_mycard, text = "My Cards", onClick = {
+                navController.navigate(MY_CARDS)
+            })
 
-            Spacer(modifier = modifier.padding(14.dp))
+            Spacer(modifier = modifier.padding(10.dp))
 
             if (currentScreen == "more") NavItem(icon = R.drawable.ic_selected_more,
                 text = "More",
@@ -855,7 +867,7 @@ fun OnboardingScreen(
 }
 
 @Composable
-fun TransactionList(amount:String) {
+fun TransactionList(amount: String) {
     Column(
         modifier = Modifier
             .background(OffYellowColor),
@@ -871,11 +883,11 @@ fun TransactionList(amount:String) {
                 .width(124.dp)
         )
         Text(
-            text =amount,
+            text = amount,
             textAlign = TextAlign.Center,
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(top = 18.dp,bottom=4.dp)
+            modifier = Modifier.padding(top = 18.dp, bottom = 4.dp)
         )
         Text(
             text = "Transfer amount",
@@ -889,13 +901,13 @@ fun TransactionList(amount:String) {
             textAlign = TextAlign.Center,
             fontSize = 16.sp,
             color = PrimaryColor,
-            modifier = Modifier.padding(top= 4.dp)
+            modifier = Modifier.padding(top = 4.dp)
         )
     }
 }
 
 @Composable
-fun MycardsItem(modifier: Modifier = Modifier, text1:String, text2:String) {
+fun MycardsItem(modifier: Modifier = Modifier, text1: String, text2: String) {
     Column(
         modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.Center,
@@ -957,7 +969,7 @@ fun Data(
     labelText: String,
     cardInfo: String,
     onValueChange: (String) -> Unit,
-    modifier: Modifier=Modifier
+    modifier: Modifier = Modifier
 ) {
     Column(
         modifier = Modifier
@@ -993,12 +1005,16 @@ fun ListItemOfInfo(
         colors = CardDefaults.cardColors(OffYellowColor),
         elevation = CardDefaults.elevatedCardElevation()
     ) {
-        Column(modifier = Modifier
-            .padding(16.dp)
-            .size(180.dp, 50.dp)){
-            Text(text = title, fontSize = 16.sp, modifier = Modifier.padding(bottom=13.dp),
-                fontWeight = FontWeight.Bold )
-            Text(text = description, fontSize = 16.sp, color= Color.Gray)
+        Column(
+            modifier = Modifier
+                .padding(16.dp)
+                .size(180.dp, 50.dp)
+        ) {
+            Text(
+                text = title, fontSize = 16.sp, modifier = Modifier.padding(bottom = 13.dp),
+                fontWeight = FontWeight.Bold
+            )
+            Text(text = description, fontSize = 16.sp, color = Color.Gray)
             BorderStroke(1.dp, color = Color.Gray)
         }
 
@@ -1012,7 +1028,8 @@ fun ListItem(
     title: String,
     description: String,
     onClick: () -> Unit,
-    color:Color
+    color: Color,
+    date: String ="",
 ) {
     Card(
         modifier = Modifier
@@ -1029,24 +1046,32 @@ fun ListItem(
                 .padding(16.dp),
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically
-        ){
+        ) {
             Image(painter = painterResource(id = iconRes), contentDescription = title)
-            Column(modifier = Modifier
-                .padding(start = 24.dp, end = 90.dp)
-                .size(180.dp, 50.dp)){
-                Text(text = title, fontSize = 16.sp, modifier = Modifier.padding(bottom=4.dp),
-                    fontWeight = FontWeight.Bold )
-                Text(text = description, fontSize = 16.sp, color= Color.Gray)
+            Column(
+                modifier = Modifier
+                    .padding(start = 24.dp, end = 90.dp)
+                    .size(180.dp, 50.dp)
+            ) {
+                Text(
+                    text = title, fontSize = 16.sp, modifier = Modifier.padding(bottom = 4.dp),
+                    fontWeight = FontWeight.Bold
+                )
+                Text(text = description, fontSize = 16.sp, color = Color.Gray)
+                Text(text = date, style = CardDetailsTextStyle, color = G100)
             }
-            Image(painter = painterResource(id = R.drawable.path),
-                contentDescription ="to",
-                modifier = Modifier.size(13.dp))
+            Image(
+                painter = painterResource(id = R.drawable.path),
+                contentDescription = "to",
+                modifier = Modifier.size(13.dp)
+            )
         }
 
     }
 }
+
 @Composable
-fun cardimp(text1:String,text2:String) {
+fun cardimp(text1: String, text2: String) {
     Card(
         colors = CardDefaults.cardColors(P50),
         modifier = Modifier
@@ -1097,22 +1122,48 @@ fun cardimp(text1:String,text2:String) {
 
 @Composable
 fun BoxList(
-    icon:Int,
-    title:String,
-    description:String,
-    OnClick:()->Unit,
-){
-    Box(modifier=Modifier.padding(16.dp)) {
-        ListItem(iconRes =icon, title =title , description =description, onClick = OnClick, color = Color.White)
-        Column(verticalArrangement =Arrangement.Center, horizontalAlignment = Alignment.End, modifier = Modifier.align(Alignment.CenterEnd)){
-            Image(painter = painterResource(id = R.drawable.path),
-                contentDescription ="to",
+    icon: Int,
+    title: String,
+    description: String,
+    OnClick: () -> Unit,
+    status: String,
+    date: String,
+) {
+    Box(modifier = Modifier.padding(16.dp)) {
+        ListItem(
+            iconRes = icon,
+            title = title,
+            description = description,
+            onClick = OnClick,
+            color = Color.White,
+            date = date,
+        )
+        Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.End,
+            modifier = Modifier.align(Alignment.CenterEnd)
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.path),
+                contentDescription = "to",
                 modifier = Modifier
                     .padding(5.dp)
-                    .size(15.dp))
-            Text(text = "Success",
-                Modifier
-                    .padding(8.dp)
-                    .background(Color.Green))}
+                    .size(15.dp)
+            )
+            if(status == "successful") {
+                Text(
+                    text = "Successful",
+                    style = SmallTextStyle,
+                    color = Color(0xFF118A30)
+                )
+            }else{
+                Text(
+                    text = "Failed",
+                    style = SmallTextStyle,
+                    color = AlertColor
+                )
+
+            }
+        }
     }
 }

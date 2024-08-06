@@ -48,6 +48,7 @@ import com.example.speedoapp.ui.addcard.AddCardViewModel
 import com.example.speedoapp.model.CardInfo
 import com.example.speedoapp.ui.common.ListItem
 import com.example.speedoapp.ui.common.MenuAppBar
+import com.example.speedoapp.ui.homepage.HomeViewModel
 import com.example.speedoapp.ui.theme.OffYellowColor
 import com.example.speedoapp.ui.theme.SubTitleTextStyle
 import com.example.speedoapp.utils.readJsonFromAssets
@@ -56,19 +57,24 @@ import profileInfo
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Profile(navController: NavController, modifier: Modifier = Modifier) {
-    val context= LocalContext.current
-    val jsonString = readJsonFromAssets(context, "profile.json")
-
-    val jsonData = Gson().fromJson(jsonString, profileInfo::class.java)
-    val name=jsonData.name
-    val initial=getInitials(name)
+fun Profile(
+    navController: NavController,
+    modifier: Modifier = Modifier,
+    viewModel: HomeViewModel = viewModel()
+) {
+    val context = LocalContext.current
+    val balance by viewModel.balance.collectAsState()
+    val name = balance.name
+    val initial = viewModel.getInitials(name)
     Scaffold(
         topBar = {
-            CenterAlignedTopAppBar(title = {
-                Text(text = "Profile", style = SubTitleTextStyle)
-            },colors = TopAppBarDefaults.smallTopAppBarColors(
-                containerColor = OffYellowColor))
+            CenterAlignedTopAppBar(
+                title = {
+                    Text(text = "Profile", style = SubTitleTextStyle)
+                }, colors = TopAppBarDefaults.smallTopAppBarColors(
+                    containerColor = OffYellowColor
+                )
+            )
             Icon(
                 painter = painterResource(id = R.drawable.ic_back),
                 contentDescription = "Back Icon",
@@ -76,19 +82,29 @@ fun Profile(navController: NavController, modifier: Modifier = Modifier) {
                     .padding(20.dp)
                     .clickable { navController.popBackStack() }
             )
-        }, bottomBar = { MenuAppBar(modifier = Modifier, currentScreen = "transactions", navController = navController) },
+        },
+        bottomBar = {
+            MenuAppBar(
+                modifier = Modifier,
+                currentScreen = "transactions",
+                navController = navController
+            )
+        },
         modifier = Modifier.background(OffYellowColor)
     ) { innerPadding ->
-        Column(modifier = Modifier
-            .padding(innerPadding)
-            .fillMaxSize()
-            .background(OffYellowColor)) {
-            Row(modifier= Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
+        Column(
+            modifier = Modifier
+                .padding(innerPadding)
+                .fillMaxSize()
+                .background(OffYellowColor)
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically
-            ){
+            ) {
                 Box(
                     modifier = Modifier
                         .size(48.dp)
@@ -114,30 +130,42 @@ fun Profile(navController: NavController, modifier: Modifier = Modifier) {
                     modifier = Modifier.padding(16.dp)
                 )
             }
-            ListItem(iconRes = R.drawable.group_18325, title = "Personal information", description ="Your information", onClick = {navController.navigate(AppRoutes.PROFILE_INFO)},
-                OffYellowColor)
-            ListItem(iconRes = R.drawable.group_183252, title = "Settings", description ="Change your settings",
-                onClick = {navController.navigate(AppRoutes.SETTINGS)}, OffYellowColor )
-            ListItem(iconRes = R.drawable.group_183253, title = "Payment history", description = "view your transactions", onClick = {},
-                OffYellowColor)
-            ListItem(iconRes = R.drawable.group_183254, title = "My Favourite list", description ="view your favourite",
-                onClick = {}, OffYellowColor)
+            ListItem(
+                iconRes = R.drawable.group_18325,
+                title = "Personal information",
+                description = "Your information",
+                onClick = { navController.navigate(AppRoutes.PROFILE_INFO) },
+                OffYellowColor,
+
+            )
+            ListItem(iconRes = R.drawable.group_183252,
+                title = "Settings",
+                description = "Change your settings",
+                onClick = { navController.navigate(AppRoutes.SETTINGS) },
+                OffYellowColor
+            )
+            ListItem(
+                iconRes = R.drawable.group_183253,
+                title = "Payment history",
+                description = "view your transactions",
+                onClick = { navController.navigate(AppRoutes.TRANSACTIONS_HISTORY)},
+                OffYellowColor
+            )
+            ListItem(iconRes = R.drawable.group_183254,
+                title = "My Favourite list",
+                description = "view your favourite",
+                onClick = {navController.navigate(AppRoutes.FAVOURITE_ROUTE)},
+                OffYellowColor
+            )
 
         }
     }
 }
 
-fun getInitials(fullName: String): String {
-    val names = fullName.split(" ")
-    return names.take(2)
-        .map { it.first().uppercaseChar() }
-        .joinToString("")
-}
-
 
 @Preview(showBackground = true)
 @Composable
-fun ProfilePreview(){
-    val nav= rememberNavController()
-    Profile(navController =nav )
+fun ProfilePreview() {
+    val nav = rememberNavController()
+    Profile(navController = nav)
 }
