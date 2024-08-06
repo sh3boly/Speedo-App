@@ -81,6 +81,8 @@ fun AmountScreen(
     modifier: Modifier = Modifier,
     viewModel: AmountScreenViewModel
 ) {
+    viewModel.getBalance()
+    viewModel.getFavourites()
     val transferData by viewModel.transferData.collectAsState()
     //val hasError by viewModel.hasError.collectAsState() -> will use it to show error screen in case error
     val scaffoldState = rememberBottomSheetScaffoldState()
