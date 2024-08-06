@@ -1,5 +1,8 @@
 package com.example.speedoapp.ui.common
 
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -16,16 +19,22 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Card
@@ -35,19 +44,26 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerState
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults.outlinedTextFieldColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -55,17 +71,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import com.example.speedoapp.R
+import com.example.speedoapp.model.Currency
 import com.example.speedoapp.navigation.AppRoutes.AMOUNT_TRANSFER
 import com.example.speedoapp.navigation.AppRoutes.HOME_ROUTE
 import com.example.speedoapp.navigation.AppRoutes.MORE_ROUTE
@@ -89,12 +113,16 @@ import com.example.speedoapp.ui.theme.G900
 import com.example.speedoapp.ui.theme.GradientEnd
 import com.example.speedoapp.ui.theme.GradientStart
 import com.example.speedoapp.ui.theme.HeadingTextStyle
+import com.example.speedoapp.ui.theme.OffYellowColor
 import com.example.speedoapp.ui.theme.P300
 import com.example.speedoapp.ui.theme.P50
 import com.example.speedoapp.ui.theme.P75
 import com.example.speedoapp.ui.theme.PrimaryColor
+import com.example.speedoapp.ui.theme.RedYellowColor
 import com.example.speedoapp.ui.theme.SubTitleTextStyle
 import com.example.speedoapp.ui.theme.SubTitleTextStyleBold
+import com.example.speedoapp.ui.tranfer.AmountScreenViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun PrimaryButton(
@@ -124,6 +152,7 @@ fun PrimaryButton(
 @Composable
 fun SecondaryButton(
     modifier: Modifier = Modifier,
+    isEnabled: Boolean = true,
     onClick: () -> Unit,
     buttonText: String
 ) {
@@ -258,6 +287,67 @@ fun DataField(
         )
     }
 }
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DataFieldInt(
+    modifier: Modifier = Modifier,
+    isError: String? = null,
+    value: Int,
+    onValueChange: (Int) -> Unit,
+    label: String,
+    @DrawableRes image: Int? = null,
+    @DrawableRes typingImage: Int? = null,
+    imageDescription: String = "",
+    type: KeyboardType = KeyboardType.Number,
+) {
+    Column(
+        horizontalAlignment = Alignment.Start,
+    ) {
+        Text(
+            text = label,
+            style = BodyMedium,
+            color = G700,
+            textAlign = TextAlign.Start,
+        )
+        Spacer(modifier = modifier.height(8.dp))
+        OutlinedTextField(
+            shape = RoundedCornerShape(6.dp),
+            isError = isError != null,
+            value = value.toString(), // Convert value to String for display
+            onValueChange = { newValue ->
+                try {
+                    val intValue = newValue.toIntOrNull() ?: return@OutlinedTextField // Handle invalid input
+                    onValueChange(intValue)
+                } catch (e: NumberFormatException) {
+                    // Handle potential exception for invalid input (optional)
+                }
+            },
+            placeholder = {
+                Text(text = "Enter your $label", style = AppTextStyle, color = G70)
+            },
+            keyboardOptions = KeyboardOptions(),
+            trailingIcon = {
+                if (typingImage != null && value > 0) { // Check if value is non-zero
+                    Image(painterResource(id = typingImage), imageDescription, Modifier.size(24.dp))
+                } else if (image != null) {
+                    Image(painterResource(id = image), imageDescription, Modifier.size(24.dp))
+                }
+            },
+            colors = outlinedTextFieldColors(
+                containerColor = G0,
+                focusedBorderColor = PrimaryColor,
+                unfocusedBorderColor = G70,
+                cursorColor = colorResource(id = R.color.black),
+                errorContainerColor = G0
+            ),
+            modifier = modifier.fillMaxWidth()
+        )
+        if (isError != null) Text(
+            text = isError, style = AppTextStyle, color = AlertColor
+        )
+    }
+}
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -383,6 +473,7 @@ fun LineBetweenSteps(isActive: Boolean) {
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ClickableDataField(
     modifier: Modifier = Modifier,
@@ -662,18 +753,12 @@ fun MenuAppBar(
                 onClick = {},
                 color = P300
             )
-            else NavItem(
-                icon = R.drawable.ic_normal_history,
-                text = "Transactions",
-                onClick = {})
+            else NavItem(icon = R.drawable.ic_normal_history, text = "Transactions", onClick = {})
 
             Spacer(modifier = modifier.padding(14.dp))
 
             if (currentScreen == "mycards") NavItem(
-                icon = R.drawable.ic_selected_mycard,
-                text = "My Cards",
-                onClick = {},
-                color = P300
+                icon = R.drawable.ic_selected_mycard, text = "My Cards", onClick = {}, color = P300
             )
             else NavItem(icon = R.drawable.ic_mycard, text = "My Cards", onClick = {})
 
@@ -766,5 +851,268 @@ fun OnboardingScreen(
 
         }
 
+    }
+}
+
+@Composable
+fun TransactionList(amount:String) {
+    Column(
+        modifier = Modifier
+            .background(OffYellowColor),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Spacer(modifier = Modifier.padding(15.dp))
+        Image(
+            painter = painterResource(id = R.drawable.group_18305),
+            contentDescription = "Account connected successfully",
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(120.dp)
+                .width(124.dp)
+        )
+        Text(
+            text =amount,
+            textAlign = TextAlign.Center,
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(top = 18.dp,bottom=4.dp)
+        )
+        Text(
+            text = "Transfer amount",
+            textAlign = TextAlign.Center,
+            fontSize = 16.sp,
+            color = DisabledColor,
+            modifier = Modifier.padding(4.dp)
+        )
+        Text(
+            text = "Received money",
+            textAlign = TextAlign.Center,
+            fontSize = 16.sp,
+            color = PrimaryColor,
+            modifier = Modifier.padding(top= 4.dp)
+        )
+    }
+}
+
+@Composable
+fun MycardsItem(modifier: Modifier = Modifier, text1:String, text2:String) {
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Card(
+            colors = CardDefaults.cardColors(P50),
+            modifier = Modifier
+                .padding(top = 8.dp)
+                .height(94.dp)
+                .width(360.dp),
+            shape = RoundedCornerShape(8.dp),
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(start = 16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(48.dp)
+                        .clip(CircleShape)
+                        .background(ButtonTextColor)
+                        .align(Alignment.CenterVertically)
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.bank),
+                        contentDescription = "Bank Icon",
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+                }
+                Column(
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .fillMaxSize(),
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Text(
+                        text = text1,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 20.sp,
+                    )
+                    Spacer(modifier = Modifier.padding(8.dp))
+                    Text(
+                        text = text2,
+                        fontSize = 16.sp,
+                        color = Color.Gray
+                    )
+                }
+            }
+        }
+    }
+}
+
+
+@Composable
+fun Data(
+    labelText: String,
+    cardInfo: String,
+    onValueChange: (String) -> Unit,
+    modifier: Modifier=Modifier
+) {
+    Column(
+        modifier = Modifier
+            .padding(8.dp)
+    ) {
+        Text(
+            text = labelText,
+            modifier = Modifier
+                .align(Alignment.Start)
+                .padding(bottom = 8.dp)
+        )
+
+        OutlinedTextField(
+            value = cardInfo,
+            onValueChange = onValueChange,
+            placeholder = { Text(text = labelText, style = AppTextStyle) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+            modifier = Modifier.fillMaxHeight()
+        )
+    }
+}
+
+
+@Composable
+fun ListItemOfInfo(
+    title: String,
+    description: String,
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 1.dp),
+        colors = CardDefaults.cardColors(OffYellowColor),
+        elevation = CardDefaults.elevatedCardElevation()
+    ) {
+        Column(modifier = Modifier
+            .padding(16.dp)
+            .size(180.dp, 50.dp)){
+            Text(text = title, fontSize = 16.sp, modifier = Modifier.padding(bottom=13.dp),
+                fontWeight = FontWeight.Bold )
+            Text(text = description, fontSize = 16.sp, color= Color.Gray)
+            BorderStroke(1.dp, color = Color.Gray)
+        }
+
+    }
+}
+
+
+@Composable
+fun ListItem(
+    iconRes: Int,
+    title: String,
+    description: String,
+    onClick: () -> Unit,
+    color:Color
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 1.dp)
+            .clickable { onClick() },
+        shape = RoundedCornerShape(8.dp),
+        colors = CardDefaults.cardColors(color),
+        elevation = CardDefaults.elevatedCardElevation()
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.Start,
+            verticalAlignment = Alignment.CenterVertically
+        ){
+            Image(painter = painterResource(id = iconRes), contentDescription = title)
+            Column(modifier = Modifier
+                .padding(start = 24.dp, end = 90.dp)
+                .size(180.dp, 50.dp)){
+                Text(text = title, fontSize = 16.sp, modifier = Modifier.padding(bottom=4.dp),
+                    fontWeight = FontWeight.Bold )
+                Text(text = description, fontSize = 16.sp, color= Color.Gray)
+            }
+            Image(painter = painterResource(id = R.drawable.path),
+                contentDescription ="to",
+                modifier = Modifier.size(13.dp))
+        }
+
+    }
+}
+@Composable
+fun cardimp(text1:String,text2:String) {
+    Card(
+        colors = CardDefaults.cardColors(P50),
+        modifier = Modifier
+            .height(126.dp)
+            .fillMaxWidth()
+            .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 12.dp),
+        shape = RoundedCornerShape(8.dp),
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(start = 16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(48.dp)
+                    .clip(CircleShape)
+                    .background(ButtonTextColor)
+                    .align(Alignment.CenterVertically)
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.bank),
+                    contentDescription = stringResource(R.string.bank_icon),
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .size(32.dp)
+                )
+            }
+            Column(
+                modifier = Modifier
+                    .padding(top = 14.dp)
+                    .padding(start = 32.dp)
+                    .fillMaxSize(),
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = "${text1}\n${text2}",
+                    style = BodyMediumBold,
+                    color = PrimaryColor,
+                )
+                Spacer(modifier = Modifier.padding(6.dp))
+            }
+        }
+    }
+}
+
+
+@Composable
+fun BoxList(
+    icon:Int,
+    title:String,
+    description:String,
+    OnClick:()->Unit,
+){
+    Box(modifier=Modifier.padding(16.dp)) {
+        ListItem(iconRes =icon, title =title , description =description, onClick = OnClick, color = Color.White)
+        Column(verticalArrangement =Arrangement.Center, horizontalAlignment = Alignment.End, modifier = Modifier.align(Alignment.CenterEnd)){
+            Image(painter = painterResource(id = R.drawable.path),
+                contentDescription ="to",
+                modifier = Modifier
+                    .padding(5.dp)
+                    .size(15.dp))
+            Text(text = "Success",
+                Modifier
+                    .padding(8.dp)
+                    .background(Color.Green))}
     }
 }

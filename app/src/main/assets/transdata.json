@@ -1,0 +1,10 @@
+{
+  "type": "successful_transaction",
+  "transferAmount": "1000 USD",
+    "Sname": "Asmaa Dosuky",
+    "SaccountNumber": "xxx7880",
+    "Rname": "Jonathon Smith",
+    "RaccountNumber": "xxxx7890",
+    "reference": "123456789879",
+    "date": "2024-07-20T19:50:00Z"
+}

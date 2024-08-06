@@ -1,12 +1,14 @@
 package com.example.speedoapp.ui.profile
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -16,9 +18,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.speedoapp.R
 import com.example.speedoapp.ui.common.PasswordField
 import com.example.speedoapp.ui.common.PrimaryButton
 import com.example.speedoapp.ui.theme.OffYellowColor
@@ -36,6 +40,13 @@ fun ChangePass(navController: NavController, modifier: Modifier = Modifier) {
                 }, colors = TopAppBarDefaults.smallTopAppBarColors(
                     containerColor = OffYellowColor
                 )
+            )
+            Icon(
+                painter = painterResource(id = R.drawable.ic_back),
+                contentDescription = "Back Icon",
+                modifier = Modifier
+                    .padding(20.dp)
+                    .clickable { navController.popBackStack() }
             )
         }
     ) { innerPadding ->
