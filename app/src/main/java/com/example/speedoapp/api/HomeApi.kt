@@ -1,6 +1,7 @@
 package com.example.speedoapp.api
 
 import com.example.speedoapp.model.BalanceResponse
+import com.example.speedoapp.model.LogoutResponse
 import com.example.speedoapp.model.TransactionRoot
 import com.example.speedoapp.model.User
 import retrofit2.Response
@@ -17,7 +18,7 @@ interface HomeApi {
 //    @GET("api/user")
 //    suspend fun getUser(): User
 //
-//    @POST("api/logout")
-//    suspend fun logout(): Response<Unit>
+    @POST("api/logout")
+    suspend fun logout(): Response<LogoutResponse>
 
 }

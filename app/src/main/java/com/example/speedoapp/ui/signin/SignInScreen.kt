@@ -136,7 +136,6 @@ fun SignInScreen(
                             ).show()
                             navController.navigate(HOME_ROUTE)
                         }
-
                         is LoginStatus.Error -> {
                             Toast.makeText(
                                 context,

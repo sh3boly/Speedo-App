@@ -67,6 +67,7 @@ fun HomeScreen(
     viewModel: HomeViewModel = viewModel()
 ) {
 
+
     val balance by viewModel.balance.collectAsState()
 
     //val transactions by viewModel.transactions.collectAsState()

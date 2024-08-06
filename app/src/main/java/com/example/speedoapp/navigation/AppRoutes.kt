@@ -14,6 +14,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.speedoapp.R
+import com.example.speedoapp.api.InactivityManager
 import com.example.speedoapp.constants.Constants.EMAIL
 import com.example.speedoapp.constants.Constants.IDENTIFIER
 import com.example.speedoapp.constants.Constants.NAME
@@ -89,11 +90,15 @@ fun AppNavHost(modifier: Modifier = Modifier, firstTime: Boolean) {
     val navController = rememberNavController()
     val amountScreenViewModel: AmountScreenViewModel = viewModel()
     val context = LocalContext.current
+    InactivityManager.init(navController)
+
     amountScreenViewModel.loadCurrenciesFromLocal(context)
 
     NavHost(
         navController = navController,
-        startDestination = if (firstTime) AMOUNT_ONBOARDING_ROUTE else SIGNIN_ROUTE,
+        startDestination = if (firstTime) AMOUNT_ONBOARDING_ROUTE else {
+            if (PreferencesManager.getToken() != null) HOME_ROUTE else SIGNIN_ROUTE
+        },
         modifier = modifier
     ) {
         composable(route = SIGNUP_ROUTE) { SignUpScreen(navController) }

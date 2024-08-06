@@ -4,8 +4,11 @@ import PreferencesManager
 import android.os.Handler
 import android.os.Looper
 import android.widget.Toast
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.speedoapp.constants.Constants.INACTIVITY_TIME
 import com.example.speedoapp.navigation.AppRoutes
+import com.example.speedoapp.ui.homepage.HomeViewModel
 
 object InactivityManager {
     private lateinit var navController: NavController
@@ -13,7 +16,6 @@ object InactivityManager {
         navController = controller
 
     }
-
     private val onInactivity: () -> Unit = {
         if (PreferencesManager.getToken() != null) {
             PreferencesManager.removeToken()
@@ -27,7 +29,7 @@ object InactivityManager {
 
     private val handler = Handler(Looper.getMainLooper())
     private val inactivityRunnable = Runnable { onInactivity() }
-    private var inactivityTimeoutMillis: Long = 3600000 / 2 // 30 minutes in milliseconds
+    private var inactivityTimeoutMillis: Long = INACTIVITY_TIME // 30 minutes in milliseconds
 
 
 

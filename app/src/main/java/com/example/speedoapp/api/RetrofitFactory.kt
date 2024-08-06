@@ -2,7 +2,6 @@ package com.example.speedoapp.api
 
 import AuthInterceptor
 import PreferencesManager
-import android.util.Log
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -47,11 +46,7 @@ object RetrofitFactory {
     }
 
     val homeApi: HomeApi by lazy {
-        try {
-            unauthRetrofit.create(HomeApi::class.java)
-        } catch (e: Exception) {
-            throw e
-        }
+        unauthRetrofit.create(HomeApi::class.java)
     }
 
     val favouriteApi: FavouriteApiCallable by lazy {

@@ -3,6 +3,7 @@ package com.example.speedoapp.ui.more
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
+import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -30,6 +31,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -38,13 +42,18 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.speedoapp.R
+import com.example.speedoapp.model.LoginStatus
+import com.example.speedoapp.model.LogoutStatus
 import com.example.speedoapp.ui.help.HelpItem
 import com.example.speedoapp.navigation.AppRoutes.FAVOURITE_ROUTE
 import com.example.speedoapp.navigation.AppRoutes.HOME_ROUTE
+import com.example.speedoapp.navigation.AppRoutes.SIGNIN_ROUTE
 import com.example.speedoapp.ui.common.MenuAppBar
 import com.example.speedoapp.ui.common.TopBar
+import com.example.speedoapp.ui.homepage.HomeViewModel
 import com.example.speedoapp.ui.theme.BodyMediumBold
 import com.example.speedoapp.ui.theme.G0
 import com.example.speedoapp.ui.theme.G200
@@ -52,13 +61,19 @@ import com.example.speedoapp.ui.theme.G40
 import com.example.speedoapp.ui.theme.OffYellowColor
 import com.example.speedoapp.ui.theme.RedYellowColor
 import kotlinx.coroutines.launch
-
+import kotlinx.coroutines.flow.StateFlow
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MoreScreen(navController: NavController, modifier: Modifier = Modifier) {
+fun MoreScreen(
+    navController: NavController,
+    modifier: Modifier = Modifier,
+    viewModel: HomeViewModel = viewModel()
+) {
     val scaffoldState = rememberBottomSheetScaffoldState()
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
+    val logoutStatus by viewModel.logoutStatus.collectAsState()
+
 
     BottomSheetScaffold(
         sheetShape = RoundedCornerShape(topStart = 50.dp, topEnd = 50.dp),
@@ -141,9 +156,9 @@ fun MoreScreen(navController: NavController, modifier: Modifier = Modifier) {
                         text = stringResource(R.string.favourites),
                         image = R.drawable.ic_favorite,
                         onClick = {
-                            Log.d("YOO",  "Iam here")
+                            Log.d("YOO", "Iam here")
                             navController.navigate(FAVOURITE_ROUTE)
-                            Log.d("YOO",  "Iam here")
+                            Log.d("YOO", "Iam here")
 
                         },
                         contentDescription = stringResource(R.string.favourites)
@@ -170,10 +185,40 @@ fun MoreScreen(navController: NavController, modifier: Modifier = Modifier) {
                     MoreItem(
                         text = stringResource(R.string.logout),
                         image = R.drawable.ic_logout,
-                        onClick = { /*TODO*/ },
+                        onClick = {
+                            viewModel.logout()
+                        },
                         contentDescription = stringResource(R.string.logout),
                         divider = false
                     )
+                    LaunchedEffect(logoutStatus) {
+                        logoutStatus?.let { status ->
+                            when (status) {
+                                is LogoutStatus.Success -> {
+                                    Log.d("API", "eh el 3abat da")
+                                    Toast.makeText(
+                                        context,
+                                        "Log out Successful!",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    Log.d("API", "ba3d el 3abat")
+
+                                    navController.navigate(SIGNIN_ROUTE)
+                                    Log.d("API", "eh da")
+
+
+                                }
+                                is LogoutStatus.Error -> {
+                                    Toast.makeText(
+                                        context,
+                                        "Log out failed! Error: ${status.message}",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }

@@ -25,4 +25,5 @@ object Constants {
     const val FAVOURITE_RECIPIENT_ID = "id"
     const val FAVOURITE_RECIPIENT_NAME = "recipientName"
     const val FAVOURITE_RECIPIENT_ACCOUNT_NUMBER = "recipientAccountId"
+    const val INACTIVITY_TIME: Long = 3600000 / 2
 }

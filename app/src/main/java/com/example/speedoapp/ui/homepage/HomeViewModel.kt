@@ -1,13 +1,23 @@
 package com.example.speedoapp.ui.homepage
 
+import PreferencesManager
+import android.content.Context
 import android.util.Log
+import android.widget.Toast
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavController
 import com.example.speedoapp.api.RetrofitFactory
 import com.example.speedoapp.model.BalanceResponse
+import com.example.speedoapp.model.LoginStatus
+import com.example.speedoapp.model.LogoutStatus
 import com.example.speedoapp.model.Transaction
+import com.example.speedoapp.navigation.AppRoutes.SIGNIN_ROUTE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -34,6 +44,8 @@ class HomeViewModel : ViewModel() {
         //getTransactions()
     }
 
+    private val _logoutStatus = MutableStateFlow<LogoutStatus?>(null)
+    val logoutStatus: StateFlow<LogoutStatus?> = _logoutStatus.asStateFlow()
     private fun getBalance() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -48,7 +60,7 @@ class HomeViewModel : ViewModel() {
         }
     }
 
-//    fun getTransactions() {
+    //    fun getTransactions() {
 //        viewModelScope.launch(Dispatchers.IO) {
 //            try {
 //                _transactions.update {
@@ -76,16 +88,23 @@ class HomeViewModel : ViewModel() {
 //        }
 //    }
 //
-//    fun logout(){
-//        viewModelScope.launch(Dispatchers.IO) {
-//            try {
-//                RetrofitFactory.homeApi.logout()
-//            }
-//            catch (e: Exception){
-//                Log.d("trace", "Exception: ${e.localizedMessage}")
-//            }
-//        }
-//    }
+    fun logout() {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = RetrofitFactory.homeApi.logout()
+                if (response.isSuccessful) {
+                    val logoutResponse = response.body()
+                    PreferencesManager.removeToken()
+                    if (logoutResponse != null)
+                        _logoutStatus.value = (LogoutStatus.Success(logoutResponse)) // Assuming you have a LogoutStatus sealed class
+                } else {
+                    _logoutStatus.value = (LogoutStatus.Error("Error: ${response.code()} ${response.message()}"))
+                }
+            } catch (e: Exception) {
+                _logoutStatus.value = (LogoutStatus.Error("Exception: ${e.localizedMessage}"))
+            }
+        }
+    }
 
     fun getInitials(fullName: String): String {
         if (fullName.isNullOrEmpty()) {
