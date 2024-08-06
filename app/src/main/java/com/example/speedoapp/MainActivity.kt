@@ -1,5 +1,6 @@
 package com.example.speedoapp
 
+import AuthInterceptor
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
@@ -20,6 +21,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.speedoapp.navigation.AppNavHost
 import com.example.speedoapp.ui.theme.SpeedoAppTheme
 import com.example.speedoapp.api.InactivityManager
+import com.example.speedoapp.api.RetrofitFactory
 import com.example.speedoapp.navigation.AppRoutes.ADDCARD_ROUTE
 import com.example.speedoapp.navigation.AppRoutes.LOADING_ROUTE
 import com.example.speedoapp.navigation.AppRoutes.MY_CARDS
@@ -58,7 +60,6 @@ fun AppContent() {
     val isFirst = PreferencesManager.isFirstTimeLaunch()
 
     var hasNotificationPermission by remember { mutableStateOf(false) }
-
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
     ) { isGranted ->

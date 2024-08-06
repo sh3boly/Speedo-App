@@ -1,9 +1,13 @@
 package com.example.speedoapp.ui.homepage
 
 
+import android.os.Build
 import android.util.Log
+import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,8 +30,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -53,13 +61,26 @@ import com.example.speedoapp.ui.theme.G700
 import com.example.speedoapp.ui.theme.G900
 import com.example.speedoapp.ui.theme.PrimaryColor
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.speedoapp.api.InactivityManager
+import com.example.speedoapp.model.BalanceStatus
+import com.example.speedoapp.model.LoginStatus
+import com.example.speedoapp.model.TransactionHistory
+import com.example.speedoapp.model.TransactionHistoryRoot
 import com.example.speedoapp.navigation.AppRoutes.AMOUNT_TRANSFER
+import com.example.speedoapp.navigation.AppRoutes.HOME_ROUTE
+import com.example.speedoapp.navigation.AppRoutes.MY_CARDS
+import com.example.speedoapp.navigation.AppRoutes.PROFILE
+import com.example.speedoapp.navigation.AppRoutes.SIGNIN_ROUTE
+import com.example.speedoapp.navigation.AppRoutes.TRANSACTIONS_HISTORY
 import com.example.speedoapp.ui.theme.G40
 import com.example.speedoapp.ui.theme.HeadingSemiBold
 import com.example.speedoapp.ui.theme.HomeGradientEnd
 import com.example.speedoapp.ui.theme.HomeGradientStart
 import com.example.speedoapp.ui.theme.P50
+import com.example.speedoapp.utils.readJsonFromAssets
+import com.google.gson.Gson
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
@@ -69,7 +90,7 @@ fun HomeScreen(
 
 
     val balance by viewModel.balance.collectAsState()
-
+    InactivityManager.initViewModel(viewModel)
     //val transactions by viewModel.transactions.collectAsState()
     //val name by viewModel.name.collectAsState()
     //Log.d("trace", "The name is : $name")
@@ -78,10 +99,22 @@ fun HomeScreen(
 //    if (hasError > 0)
 //        Toast.makeText(LocalContext.current, "Check your connection", Toast.LENGTH_SHORT).show()
     //val name = "Asmaa Desouky"
-    val transactions = mutableListOf<Transaction>()
-    transactions.add(Transaction("Ahmed", " - Received", 1000f, "Today 11:00"))
-    transactions.add(Transaction("Ahmed", " - Received", 1000f, "Today 11:00"))
-    transactions.add(Transaction("Ahmed", " - Received", 1000f, "Today 11:00"))
+    val context = LocalContext.current
+    val balanceStatus by viewModel.balanceStatus.collectAsState()
+
+    var transactions by remember { mutableStateOf<List<TransactionHistory>?>(null) }
+    val jsonString = readJsonFromAssets(context, "transactionsHistory.json")
+    Log.d("Transaction", "JSON String: $jsonString")
+    if (jsonString.isNotEmpty()) {
+        try {
+            val gson = Gson()
+            val x = TransactionHistoryRoot::class.java
+            val ListObject = gson.fromJson(jsonString, x)
+            transactions = ListObject?.transactions
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
     Scaffold(
         bottomBar = { MenuAppBar(currentScreen = "home", navController = navController) }
     )
@@ -122,7 +155,31 @@ fun HomeScreen(
             Spacer(modifier = modifier.padding(16.dp))
             Services(navController = navController)
             Spacer(modifier = modifier.padding(16.dp))
-            RecentTransaction(transactions = transactions)
+            if (transactions != null) {
+                RecentTransaction(
+                    transactions = transactions!!,
+                    viewModel = viewModel,
+                    navController = navController
+                )
+            }
+            LaunchedEffect(balanceStatus) {
+                balanceStatus?.let { status ->
+                    when (status) {
+                        is BalanceStatus.Success -> {
+                        }
+
+                        is BalanceStatus.Error -> {
+                            Toast.makeText(
+                                context,
+                                "Your session has expired",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            viewModel.logout()
+                            navController.navigate(SIGNIN_ROUTE)
+                        }
+                    }
+                }
+            }
 
         }
     }
@@ -183,23 +240,35 @@ fun Services(modifier: Modifier = Modifier, navController: NavController) {
                 icon = R.drawable.ic_transfer,
                 text = "Transfer",
                 onClick = { navController.navigate(AMOUNT_TRANSFER) })
-            Spacer(modifier = Modifier.padding(horizontal = 16.dp))
+            Spacer(modifier = Modifier.padding(horizontal = 15.dp))
 
-            IconWithText(icon = R.drawable.ic_history, text = "Transactions", onClick = {})
-            Spacer(modifier = Modifier.padding(horizontal = 16.dp))
+            IconWithText(icon = R.drawable.ic_history, text = "Transactions", onClick = {
+                navController.navigate(TRANSACTIONS_HISTORY)
+            })
+            Spacer(modifier = Modifier.padding(horizontal = 15.dp))
 
-            IconWithText(icon = R.drawable.ic_cards, text = "Cards", onClick = {})
-            Spacer(modifier = Modifier.padding(horizontal = 16.dp))
+            IconWithText(icon = R.drawable.ic_cards, text = "Cards", onClick = {
+                navController.navigate(MY_CARDS)
+            })
+            Spacer(modifier = Modifier.padding(horizontal = 15.dp))
 
-            IconWithText(icon = R.drawable.ic_account, text = "Account", onClick = {})
-            Spacer(modifier = Modifier.padding(horizontal = 16.dp))
+            IconWithText(icon = R.drawable.ic_account, text = "Account", onClick = {
+                navController.navigate(PROFILE)
+            })
+            Spacer(modifier = Modifier.padding(horizontal = 15.dp))
         }
 
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun RecentTransaction(modifier: Modifier = Modifier, transactions: List<Transaction>) {
+fun RecentTransaction(
+    modifier: Modifier = Modifier,
+    transactions: List<TransactionHistory>,
+    viewModel: HomeViewModel,
+    navController: NavController
+) {
     Column {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -210,7 +279,13 @@ fun RecentTransaction(modifier: Modifier = Modifier, transactions: List<Transact
                 modifier = modifier.fillMaxWidth(),
                 contentAlignment = Alignment.CenterEnd
             ) {
-                Text(text = "View all", style = BodyMediumBold, color = G200)
+                Text(
+                    text = "View all",
+                    style = BodyMediumBold,
+                    color = G200,
+                    modifier = modifier.clickable {
+                        navController.navigate(TRANSACTIONS_HISTORY)
+                    })
             }
 
         }
@@ -221,17 +296,24 @@ fun RecentTransaction(modifier: Modifier = Modifier, transactions: List<Transact
                 .background(color = G0)
         ) {
             itemsIndexed(transactions) { index, transaction ->
-                TransactionListItem(transaction = transaction)
-                if (transactions.size - 1 != index)
-                    HorizontalDivider(color = G40)
+                if (transaction.status != "failed") {
+                    TransactionListItem(transaction = transaction, viewModel = viewModel)
+                    if (transactions.size - 1 != index)
+                        HorizontalDivider(color = G40)
+                }
             }
         }
 
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun TransactionListItem(modifier: Modifier = Modifier, transaction: Transaction) {
+fun TransactionListItem(
+    modifier: Modifier = Modifier,
+    transaction: TransactionHistory,
+    viewModel: HomeViewModel
+) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
@@ -262,9 +344,13 @@ fun TransactionListItem(modifier: Modifier = Modifier, transaction: Transaction)
                 .height(57.dp)
         ) {
             Text(text = transaction.name, style = AppTextStyleSelected, color = G900)
-            Text(text = "Visa . Master Card . 1234", style = CardDetailsTextStyle, color = G700)
             Text(
-                text = transaction.date + " - " + transaction.type,
+                text = "${transaction.cardType} - ${transaction.cardNumber}",
+                style = CardDetailsTextStyle,
+                color = G700
+            )
+            Text(
+                text = viewModel.formatDateTime(transaction.transactionDate),
                 style = CardDetailsTextStyle,
                 color = G700
             )
@@ -283,10 +369,4 @@ fun TransactionListItem(modifier: Modifier = Modifier, transaction: Transaction)
 
 
     }
-}
-
-@Composable
-@Preview(showBackground = true)
-fun HomeScreenPreview() {
-    HomeScreen(navController = NavController(LocalContext.current))
 }

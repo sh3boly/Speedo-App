@@ -64,7 +64,7 @@ fun MyCards(
                     .padding(20.dp)
                     .clickable { navController.popBackStack() }
             )
-        }, bottomBar = { MenuAppBar(modifier = Modifier, currentScreen = "transactions", navController = navController) },
+        }, bottomBar = { MenuAppBar(modifier = Modifier, currentScreen = "mycards", navController = navController) },
         modifier = Modifier.background(OffYellowColor)
 
     ) { innerPadding ->

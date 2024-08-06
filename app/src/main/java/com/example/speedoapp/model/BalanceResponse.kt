@@ -12,3 +12,8 @@ data class BalanceResponse(
     @SerializedName("username")
     val username: String
 )
+
+sealed class BalanceStatus {
+    data class Success(val balanceStatus: BalanceResponse?) : BalanceStatus()
+    data class Error(val message: String) : BalanceStatus()
+}

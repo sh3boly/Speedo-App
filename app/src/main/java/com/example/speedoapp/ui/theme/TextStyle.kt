@@ -105,3 +105,10 @@ val HeadingTextStyle = TextStyle(
     textAlign = TextAlign.Center,
     fontWeight = FontWeight(600)
 )
+
+val SmallTextStyle = TextStyle(
+    fontSize = 9.36.sp,
+    lineHeight = 14.04.sp,
+    fontWeight = FontWeight(500),
+
+)

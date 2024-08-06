@@ -1,5 +1,8 @@
 package com.example.speedoapp.ui.notifications
 
+import android.os.Build
+import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -38,20 +41,24 @@ import androidx.navigation.compose.rememberNavController
 import com.example.speedoapp.R
 import com.example.speedoapp.model.CardInfo
 import com.example.speedoapp.model.Transaction
+import com.example.speedoapp.model.TransactionHistory
+import com.example.speedoapp.model.TransactionHistoryRoot
 import com.example.speedoapp.model.TransactionRoot
 import com.example.speedoapp.navigation.AppRoutes
 import com.example.speedoapp.ui.common.BoxList
 import com.example.speedoapp.ui.common.ListItem
 import com.example.speedoapp.ui.common.MenuAppBar
+import com.example.speedoapp.ui.homepage.HomeViewModel
 import com.example.speedoapp.ui.theme.ButtonTextColor
 import com.example.speedoapp.ui.theme.OffYellowColor
 import com.example.speedoapp.ui.theme.SubTitleTextStyle
 import com.example.speedoapp.utils.readJsonFromAssets
 import com.google.gson.Gson
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TransactionHistroy(modifier: Modifier = Modifier,navController:NavController) {
+fun TransactionHistroy(modifier: Modifier = Modifier, navController: NavController, viewModel: HomeViewModel = androidx.lifecycle.viewmodel.compose.viewModel()) {
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -81,19 +88,21 @@ fun TransactionHistroy(modifier: Modifier = Modifier,navController:NavController
     //for each
     { innerPadding ->
         val context = LocalContext.current
-        var transactions by remember { mutableStateOf<List<Transaction>?>(null) }
+        var transactions by remember { mutableStateOf<List<TransactionHistory>?>(null) }
         val jsonString = readJsonFromAssets(context, "transactionsHistory.json")
-
+        Log.d("Transaction", "JSON String: $jsonString")
         if (jsonString.isNotEmpty()) {
             try {
                 val gson = Gson()
-                val x = TransactionRoot::class.java
+                val x = TransactionHistoryRoot::class.java
                 val ListObject = gson.fromJson(jsonString, x)
                 transactions = ListObject?.transactions
             } catch (e: Exception) {
                 e.printStackTrace()
             }
         }
+        Log.d("Transaction", "JSON String: $transactions")
+
         Column(
             modifier = Modifier
                 .padding(innerPadding)
@@ -111,10 +120,12 @@ fun TransactionHistroy(modifier: Modifier = Modifier,navController:NavController
                 LazyColumn {
                     items(transactions!!) { transaction ->
                         BoxList(
-                            icon = R.drawable.group_18312,
+                            icon = if (transaction.cardType == "Credit Card") R.drawable.group_18312 else R.drawable.ic_bank,
                             title = transaction.name,
-                            description = "${transaction.type}-${transaction.date}/n" +
-                                    "${transaction.date}-${transaction.amount}",
+                            status = transaction.status,
+                            description = "${transaction.cardType} - ${transaction.cardNumber}\n" +
+                                    "${transaction.amount}",
+                            date = viewModel.formatDateTime(transaction.transactionDate),
                             OnClick = { navController.navigate(AppRoutes.TRANSACTIONS_DETAILS) }
                         )
                     }

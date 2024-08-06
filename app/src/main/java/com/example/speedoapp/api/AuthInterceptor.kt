@@ -1,3 +1,5 @@
+import androidx.navigation.NavController
+import com.example.speedoapp.navigation.AppRoutes.SIGNIN_ROUTE
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.Response
@@ -13,5 +15,9 @@ class AuthInterceptor(private val tokenManager: PreferencesManager) : Intercepto
             chain.request()
         }
         return chain.proceed(request)
+    }
+    private fun handleTokenExpiration(chain: Interceptor.Chain): Response {
+        tokenManager.removeToken()
+        return chain.proceed(chain.request())
     }
 }

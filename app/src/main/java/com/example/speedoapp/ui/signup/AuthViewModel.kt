@@ -2,6 +2,7 @@ package com.example.speedoapp.ui.signup
 
 import PreferencesManager
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.speedoapp.api.RetrofitFactory
@@ -56,7 +57,7 @@ class AuthViewModel : ViewModel() {
     }
 
     private val _registerStatus = MutableStateFlow<RegisterStatus?>(null)
-    val registerStatus: StateFlow<RegisterStatus?>  = _registerStatus.asStateFlow()
+    val registerStatus: StateFlow<RegisterStatus?> = _registerStatus.asStateFlow()
 
     fun register(name: String, email: String, password: String, context: Context) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -72,14 +73,20 @@ class AuthViewModel : ViewModel() {
                         _registerStatus.value = (RegisterStatus.Error("Empty response body"))
                     }
                 } else {
-                    _registerStatus.value = (RegisterStatus.Error("Error: ${response.code()} ${response.message()}"))
+                    if (response.code() == 400) {
+                        _registerStatus.value = (RegisterStatus.Error("Invalid email"))
+                    } else {
+                        _registerStatus.value =
+                            (RegisterStatus.Error("Error, pleaser check your internet connection and try again"))
+                    }
                 }
             } catch (e: Exception) {
-                _registerStatus.value = (RegisterStatus.Error("Exception: ${e.localizedMessage}"))
+                Log.d("APIt", "Exception: ${e.localizedMessage}")
             }
         }
     }
-    fun resetRegisterStatus(){
+
+    fun resetRegisterStatus() {
         _registerStatus.value = null
     }
 
@@ -102,15 +109,20 @@ class AuthViewModel : ViewModel() {
                         _loginStatus.value = (LoginStatus.Error("Empty response body"))
                     }
                 } else {
-                    _loginStatus.value = (LoginStatus.Error("Error: ${response.code()} ${response.message()}"))
+                    if (response.code() == 400)
+                        _loginStatus.value = (LoginStatus.Error("Invalid email or password"))
+                    else
+                        _loginStatus.value =
+                            (LoginStatus.Error("Error, pleaser check your internet connection and try again"))
                 }
             } catch (e: Exception) {
-                _loginStatus.value = (LoginStatus.Error("Exception: ${e.localizedMessage}"))
+                Log.d("APIt", "Exception: ${e.localizedMessage}")
             }
         }
 
     }
-    fun resetLoginStatus(){
+
+    fun resetLoginStatus() {
         _loginStatus.value = null
     }
 

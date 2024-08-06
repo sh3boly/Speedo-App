@@ -1,25 +1,28 @@
 {
   "transactions": [
     {
-      "cardType": "credit_card",
+      "name": "Ahmed Hamdy",
+      "cardType": "Credit Card",
       "cardNumber": "1234",
-      "transactionDate": "2023-11-22T11:00:00",
+      "transactionDate": "2024-08-06T09:00:00",
       "status": "successful",
       "amount": 1000
     },
     {
-      "cardType": "bank",
+      "name": "Hussein Ahmed",
+      "cardType": "Bank",
       "cardNumber": "1234",
-      "transactionDate": "2023-11-22T11:00:00",
+      "transactionDate": "2024-08-05T22:00:00",
       "status": "failed",
-      "amount": 1000
+      "amount": 500
     },
     {
-      "cardType": "credit_card",
-      "cardNumber": "1234",
-      "transactionDate": "2023-11-22T11:00:00",
+      "name": "Hamada Helal",
+      "cardType": "Credit Card",
+      "cardNumber": "5242",
+      "transactionDate": "2024-07-30T00:00:00",
       "status": "successful",
-      "amount": 1000
+      "amount": 350
     }
   ]
 }

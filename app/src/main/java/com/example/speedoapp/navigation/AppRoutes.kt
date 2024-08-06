@@ -38,8 +38,10 @@ import com.example.speedoapp.navigation.AppRoutes.PAYMENT_ONBOARDING_ROUTE
 import com.example.speedoapp.navigation.AppRoutes.PAYMENT_TRANSFER
 import com.example.speedoapp.navigation.AppRoutes.PROFILE
 import com.example.speedoapp.navigation.AppRoutes.SELECT_CURRENCY
+import com.example.speedoapp.navigation.AppRoutes.SETTINGS
 import com.example.speedoapp.navigation.AppRoutes.SIGNIN_ROUTE
 import com.example.speedoapp.navigation.AppRoutes.TRANSACTIONS_DETAILS
+import com.example.speedoapp.navigation.AppRoutes.TRANSACTIONS_HISTORY
 import com.example.speedoapp.ui.MyCards.MyCards
 import com.example.speedoapp.ui.addcard.AddCardScreen
 import com.example.speedoapp.ui.addcard.LoadingScreen
@@ -50,9 +52,11 @@ import com.example.speedoapp.ui.favourite.FavouriteScreen
 import com.example.speedoapp.ui.homepage.HomeScreen
 import com.example.speedoapp.ui.more.MoreScreen
 import com.example.speedoapp.ui.notifications.TransactionDetails
+import com.example.speedoapp.ui.notifications.TransactionHistroy
 import com.example.speedoapp.ui.notifications.TransactionListScreen
 import com.example.speedoapp.ui.signin.SignInScreen
 import com.example.speedoapp.ui.profile.Profile
+import com.example.speedoapp.ui.profile.Settings
 import com.example.speedoapp.ui.signup.CountryDateScreen
 import com.example.speedoapp.ui.signup.SignUpScreen
 import com.example.speedoapp.ui.tranfer.AmountScreen
@@ -88,6 +92,7 @@ object AppRoutes {
     const val FAVOURITE_ROUTE = "favourite"
     const val NOTIFICATIONS="notifications"
     const val TRANSACTIONS_DETAILS="details"
+    const val TRANSACTIONS_HISTORY="history"
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -233,6 +238,9 @@ fun AppNavHost(modifier: Modifier = Modifier, firstTime: Boolean) {
             amountScreenViewModel.reset()
             FavouriteScreen(navController = navController)
         }
+        composable(route = TRANSACTIONS_HISTORY){ TransactionHistroy(navController = navController)}
+        composable(route = SETTINGS){Settings(navController = navController)}
+        composable(route = TRANSACTIONS_DETAILS){TransactionDetails(navController = navController)}
     }
 }
 

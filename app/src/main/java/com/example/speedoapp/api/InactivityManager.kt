@@ -12,12 +12,18 @@ import com.example.speedoapp.ui.homepage.HomeViewModel
 
 object InactivityManager {
     private lateinit var navController: NavController
+    private lateinit var viewModel: HomeViewModel
     fun init(controller: NavController) {
         navController = controller
 
     }
+    fun initViewModel(homeViewModel: HomeViewModel){
+        viewModel = homeViewModel
+    }
+
     private val onInactivity: () -> Unit = {
         if (PreferencesManager.getToken() != null) {
+            viewModel.logout()
             PreferencesManager.removeToken()
             navController.navigate(AppRoutes.SIGNIN_ROUTE)
             Toast.makeText(navController.context, "Session expired", Toast.LENGTH_LONG).show()
