@@ -89,7 +89,7 @@ fun HomeScreen(
         Column(
             modifier = Modifier
                 .background(Brush.linearGradient(listOf(HomeGradientStart, HomeGradientEnd)))
-                .padding(start = 16.dp, end = 16.dp, bottom = 15.dp, top = 78.dp)
+                .padding(start = 16.dp, end = 16.dp, bottom = 15.dp, top = 30.dp)
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
