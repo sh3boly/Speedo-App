@@ -46,7 +46,7 @@ import com.example.speedoapp.ui.theme.SubTitleTextStyle
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EditProfile(navController: NavController, modifier: Modifier = Modifier,viewModel: UpdateUserViewModel= androidx.lifecycle.viewmodel.compose.viewModel()) {
+fun EditProfile(navController: NavController, modifier: Modifier = Modifier) {
     var name by rememberSaveable { mutableStateOf("") }
     var phone by rememberSaveable { mutableIntStateOf(+20) }
     Scaffold(
@@ -67,11 +67,13 @@ fun EditProfile(navController: NavController, modifier: Modifier = Modifier,view
             )
         }
     ) { innerPadding ->
-        Column(modifier = Modifier
-            .padding(innerPadding)
-            .padding(16.dp)
-            .fillMaxSize()
-            .background(OffYellowColor)) {
+        Column(
+            modifier = Modifier
+                .padding(innerPadding)
+                .padding(16.dp)
+                .fillMaxSize()
+                .background(OffYellowColor)
+        ) {
             DataField(
                 isError = "",
                 value = "",
@@ -81,30 +83,23 @@ fun EditProfile(navController: NavController, modifier: Modifier = Modifier,view
                 typingImage = R.drawable.ic_person_typing,
                 type = KeyboardType.Text,
             )
-                DataFieldInt(
-                    isError = "",
-                    value = phone,
-                    onValueChange = { phone= it},
-                    label = "Phone number",
-                    image = null,
-                    typingImage = R.drawable.ic_person_typing,
-                    type = KeyboardType.Number,
-                )
-            }
+            DataFieldInt(
+                isError = "",
+                value = phone,
+                onValueChange = { phone = it },
+                label = "Phone number",
+                image = null,
+                typingImage = R.drawable.ic_person_typing,
+                type = KeyboardType.Number,
+            )
+        }
 
-            CountryPicker()
-            Spacer(modifier =Modifier.padding(10.dp))
-            DatePicker()
-            Spacer(modifier =Modifier.padding(15.dp))
-            PrimaryButton(onClick = {viewModel.updateUser(UpdateUserRequest(name = name, phoneNumber = phone ))
-                                    }, buttonText ="Save")
-        val uiState = viewModel.uiState.collectAsState()
-        if (uiState.value.user != null) {
-            Toast.makeText(LocalContext.current, "User updated successfully", Toast.LENGTH_SHORT).show()
-        } else if (uiState.value.error != null) {
-            Toast.makeText(LocalContext.current, "Error updating user: ${uiState.value.error}", Toast.LENGTH_SHORT).show()
-        }
-        }
+        CountryPicker()
+        Spacer(modifier = Modifier.padding(10.dp))
+        DatePicker()
+        Spacer(modifier = Modifier.padding(15.dp))
+        PrimaryButton(onClick = {}, buttonText = "Save")
+    }
     }
 
 @Preview(showBackground = true)

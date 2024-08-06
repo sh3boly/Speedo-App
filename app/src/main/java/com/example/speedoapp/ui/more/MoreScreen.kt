@@ -50,6 +50,7 @@ import com.example.speedoapp.model.LogoutStatus
 import com.example.speedoapp.ui.help.HelpItem
 import com.example.speedoapp.navigation.AppRoutes.FAVOURITE_ROUTE
 import com.example.speedoapp.navigation.AppRoutes.HOME_ROUTE
+import com.example.speedoapp.navigation.AppRoutes.PROFILE
 import com.example.speedoapp.navigation.AppRoutes.SIGNIN_ROUTE
 import com.example.speedoapp.ui.common.MenuAppBar
 import com.example.speedoapp.ui.common.TopBar
@@ -167,7 +168,7 @@ fun MoreScreen(
                     MoreItem(
                         text = stringResource(R.string.profile),
                         image = R.drawable.ic_user,
-                        onClick = { /*TODO*/ },
+                        onClick = {navController.navigate(PROFILE) },
                         contentDescription = stringResource(R.string.profile)
                     )
 
