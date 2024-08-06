@@ -13,11 +13,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -26,6 +30,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -49,6 +54,8 @@ import com.example.speedoapp.ui.theme.G900
 import com.example.speedoapp.ui.theme.PrimaryColor
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.speedoapp.navigation.AppRoutes.AMOUNT_TRANSFER
+import com.example.speedoapp.ui.theme.G40
+import com.example.speedoapp.ui.theme.HeadingSemiBold
 import com.example.speedoapp.ui.theme.HomeGradientEnd
 import com.example.speedoapp.ui.theme.HomeGradientStart
 import com.example.speedoapp.ui.theme.P50
@@ -60,9 +67,7 @@ fun HomeScreen(
     viewModel: HomeViewModel = viewModel()
 ) {
 
-    Log.d("balance", "Here")
     val balance by viewModel.balance.collectAsState()
-    Log.d("balance", "Here: ${balance?.balance}")
 
     //val transactions by viewModel.transactions.collectAsState()
     //val name by viewModel.name.collectAsState()
@@ -73,7 +78,9 @@ fun HomeScreen(
 //        Toast.makeText(LocalContext.current, "Check your connection", Toast.LENGTH_SHORT).show()
     //val name = "Asmaa Desouky"
     val transactions = mutableListOf<Transaction>()
-    transactions.add(Transaction("Ahmed", "Credit", 1000f, "12/12/2022"))
+    transactions.add(Transaction("Ahmed", " - Received", 1000f, "Today 11:00"))
+    transactions.add(Transaction("Ahmed", " - Received", 1000f, "Today 11:00"))
+    transactions.add(Transaction("Ahmed", " - Received", 1000f, "Today 11:00"))
     Scaffold(
         bottomBar = { MenuAppBar(currentScreen = "home", navController = navController) }
     )
@@ -86,7 +93,6 @@ fun HomeScreen(
                 .padding(innerPadding)
         ) {
             Row(
-
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = modifier.fillMaxWidth()
             ) {
@@ -96,7 +102,7 @@ fun HomeScreen(
 
                 Column() {
                     Text(text = "Welcome back,", style = AppTextStyle, color = PrimaryColor)
-                    Text(text = balance!!.name, style = AppTextStyle, color = G900)
+                    Text(text = balance!!.name, style = BodyMediumBold, color = G900)
                 }
 
                 Box(
@@ -138,7 +144,7 @@ fun BalanceCard(modifier: Modifier = Modifier, balance: String) {
         ) {
             Text(text = "Current Balance", style = BodyMedium, color = G0)
             Spacer(modifier = Modifier.height(8.dp))
-            Text(text = "$$balance", style = BodyMedium, color = G0)
+            Text(text = "$$balance", style = HeadingSemiBold, color = G0)
         }
 
     }
@@ -148,24 +154,30 @@ fun BalanceCard(modifier: Modifier = Modifier, balance: String) {
 fun Services(modifier: Modifier = Modifier, navController: NavController) {
     Column(
         modifier = Modifier
+            .fillMaxWidth()
             .width(343.dp)
             .height(141.dp)
-
+            .clip(RoundedCornerShape(8.dp))
+            .background(color = G0),
+        verticalArrangement = Arrangement.Center
     ) {
         Box(
             modifier = Modifier.padding(horizontal = 12.dp)
+
         ) {
             Text(text = "Services", style = BodyMedium, color = G700)
         }
         Spacer(modifier = modifier.padding(16.dp))
         Row(
             verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center,
             modifier = Modifier
                 .padding(
                     start = 12.dp, end = 15.dp, top = 0.dp, bottom = 8.dp
                 )
 
         ) {
+            Spacer(modifier = modifier.padding(horizontal = 10.dp))
             IconWithText(
                 icon = R.drawable.ic_transfer,
                 text = "Transfer",
@@ -180,8 +192,6 @@ fun Services(modifier: Modifier = Modifier, navController: NavController) {
 
             IconWithText(icon = R.drawable.ic_account, text = "Account", onClick = {})
             Spacer(modifier = Modifier.padding(horizontal = 16.dp))
-
-
         }
 
     }
@@ -203,9 +213,16 @@ fun RecentTransaction(modifier: Modifier = Modifier, transactions: List<Transact
             }
 
         }
-        LazyColumn {
-            items(transactions) { transaction ->
+        Spacer(modifier = modifier.height(8.dp))
+        LazyColumn(
+            modifier = modifier
+                .clip(RoundedCornerShape(8.dp))
+                .background(color = G0)
+        ) {
+            itemsIndexed(transactions) { index, transaction ->
                 TransactionListItem(transaction = transaction)
+                if (transactions.size - 1 != index)
+                    HorizontalDivider(color = G40)
             }
         }
 
@@ -218,16 +235,23 @@ fun TransactionListItem(modifier: Modifier = Modifier, transaction: Transaction)
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .fillMaxWidth()
+            .clip(RoundedCornerShape(10.dp))
+            .background(color = G0)
             .height(77.dp)
             .padding(8.dp)
+
     ) {
         Box(
-            modifier = modifier.background(P50)
+            modifier = modifier
+                .clip(RoundedCornerShape(8.dp))
+                .background(P50)
+
         ) {
 
             Image(
                 painter = painterResource(id = R.drawable.ic_visa),
                 contentDescription = "Master Card Icon",
+                modifier = modifier
             )
         }
         Spacer(modifier = modifier.padding(8.dp))
@@ -246,12 +270,14 @@ fun TransactionListItem(modifier: Modifier = Modifier, transaction: Transaction)
         }
 
         Spacer(modifier = Modifier.weight(1f))
-
         Text(
             text = "$" + transaction.amount.toString(),
             style = BodyMediumBold,
             color = PrimaryColor,
-            modifier = modifier.align(Alignment.Top)
+            modifier = modifier
+                .padding(top = 16.dp)
+                .padding(end = 8.dp)
+                .align(Alignment.Top)
         )
 
 

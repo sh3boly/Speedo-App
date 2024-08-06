@@ -37,16 +37,12 @@ class HomeViewModel : ViewModel() {
     private fun getBalance() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                Log.d("API", "before api call")
                 val response = RetrofitFactory.homeApi.getBalance()
-                Log.d("API", "after: ${response.body()?.name}")
 
                 if (response.isSuccessful)
                     _balance.value = response.body() ?: BalanceResponse("", 0, "", "")
             } catch (e: Exception) {
-                Log.d("API", "Exception: ${e.localizedMessage}")
                 _hasError.value += 1
-                Log.d("API", "Exception: ${e.stackTrace}")
 
             }
         }

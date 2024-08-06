@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -86,7 +87,7 @@ object AppRoutes {
 @Composable
 fun AppNavHost(modifier: Modifier = Modifier, firstTime: Boolean) {
     val navController = rememberNavController()
-   val amountScreenViewModel: AmountScreenViewModel = viewModel()
+    val amountScreenViewModel: AmountScreenViewModel = viewModel()
     val context = LocalContext.current
     amountScreenViewModel.loadCurrenciesFromLocal(context)
 
@@ -116,10 +117,8 @@ fun AppNavHost(modifier: Modifier = Modifier, firstTime: Boolean) {
         }
 
         composable(route = HOME_ROUTE) {
-            Log.d("API", "da5el el home")
+            amountScreenViewModel.reset()
             HomeScreen(navController = navController)
-            Log.d("API", "mad5ltesh el home")
-
         }
 
         composable(AMOUNT_TRANSFER) {
@@ -165,6 +164,8 @@ fun AppNavHost(modifier: Modifier = Modifier, firstTime: Boolean) {
 
         composable(MORE_ROUTE) { MoreScreen(navController = navController) }
         composable(route = AMOUNT_ONBOARDING_ROUTE) {
+            amountScreenViewModel.reset()
+
             OnboardingScreen(
                 image = R.drawable.ic_amount,
                 title = "Amount",
@@ -193,12 +194,83 @@ fun AppNavHost(modifier: Modifier = Modifier, firstTime: Boolean) {
             )
         }
 
-        composable(route = ADDCARD_ROUTE) { AddCardScreen(navController) }
-        composable(route = LOADING_ROUTE) { LoadingScreen(navController) }
-        composable(route = OTP_ROUTE) { OTP(navController) }
-        composable(route = OTP_CONNECT_ROUTE) { OTPconnected(navController) }
-        composable(route = MY_CARDS) { MyCards(navController) }
-        composable(route = PROFILE) { Profile(navController) }
-        composable(route = FAVOURITE_ROUTE) { FavouriteScreen(navController = navController) }
+        composable(route = ADDCARD_ROUTE) {
+            amountScreenViewModel.reset()
+            AddCardScreen(navController)
+        }
+        composable(route = LOADING_ROUTE) {
+            amountScreenViewModel.reset()
+            LoadingScreen(navController)
+        }
+        composable(route = OTP_ROUTE) {
+            amountScreenViewModel.reset()
+            OTP(navController)
+        }
+        composable(route = OTP_CONNECT_ROUTE) {
+            amountScreenViewModel.reset()
+            OTPconnected(navController)
+        }
+        composable(route = MY_CARDS) {
+            amountScreenViewModel.reset()
+            MyCards(navController)
+        }
+        composable(route = PROFILE) {
+            amountScreenViewModel.reset()
+            Profile(navController)
+        }
+        composable(route = FAVOURITE_ROUTE) {
+            amountScreenViewModel.reset()
+            FavouriteScreen(navController = navController)
+        }
+    }
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+@Composable
+fun TransferNavGraph(navController: NavHostController) {
+    // Create the ViewModel for the transfer process
+    val viewModel: AmountScreenViewModel = viewModel()
+
+    NavHost(
+        navController = navController,
+        startDestination = AMOUNT_TRANSFER,
+        route = "transfer_graph"
+    ) {
+        composable(route = AMOUNT_TRANSFER) {
+            AmountScreen(
+                navController = navController,
+                viewModel = viewModel
+            )
+        }
+        composable(
+            route = "$SELECT_CURRENCY/{$IDENTIFIER}",
+            arguments = listOf(navArgument(IDENTIFIER) { type = NavType.IntType })
+        ) {
+            val identifier = it.arguments?.getInt(IDENTIFIER)
+            CurrenciesScreen(
+                navController = navController,
+                identifier = identifier!!,
+                viewModel = viewModel,
+                onCurrencySelected = { selectedCurrency ->
+                    if (identifier == 0) {
+                        viewModel.updateCurrencyFrom(selectedCurrency)
+                    } else {
+                        viewModel.updateCurrencyTo(selectedCurrency)
+                    }
+                }
+            )
+        }
+        composable(route = CONFIRM_TRANSFER) {
+            ConfirmScreen(
+                navController = navController,
+                viewModel = viewModel
+            )
+        }
+        composable(route = PAYMENT_TRANSFER) {
+            PaymentScreen(
+                navController = navController,
+                viewModel = viewModel
+            )
+        }
     }
 }

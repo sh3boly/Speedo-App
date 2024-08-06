@@ -12,6 +12,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.speedoapp.ui.common.TopBar
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -50,6 +52,7 @@ import com.example.speedoapp.R
 import com.example.speedoapp.model.TransferData
 import com.example.speedoapp.navigation.AppRoutes.CONFIRM_TRANSFER
 import com.example.speedoapp.navigation.AppRoutes.SELECT_CURRENCY
+import com.example.speedoapp.ui.common.AccountCard
 import com.example.speedoapp.ui.common.DataField
 import com.example.speedoapp.ui.common.MenuAppBar
 import com.example.speedoapp.ui.common.PrimaryButton
@@ -83,6 +86,9 @@ fun AmountScreen(
     val scaffoldState = rememberBottomSheetScaffoldState()
     val scope = rememberCoroutineScope()
     var isError by remember { mutableStateOf<String?>(null) }
+    val favourites by viewModel.favourites.collectAsState()
+    var selectedFavouriteIndex by rememberSaveable { mutableStateOf<Int?>(null) }
+
 //    val context = LocalContext.current
 //    viewModel.loadCurrenciesFromLocal(context)
     BottomSheetScaffold(sheetShape = RoundedCornerShape(topStart = 50.dp, topEnd = 50.dp),
@@ -96,11 +102,13 @@ fun AmountScreen(
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
                     .padding(top = 32.dp)
-                    .height(400.dp), verticalArrangement = Arrangement.Center
+                    .height(400.dp),
 
             ) {
+
                 Row(
-                    modifier = modifier.fillMaxSize(), horizontalArrangement = Arrangement.Center
+                    modifier = modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.favorite),
@@ -116,8 +124,31 @@ fun AmountScreen(
                         textAlign = TextAlign.End
                     )
                 }
-            }
+                Spacer(modifier = modifier.height(16.dp))
+                LazyColumn {
+                    itemsIndexed(favourites) { index, favourite ->
+                        AccountCard(
+                            identifier = 1,
+                            cardHolder = favourite.recipientName,
+                            cardHolderTextStyle = BodyMediumBold,
+                            cardNumber = favourite.recipientAccountNumber,
+                            isSelected = selectedFavouriteIndex == index, // Pass selection state
+                            onCardClick = {
+                                selectedFavouriteIndex = index
+                                viewModel.updateRecipientName(favourite.recipientName)
+                                viewModel.updateRecipientAccountNumber(favourite.recipientAccountNumber)
 
+                                scope.launch {
+                                    kotlinx.coroutines.delay(300)
+                                    scaffoldState.bottomSheetState.partialExpand()
+                                }
+                            }
+                        )
+                        Spacer(modifier = modifier.height(16.dp))
+                    }
+                }
+
+            }
         }) {
         Box(
             modifier = Modifier

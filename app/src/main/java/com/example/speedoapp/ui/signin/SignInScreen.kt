@@ -129,18 +129,12 @@ fun SignInScreen(
                 loginStatus?.let { status ->
                     when (status) {
                         is LoginStatus.Success -> {
-                            Log.d("API", "eh el 3abat da")
                             Toast.makeText(
                                 context,
                                 "login Successful!",
                                 Toast.LENGTH_SHORT
                             ).show()
-                            Log.d("API", "ba3d el 3abat")
-
                             navController.navigate(HOME_ROUTE)
-                            Log.d("API", "eh da")
-
-
                         }
 
                         is LoginStatus.Error -> {

@@ -53,6 +53,8 @@ fun PaymentScreen(
 ) {
     val transferData by viewModel.transferData.collectAsState()
     val transferResult by viewModel.transferResult.collectAsState()
+    val balance by viewModel.balance.collectAsState()
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -116,7 +118,7 @@ fun PaymentScreen(
                         AccountCard(
                             identifier = 0,
                             identifierText = "From",
-                            cardHolder = "Asmaa Dosuky",
+                            cardHolder = balance.name,
                             cardNumber = "7890"
                         )
                         Spacer(modifier = Modifier.height(11.dp))
@@ -160,12 +162,23 @@ fun PaymentScreen(
                     buttonText = stringResource(R.string.back_to_home)
                 )
                 Spacer(modifier = modifier.height(16.dp))
-                SecondaryButton(
-                    onClick = { /*TODO*/ },
-                    buttonText = stringResource(
-                        R.string.add_to_favourite
+                if (!viewModel.searchRecipient(
+                        transferData.recipient.name,
+                        transferData.recipient.accountNumber
                     )
                 )
+                    SecondaryButton(
+                        onClick = {
+                            viewModel.addFavourite(
+                                transferData.recipient.name,
+                                transferData.recipient.accountNumber
+                            )
+                            navController.navigate(HOME_ROUTE)
+                        },
+                        buttonText = stringResource(
+                            R.string.add_to_favourite
+                        )
+                    )
             }
         }
     }

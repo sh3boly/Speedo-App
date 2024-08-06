@@ -23,6 +23,7 @@ val G40 = Color(0xFFE3E2E2)
 val G0 = Color(0xFFFFFFFF)
 val CircularIndicatorBig = Color(0xFFCEA3AC)
 val P50 = Color(0xFFF3E9EB)
+val P75 = Color(0xFFCEA3AC)
 val P300 = Color(0xFF871E35)
 val D300 = Color(0xFFFF002E)
 

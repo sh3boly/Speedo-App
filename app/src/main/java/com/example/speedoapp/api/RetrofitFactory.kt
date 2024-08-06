@@ -10,6 +10,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 object RetrofitFactory {
     private const val BASE_URL =
         "http://basic-spring-app-env.eba-i6chqiqc.eu-north-1.elasticbeanstalk.com/"
+    private const val FAV_URL =
+        "http://bm-app-env.eba-yspz5pwf.eu-north-1.elasticbeanstalk.com/"
 
 
     val tokenManager = PreferencesManager
@@ -29,6 +31,12 @@ object RetrofitFactory {
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
+    private val favRetrofit = Retrofit
+        .Builder()
+        .baseUrl(FAV_URL)
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+
 
     val authApi: AuthApi by lazy {
         authRetrofit.create(AuthApi::class.java)
@@ -40,11 +48,13 @@ object RetrofitFactory {
 
     val homeApi: HomeApi by lazy {
         try {
-            Log.d("API", "Initializing HomeApi")
             unauthRetrofit.create(HomeApi::class.java)
         } catch (e: Exception) {
-            Log.d("API", "Error initializing HomeApi", e)
             throw e
         }
+    }
+
+    val favouriteApi: FavouriteApiCallable by lazy {
+        favRetrofit.create(FavouriteApiCallable::class.java)
     }
 }

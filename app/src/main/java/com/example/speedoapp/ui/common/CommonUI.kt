@@ -47,6 +47,7 @@ import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -57,6 +58,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -89,6 +91,7 @@ import com.example.speedoapp.ui.theme.GradientStart
 import com.example.speedoapp.ui.theme.HeadingTextStyle
 import com.example.speedoapp.ui.theme.P300
 import com.example.speedoapp.ui.theme.P50
+import com.example.speedoapp.ui.theme.P75
 import com.example.speedoapp.ui.theme.PrimaryColor
 import com.example.speedoapp.ui.theme.SubTitleTextStyle
 import com.example.speedoapp.ui.theme.SubTitleTextStyleBold
@@ -206,6 +209,7 @@ fun DataField(
     value: String,
     onValueChange: (String) -> Unit,
     label: String,
+    hintText: String? = null,
     @DrawableRes image: Int? = null,
     @DrawableRes typingImage: Int? = null,
     imageDescription: String = "",
@@ -227,7 +231,10 @@ fun DataField(
             value = value,
             onValueChange = onValueChange,
             placeholder = {
-                Text(text = "Enter your $label", style = AppTextStyle, color = G70)
+                if (hintText == null)
+                    Text(text = "Enter your $label", style = AppTextStyle, color = G70)
+                else
+                    Text(text = "Enter $hintText", style = AppTextStyle, color = G70)
             },
             keyboardOptions = KeyboardOptions(keyboardType = type),
             trailingIcon = {
@@ -451,20 +458,29 @@ fun DatePickerChooser(onConfirm: (DatePickerState) -> Unit, onDismiss: () -> Uni
 @Composable
 fun AccountCard(
     modifier: Modifier = Modifier,
-    identifier: Int,
-    identifierText: String? = null,
+    isSelected: Boolean = false,
+    onCardClick: (() -> Unit)? = null,
+    cardHolder: String,
+    cardHolderTextStyle: TextStyle = SubTitleTextStyleBold,
+    cardNumber: String,
     @DrawableRes firstImageInRow: Int? = null,
     onFirstActionClick: (() -> Unit)? = null,
     @DrawableRes secondImageInRow: Int? = null,
     onSecondActionClick: (() -> Unit)? = null,
-    cardHolder: String,
-    cardNumber: String,
+    identifierText: String? = null,
+    identifier: Int = 0,
 ) {
     Card(
         colors = CardDefaults.cardColors(P50),
         modifier = Modifier
             .height(if (identifier == 0) 136.dp else 93.dp)
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .border(
+                width = 2.dp,
+                color = if (isSelected) P75 else Color.Transparent,
+                shape = RoundedCornerShape(8.dp)
+            )
+            .clickable { onCardClick?.invoke() },
         shape = RoundedCornerShape(8.dp),
     ) {
         Row(
@@ -510,12 +526,14 @@ fun AccountCard(
                     }
                     Text(
                         text = cardHolder,
-                        style = SubTitleTextStyleBold,
+                        style = cardHolderTextStyle,
                         color = G900,
                     )
                     Spacer(modifier = Modifier.padding(6.dp))
                     Text(
-                        text = "Account xxxx$cardNumber", style = BodyMedium, color = G100
+                        text = "Account xxxx${cardNumber.takeLast(4)}",
+                        style = BodyMedium,
+                        color = G100
                     )
                 }
             }
